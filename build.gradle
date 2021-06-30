@@ -1,0 +1,108 @@
+
+
+plugins {
+    id 'java'
+    id "idea"
+    id 'java-library'
+    id "maven-publish"
+    id "com.github.johnrengelman.shadow" version "7.0.0"
+}
+
+apply plugin: 'maven-publish'
+
+group = 'io.github.divios'
+def pluginVersion = "1.0"
+version = pluginVersion
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+    maven {
+        name = 'spigotmc-repo'
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+
+    maven {
+        name = 'codemc-snapshots'
+        url = 'https://repo.codemc.io/repository/maven-snapshots/'
+    }
+
+    maven {
+        name = 'codemc-repo'
+        url = 'https://repo.codemc.org/repository/maven-public/'
+    }
+
+    maven { url 'https://jitpack.io' }
+
+    maven {
+        url repsyUrl
+        credentials {
+            username repsyUsername
+            password repsyPassword
+        }
+    }
+
+}
+
+task updateJars {
+    doLast {
+        copy {
+            from 'build/libs/Wards-' + pluginVersion + "-all.jar"
+            into 'C:/Users/serbe/Desktop/server_pruebas2/1.17/plugins'
+            rename ("Wards-" + pluginVersion + "-all.jar"
+                    , "Wards-" + pluginVersion + ".jar")
+        }
+        copy {
+            from 'build/libs/Wards-' + pluginVersion + "-all.jar"
+            into 'C:/Users/serbe/Desktop/server_pruebas2/1.16/plugins'
+            rename ("Wards-" + pluginVersion + "-all.jar"
+                    , "Wards-" + pluginVersion + ".jar")
+        }
+        copy {
+            from 'build/libs/Wards-' + pluginVersion + "-all.jar"
+            into 'C:/Users/serbe/Desktop/server_pruebas2/1.12/plugins'
+            rename ("Wards-" + pluginVersion + "-all.jar"
+                    , "Wards-" + pluginVersion + ".jar")
+        }
+        copy {
+            from 'build/libs/Wards-' + pluginVersion + "-all.jar"
+            into 'C:/Users/serbe/Desktop/server_pruebas2/1.8/plugins'
+            rename ("Wards-" + pluginVersion + "-all.jar"
+                    , "Wards-" + pluginVersion + ".jar")
+        }
+    }
+}
+
+shadowJar {
+    relocate('org.bstats', 'io.github.divios.Wards.shaded.bstats')
+    relocate('io.github.divios.core_lib', 'io.github.divios.Wards.shaded.Core_lib')
+    relocate('com.cryptomorin.xseries', 'io.github.divios.Wards.shaded.XSeries')
+
+    minimize()
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
+
+    compileOnly 'io.github.divios:core_lib:1.0'
+}
+
+processResources {
+    expand projectVersion: pluginVersion
+
+}
+
+task deploy(dependsOn: ["build", "updateJars"]) {
+    updateJars.mustRunAfter jar
+}
+
+compileJava.dependsOn clean
+build.dependsOn shadowJar
