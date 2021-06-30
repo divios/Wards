@@ -7,6 +7,11 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * This class represents the Ward object itself, this means,
+ * the specific block placed representing a ward
+ */
+
 public class Ward {
 
     private final String id;
