@@ -1,10 +1,19 @@
 package io.github.divios.wards.wards;
 
+import io.github.divios.core_lib.inventory.InventoryGUI;
 import io.github.divios.core_lib.misc.EventListener;
+import io.github.divios.wards.Wards;
+import io.github.divios.wards.observer.BlockInteractEvent;
+import io.github.divios.wards.observer.IObservable;
+import io.github.divios.wards.observer.IObserver;
+import io.github.divios.wards.observer.ObservablesManager;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -12,35 +21,42 @@ import java.util.UUID;
  * the specific block placed representing a ward
  */
 
-public class Ward {
+public class Ward implements IObserver {
 
+    private static final Wards plugin = Wards.getInstance();
+    private static final ObservablesManager OManager = ObservablesManager.getInstance();
+
+    private final UUID owner;
+    private final Location location;
     private final String id;
-    private final WardType type;
-    private final int radius;
 
-    private final HashMap<UUID, Location> placed = new HashMap<>();
-
-    public Ward(String id, WardType type, int radius) {
+    public Ward(UUID owner, Location location, String id) {
+        this.owner = owner;
+        this.location = location;
         this.id = id;
-        this.type = type;
-        this.radius = radius;
+
+        OManager.sToInteract(this);
+    }
+
+    public UUID getOwner() {
+        return owner;
+    }
+
+    public Location getLocation() {
+        return location;
     }
 
     public String getId() {
         return id;
     }
 
-    public WardType getType() {
-        return type;
+    public void destroy() {
+        OManager.unToInteract(this);
     }
 
-    public int getRadius() {
-        return radius;
-    }
-
-
-    private void initListeners() {
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(owner, location, id);
     }
 
     @Override
@@ -48,11 +64,23 @@ public class Ward {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ward ward = (Ward) o;
-        return id.equals(ward.getId());
+        return owner.equals(ward.getOwner()) &&
+                location.equals(ward.getLocation()) && id.equals(ward.getId());
     }
 
     @Override
-    public int hashCode() {
-        return id.hashCode();
+    public void update(IObservable observable, Object object) {
+
+        if (observable.getClass().equals(BlockInteractEvent.class)){
+            PlayerInteractEvent o = (PlayerInteractEvent) object;
+            Location l = o.getClickedBlock().getLocation();
+
+            if (!location.equals(l)) return;
+
+            InventoryGUI inv = new InventoryGUI(plugin, 27, "&6&lManage Ward ");
+
+            inv.open(o.getPlayer());
+
+        }
     }
 }
