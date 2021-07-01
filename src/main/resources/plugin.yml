@@ -4,3 +4,10 @@ main: io.github.divios.wards.Wards
 api-version: 1.13
 prefix: Wards
 description: Centinels/Wards to watch a region and get notified when someone enters
+
+commands:
+  Wards:
+    description: Wards plugin
+    default: false
+    aliases: [ Wards ]
+    usage: /Wards

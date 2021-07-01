@@ -82,9 +82,9 @@ task updateJars {
 }
 
 shadowJar {
-    relocate('org.bstats', 'io.github.divios.Wards.shaded.bstats')
-    relocate('io.github.divios.core_lib', 'io.github.divios.Wards.shaded.Core_lib')
-    relocate('com.cryptomorin.xseries', 'io.github.divios.Wards.shaded.XSeries')
+    relocate('org.bstats', 'io.github.divios.wards.shaded.bstats')
+    relocate('io.github.divios.core_lib', 'io.github.divios.wards.shaded.Core_lib')
+    relocate('com.cryptomorin.xseries', 'io.github.divios.wards.shaded.XSeries')
 
     minimize()
 }
@@ -92,7 +92,7 @@ shadowJar {
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
 
-    compileOnly 'io.github.divios:core_lib:1.0'
+    api 'io.github.divios:core_lib:1.0'
 }
 
 processResources {

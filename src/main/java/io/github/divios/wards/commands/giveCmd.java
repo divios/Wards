@@ -45,6 +45,8 @@ public class giveCmd extends abstractCommand {
     @Override
     public void run(CommandSender sender, List<String> args) {
         NBTItem item = new NBTItem(XMaterial.RESPAWN_ANCHOR.parseItem());
+        item.setString(Wards.WARD_UUID, ((Player) sender).getUniqueId().toString());
+        item.setString(Wards.WARD_ID, "oke");  // TODO: Set ward type
         item.setBoolean(Wards.WARD_META, true);
 
         ((Player) sender).getInventory().addItem(item.getItem());

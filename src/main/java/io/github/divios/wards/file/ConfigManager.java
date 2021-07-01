@@ -7,6 +7,8 @@ import org.bukkit.Bukkit;
 import java.io.*;
 import java.util.stream.Stream;
 
+import static io.github.divios.core_lib.config.configUtils.copyContents;
+
 public class ConfigManager {
 
     private static final Wards plugin = Wards.getInstance();
@@ -48,19 +50,6 @@ public class ConfigManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void copyContents(InputStream in, File to) throws IOException {
-
-        to.createNewFile();
-        OutputStream out = new FileOutputStream(to);
-        byte[] buffer = new byte[1024];
-        int lenght = in.read(buffer);
-        while (lenght != -1) {
-            out.write(buffer, 0, lenght);
-            lenght = in.read(buffer);
-        }
-
     }
 
 
