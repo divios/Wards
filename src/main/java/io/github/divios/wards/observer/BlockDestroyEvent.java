@@ -18,8 +18,7 @@ public class BlockDestroyEvent extends abstractObserver implements IObservable {
     @Override
     protected EventListener initListener() {
         return new EventListener<>(plugin, BlockExplodeEvent.class,
-                EventPriority.HIGHEST, o -> {
-            o.blockList().removeIf(block -> block.hasMetadata(WARD_BLOCK));
-        });
+                EventPriority.HIGHEST, o ->
+                o.blockList().removeIf(block -> block.hasMetadata(WARD_BLOCK)));
     }
 }

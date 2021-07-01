@@ -1,9 +1,11 @@
-package io.github.divios.wards.wards;
+package io.github.divios.wards.events;
 
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.observer.IObservable;
 import io.github.divios.wards.observer.IObserver;
 import io.github.divios.wards.observer.ObservablesManager;
+import io.github.divios.wards.wards.Ward;
+import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
@@ -11,12 +13,21 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.util.stream.IntStream;
 
-public class WardPlaced implements IObserver {
+/**
+ * Class that is called by WardsManager and subscribes
+ * to blockPlaceEvent.
+ *
+ * Checks if the item placed is a Ward.
+ * If it is, marks the new block placed with
+ * WARD_META and WARD_UUID with the owner uuid
+ */
+
+public class WardPlacedEvent implements IObserver {
 
     private final WardsManager manager;
     private final ObservablesManager OManager;
 
-    public WardPlaced(WardsManager manager){
+    public WardPlacedEvent(WardsManager manager){
         this.manager = manager;
         this.OManager = ObservablesManager.getInstance();
 
@@ -36,7 +47,6 @@ public class WardPlaced implements IObserver {
                 l.getWorld().spawnParticle(Particle.SPELL_WITCH,
                         l2.add(Math.random(), Math.random(), Math.random()), 1);
             });
-
 
             manager.createWard(new Ward.Builder(o.getItemInHand())
                     .setLocation(l)

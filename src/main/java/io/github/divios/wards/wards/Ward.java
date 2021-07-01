@@ -28,6 +28,10 @@ import java.util.*;
 /**
  * This class represents the Ward object itself, this means,
  * the specific block placed representing a ward
+ * <p>
+ * It also observer the InteractEvent and checks if the location
+ * is their saved location. If it is, cancels the event and shows
+ * the respective GUI
  */
 
 public class Ward implements IObserver {
@@ -39,35 +43,24 @@ public class Ward implements IObserver {
     private final UUID owner;
     private final Location location;
     private final String id;  //TODO: implement interface
+    private final int radius;
     private int timer = 30;
+
+    private Set<UUID> acceptedP = new HashSet<>();
+    private Set<UUID> onSight = new HashSet<>();
 
     private final InventoryGUI inv;
 
-    public Ward(UUID owner, Location location, String id, Integer timer) {
+    public Ward(UUID owner, Location location, String id, Integer radius, Integer timer) {
         this.owner = owner;
         this.location = location;
         this.id = id;
+        this.radius = radius;
         this.timer = timer;
         this.inv = new InventoryGUI(plugin, 27, "&1&lWard Manager");
         createInv();
 
         OManager.sToInteract(this);
-    }
-
-    private void createInv() {
-        inv.addButton(ItemButton.create(new ItemBuilder(XMaterial.BARRIER),
-                e -> {
-                    Optional.ofNullable(Bukkit.getPlayer(owner))
-                            .ifPresent(o -> o.sendMessage(FormatUtils.color("&7Removiste tu ward")));
-                    WManager.deleteWard(this);
-                    // TODO: Give item back to player
-                    e.getWhoClicked().closeInventory();
-                }), 13);
-
-        inv.addButton(ItemButton.create(new ItemBuilder(XMaterial.CLOCK)
-                        .setName("&a" + FormatUtils.formatTimeOffset(timer * 1000L)) , e-> {})
-                , 11);
-        inv.setDestroyOnClose(false);
     }
 
     public UUID getOwner() {
@@ -82,11 +75,8 @@ public class Ward implements IObserver {
         return id;
     }
 
-    public void destroy() {
-        OManager.unToInteract(this);
-        new ArrayList<>(inv.getInventory().getViewers())
-                .forEach(HumanEntity::closeInventory);
-        inv.destroy();
+    public int getRadius() {
+        return radius;
     }
 
     public int getTimer() {
@@ -97,7 +87,66 @@ public class Ward implements IObserver {
         this.timer = timer;
     }
 
-    public Inventory getInv() { return inv.getInventory(); }
+    public Inventory getInv() {
+        return inv.getInventory();
+    }
+
+    public Set<UUID> getAcceptedP() {
+        return Collections.unmodifiableSet(acceptedP);
+    }
+
+    public Set<UUID> getOnSight() {
+        return Collections.unmodifiableSet(onSight);
+    }
+
+    private void createInv() {
+        inv.addButton(ItemButton.create(new ItemBuilder(XMaterial.BARRIER),
+                e -> {
+                    Optional.ofNullable(Bukkit.getPlayer(owner))
+                            .ifPresent(o -> o.sendMessage(FormatUtils.color("&7Removiste tu ward")));
+                    WManager.deleteWard(this);
+                    // TODO: Give item back to player
+                    e.getWhoClicked().closeInventory();
+                }), 13);
+
+        inv.addButton(ItemButton.create(new ItemBuilder(XMaterial.CLOCK)
+                        .setName("&a" + FormatUtils.formatTimeOffset(timer * 1000L)), e -> {
+                })
+                , 11);
+        inv.setDestroyOnClose(false);
+    }
+
+    public void destroy() {
+        OManager.unToInteract(this);
+        new ArrayList<>(inv.getInventory().getViewers())
+                .forEach(HumanEntity::closeInventory);
+        inv.destroy();
+    }
+
+    public void updateOnSight(List<Player> players) {  //TODO
+        onSight.stream()
+                .filter(uuid -> !players.contains(Bukkit.getPlayer(uuid)))
+                .forEach(uuid -> {
+                    Optional.ofNullable(Bukkit.getPlayer(getOwner()))
+                            .ifPresent(player -> {
+                                player.sendMessage("");
+                            });
+                });
+    }
+
+    @Override
+    public void update(IObservable observable, Object object) {
+
+        if (observable.getClass().equals(BlockInteractEvent.class)) {
+            PlayerInteractEvent o = (PlayerInteractEvent) object;
+            Location l = o.getClickedBlock().getLocation();
+
+            if (!location.equals(l)) return;
+
+            inv.open(o.getPlayer());
+
+        }
+    }
 
     @Override
     public int hashCode() {
@@ -113,25 +162,12 @@ public class Ward implements IObserver {
                 location.equals(ward.getLocation()) && id.equals(ward.getId());
     }
 
-    @Override
-    public void update(IObservable observable, Object object) {
-
-        if (observable.getClass().equals(BlockInteractEvent.class)){
-            PlayerInteractEvent o = (PlayerInteractEvent) object;
-            Location l = o.getClickedBlock().getLocation();
-
-            if (!location.equals(l)) return;
-
-            inv.open(o.getPlayer());
-
-        }
-    }
-
     public static class Builder {
 
         private UUID uuid = null;
         private Location location = null;
         private String id;  //TODO: implement interface
+        private Integer radius = 10;
         private Integer timer = null;
 
         public Builder(UUID uuid) {
@@ -168,6 +204,11 @@ public class Ward implements IObserver {
             return this;
         }
 
+        public Builder setRadius(int radius) {
+            this.radius = radius;
+            return this;
+        }
+
         public Builder setTimer(Integer timer) {
             this.timer = timer;
             return this;
@@ -177,7 +218,7 @@ public class Ward implements IObserver {
             Objects.requireNonNull(uuid, "Uuid can't be null");
             Objects.requireNonNull(id, "Id can't not be null");
 
-            return new Ward(this.uuid, this.location, this.id, this.timer);
+            return new Ward(this.uuid, this.location, this.id, this.radius, this.timer);
         }
     }
 }
