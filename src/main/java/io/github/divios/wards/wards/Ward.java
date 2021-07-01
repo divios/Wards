@@ -7,6 +7,7 @@ import io.github.divios.core_lib.inventory.ItemButton;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
 import io.github.divios.core_lib.misc.EventListener;
 import io.github.divios.core_lib.misc.FormatUtils;
+import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.observer.BlockInteractEvent;
 import io.github.divios.wards.observer.IObservable;
@@ -19,6 +20,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -39,13 +41,14 @@ public class Ward implements IObserver {
     private final String id;  //TODO: implement interface
     private int timer = 30;
 
-    private final InventoryGUI inv = new InventoryGUI(plugin, 27, "&1&lWard Manager");
+    private final InventoryGUI inv;
 
     public Ward(UUID owner, Location location, String id, Integer timer) {
         this.owner = owner;
         this.location = location;
         this.id = id;
         this.timer = timer;
+        this.inv = new InventoryGUI(plugin, 27, "&1&lWard Manager");
         createInv();
 
         OManager.sToInteract(this);
@@ -60,6 +63,10 @@ public class Ward implements IObserver {
                     // TODO: Give item back to player
                     e.getWhoClicked().closeInventory();
                 }), 13);
+
+        inv.addButton(ItemButton.create(new ItemBuilder(XMaterial.CLOCK)
+                        .setName("&a" + FormatUtils.formatTimeOffset(timer * 1000L)) , e-> {})
+                , 11);
         inv.setDestroyOnClose(false);
     }
 
@@ -89,6 +96,8 @@ public class Ward implements IObserver {
     public void setTimer(int timer) {
         this.timer = timer;
     }
+
+    public Inventory getInv() { return inv.getInventory(); }
 
     @Override
     public int hashCode() {

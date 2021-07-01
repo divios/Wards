@@ -56,25 +56,25 @@ task updateJars {
     doLast {
         copy {
             from 'build/libs/Wards-' + pluginVersion + "-all.jar"
-            into 'C:/Users/serbe/Desktop/server_pruebas2/1.17/plugins'
+            into 'C:/Users/serbe/Desktop/server_pruebas/1.17/plugins'
             rename ("Wards-" + pluginVersion + "-all.jar"
                     , "Wards-" + pluginVersion + ".jar")
         }
         copy {
             from 'build/libs/Wards-' + pluginVersion + "-all.jar"
-            into 'C:/Users/serbe/Desktop/server_pruebas2/1.16/plugins'
+            into 'C:/Users/serbe/Desktop/server_pruebas/1.16/plugins'
             rename ("Wards-" + pluginVersion + "-all.jar"
                     , "Wards-" + pluginVersion + ".jar")
         }
         copy {
             from 'build/libs/Wards-' + pluginVersion + "-all.jar"
-            into 'C:/Users/serbe/Desktop/server_pruebas2/1.12/plugins'
+            into 'C:/Users/serbe/Desktop/server_pruebas/1.12/plugins'
             rename ("Wards-" + pluginVersion + "-all.jar"
                     , "Wards-" + pluginVersion + ".jar")
         }
         copy {
             from 'build/libs/Wards-' + pluginVersion + "-all.jar"
-            into 'C:/Users/serbe/Desktop/server_pruebas2/1.8/plugins'
+            into 'C:/Users/serbe/Desktop/server_pruebas/1.8/plugins'
             rename ("Wards-" + pluginVersion + "-all.jar"
                     , "Wards-" + pluginVersion + ".jar")
         }
