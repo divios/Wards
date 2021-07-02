@@ -7,13 +7,17 @@ import io.github.divios.core_lib.inventory.ItemButton;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.Task;
+import io.github.divios.core_lib.region.Region;
+import io.github.divios.core_lib.region.SpheroidRegion;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.observer.BlockInteractEvent;
 import io.github.divios.wards.observer.IObservable;
 import io.github.divios.wards.observer.IObserver;
 import io.github.divios.wards.observer.ObservablesManager;
+import io.github.divios.wards.tasks.WardsShowTask;
 import io.github.divios.wards.utils.utils;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -40,10 +44,11 @@ public class Ward implements IObserver {
     private static final WardsManager WManager = WardsManager.getInstance();
 
     private final UUID owner;
-    private final Location location;
     private final String id;  //TODO: implement interface
-    private final int radius;
-    private int timer = 30;
+    private final SpheroidRegion region;
+    private int timer;
+
+    private final int hash;             // Hash of the object cached
 
     private final Set<UUID> acceptedP = new HashSet<>();
     private final Set<Player> onSight = new HashSet<>();
@@ -51,12 +56,15 @@ public class Ward implements IObserver {
     private final InventoryGUI inv;
 
     public Ward(UUID owner, Location location, String id, Integer radius, Integer timer) {
+
         this.owner = owner;
-        acceptedP.add(owner);
-        this.location = location;
+        this.acceptedP.add(owner);
         this.id = id;
-        this.radius = radius;
+        this.region = new SpheroidRegion(location, radius);
         this.timer = timer;
+
+        this.hash = Objects.hash(owner, region.getCenter(), id);
+
         this.inv = new InventoryGUI(plugin, 27, "&1&lWard Manager");
         createInv();
 
@@ -67,17 +75,23 @@ public class Ward implements IObserver {
         return owner;
     }
 
-    public Location getLocation() {
-        return location;
+    public Location getCenter() {
+        return region.getCenter();
     }
 
     public String getId() {
         return id;
     }
 
-    public int getRadius() {
-        return radius;
+    public SpheroidRegion getRegion() {
+        return this.region;
     }
+
+    public double getRadius() {
+        return region.getXRadius();
+    }
+
+    public Set<Chunk> getChunks() { return region.getChunks(); }
 
     public int getTimer() {
         return timer;
@@ -115,17 +129,27 @@ public class Ward implements IObserver {
                         .setName("&a" + FormatUtils.formatTimeOffset(timer * 1000L)), e -> {
                 })
                 , 11);
+
+        inv.addButton(ItemButton.create(new ItemBuilder(XMaterial.OAK_FENCE),
+                e -> {
+                    e.getWhoClicked().closeInventory();
+                    WardsShowTask.generate((Player) e.getWhoClicked(), this);
+                }), 15);
+
         inv.setDestroyOnClose(false);
     }
 
     public void destroy() {
+
         OManager.unToInteract(this);
         new ArrayList<>(inv.getInventory().getViewers())
                 .forEach(HumanEntity::closeInventory);
         inv.destroy();
+
     }
 
-    public void updateOnSight(List<Player> players) {  //TODO
+    public void updateOnSight(List<Player> players) {
+
         onSight.stream()       // Players who exited
                 .filter(player -> !players.contains(player))
                 .forEach(player -> {
@@ -146,6 +170,7 @@ public class Ward implements IObserver {
         onSight.forEach(player -> Task.syncDelayed(plugin, () -> {
             player.addPotionEffect(PotionEffectType.GLOWING.createEffect(50, 3));
         }));
+
     }
 
     @Override
@@ -155,7 +180,7 @@ public class Ward implements IObserver {
             PlayerInteractEvent o = (PlayerInteractEvent) object;
             Location l = o.getClickedBlock().getLocation();
 
-            if (!location.equals(l)) return;
+            if (!region.getCenter().equals(l)) return;
 
             inv.open(o.getPlayer());
 
@@ -164,7 +189,7 @@ public class Ward implements IObserver {
 
     @Override
     public int hashCode() {
-        return Objects.hash(owner, location, id);
+        return hash;
     }
 
     @Override
@@ -173,7 +198,7 @@ public class Ward implements IObserver {
         if (o == null || getClass() != o.getClass()) return false;
         Ward ward = (Ward) o;
         return owner.equals(ward.getOwner()) &&
-                location.equals(ward.getLocation()) && id.equals(ward.getId());
+                region.getCenter().equals(ward.getCenter()) && id.equals(ward.getId());
     }
 
     public static class Builder {

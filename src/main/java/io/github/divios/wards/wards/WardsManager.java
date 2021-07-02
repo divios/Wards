@@ -1,6 +1,6 @@
 package io.github.divios.wards.wards;
 
-import io.github.divios.wards.tasks.WardsCheckEvent;
+import io.github.divios.wards.tasks.WardsCheckTask;
 import io.github.divios.wards.tasks.WardsCooldownTask;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.events.WardInteractEvent;
@@ -42,7 +42,7 @@ public class WardsManager {
         wardPlaced = new WardPlacedEvent(instance);
         wardInteract = new WardInteractEvent(instance);
         WardsCooldownTask.load();
-        WardsCheckEvent.load();
+        WardsCheckTask.load();
     }
 
     public Ward getWard(Location l) {
@@ -54,7 +54,7 @@ public class WardsManager {
     }
 
     public void createWard(Ward ward) {
-        wards.put(ward.getLocation(), ward);
+        wards.put(ward.getCenter(), ward);
     }
 
     public void deleteWard(Location l) {
@@ -70,8 +70,8 @@ public class WardsManager {
     }
 
     public void deleteWard(Ward ward) {
-        if (ward == null || ward.getLocation() == null) return;
-        deleteWard(ward.getLocation());
+        if (ward == null || ward.getCenter() == null) return;
+        deleteWard(ward.getCenter());
     }
 
     public void clear() {

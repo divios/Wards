@@ -43,7 +43,7 @@ public class WardPlacedEvent implements IObserver {
 
             IntStream.range(0, 40).forEach(i -> {
                 Location l2 = l.clone();
-                l.getWorld().spawnParticle(Particle.SPELL_WITCH,
+                o.getPlayer().spawnParticle(Particle.SPELL_WITCH,
                         l2.add(Math.random(), Math.random(), Math.random()), 1);
             });
 
