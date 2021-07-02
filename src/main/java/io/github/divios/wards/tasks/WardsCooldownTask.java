@@ -3,6 +3,7 @@ package io.github.divios.wards.tasks;
 import com.cryptomorin.xseries.XMaterial;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
 import io.github.divios.core_lib.misc.FormatUtils;
+import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.utils.utils;
@@ -37,8 +38,8 @@ public class WardsCooldownTask {
                     .filter(ward -> ward.getValue().getTimer() <= 0)
                     .forEach(wardE -> {
                         Ward ward = wardE.getValue();
-                        utils.sendMsg(ward.getOwner(), "&7Tu Ward ha expirado");
-                        Task.syncDelayed(plugin, () -> WManager.deleteWard(ward), 0);
+                        Msg.sendMsg(ward.getOwner(), "&7Tu Ward ha expirado");
+                        Task.syncDelayed(plugin, () -> WManager.deleteWard(ward));
                     });
         }, 20, 20);
     }

@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.util.stream.Collectors;
 
-public class WardsCheckTask {
+public class WardsWatchTask {
 
     private static final Wards plugin = Wards.getInstance();
     private static final WardsManager WManager = WardsManager.getInstance();
@@ -36,7 +36,7 @@ public class WardsCheckTask {
                             .filter(player -> !player.getUniqueId().equals(ward.getOwner()))
                             .collect(Collectors.toList()));
 
-                }), 40, 40);
+                }), 30, 30);
     }
 
 }

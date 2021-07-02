@@ -6,6 +6,7 @@ import io.github.divios.core_lib.inventory.InventoryGUI;
 import io.github.divios.core_lib.inventory.ItemButton;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
 import io.github.divios.core_lib.misc.FormatUtils;
+import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.core_lib.region.Region;
 import io.github.divios.core_lib.region.SpheroidRegion;
@@ -15,6 +16,7 @@ import io.github.divios.wards.observer.IObservable;
 import io.github.divios.wards.observer.IObserver;
 import io.github.divios.wards.observer.ObservablesManager;
 import io.github.divios.wards.tasks.WardsShowTask;
+import io.github.divios.wards.utils.ParticleUtils;
 import io.github.divios.wards.utils.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -37,11 +39,10 @@ import java.util.*;
  * the respective GUI
  */
 
-public class Ward implements IObserver {
+public class Ward{
 
     private static final Wards plugin = Wards.getInstance();
     private static final ObservablesManager OManager = ObservablesManager.getInstance();
-    private static final WardsManager WManager = WardsManager.getInstance();
 
     private final UUID owner;
     private final String id;  //TODO: implement interface
@@ -61,14 +62,12 @@ public class Ward implements IObserver {
         this.acceptedP.add(owner);
         this.id = id;
         this.region = new SpheroidRegion(location, radius);
-        this.timer = timer;
+        this.timer = 240;
 
         this.hash = Objects.hash(owner, region.getCenter(), id);
 
-        this.inv = new InventoryGUI(plugin, 27, "&1&lWard Manager");
-        createInv();
+        this.inv = WardInventory.build(this);
 
-        OManager.sToInteract(this);
     }
 
     public UUID getOwner() {
@@ -113,35 +112,12 @@ public class Ward implements IObserver {
         return Collections.unmodifiableSet(onSight);
     }
 
-    public void openInv(Player p) { inv.open(p); }
-
-    private void createInv() {
-        inv.addButton(ItemButton.create(new ItemBuilder(XMaterial.BARRIER),
-                e -> {
-                    Optional.ofNullable(Bukkit.getPlayer(owner))
-                            .ifPresent(o -> o.sendMessage(FormatUtils.color("&7Removiste tu ward")));
-                    WManager.deleteWard(this);
-                    // TODO: Give item back to player
-                    e.getWhoClicked().closeInventory();
-                }), 13);
-
-        inv.addButton(ItemButton.create(new ItemBuilder(XMaterial.CLOCK)
-                        .setName("&a" + FormatUtils.formatTimeOffset(timer * 1000L)), e -> {
-                })
-                , 11);
-
-        inv.addButton(ItemButton.create(new ItemBuilder(XMaterial.OAK_FENCE),
-                e -> {
-                    e.getWhoClicked().closeInventory();
-                    WardsShowTask.generate((Player) e.getWhoClicked(), this);
-                }), 15);
-
-        inv.setDestroyOnClose(false);
+    public void openInv(Player p) {
+        inv.open(p);
     }
 
     public void destroy() {
 
-        OManager.unToInteract(this);
         new ArrayList<>(inv.getInventory().getViewers())
                 .forEach(HumanEntity::closeInventory);
         inv.destroy();
@@ -153,38 +129,40 @@ public class Ward implements IObserver {
         onSight.stream()       // Players who exited
                 .filter(player -> !players.contains(player))
                 .forEach(player -> {
-                    acceptedP.forEach(uuid -> utils.sendMsg(uuid,
+                    acceptedP.forEach(uuid -> Msg.sendMsg(uuid,
                             player.getName() + " &7exited your ward"));
+
+                    acceptedP.forEach(uuid -> {     // remove glow
+                        Player permitted = Bukkit.getPlayer(uuid);
+                        if (permitted == null) return;
+                        ParticleUtils.removeGlow(permitted, player);       // Packets
+
+                    });
                 });
 
-        players.stream()
+        players.stream()        // Players who entered
                 .filter(player -> !onSight.contains(player))
                 .forEach(player -> {
-                    acceptedP.forEach(uuid -> utils.sendMsg(uuid,
+                    acceptedP.forEach(uuid -> Msg.sendMsg(uuid,
                             player.getName() + " &7entered your ward"));
                 });
 
         onSight.clear();
         onSight.addAll(players);
 
-        onSight.forEach(player -> Task.syncDelayed(plugin, () -> {
-            player.addPotionEffect(PotionEffectType.GLOWING.createEffect(50, 3));
+        onSight.forEach(player -> Task.syncDelayed(plugin, () -> {      // All players on the area
+
+            //player.addPotionEffect(PotionEffectType.GLOWING.createEffect(50, 3));   // effect Deprecated
+
+            acceptedP.forEach(uuid -> {     // add glow
+                Player permitted = Bukkit.getPlayer(uuid);
+                if (permitted == null) return;
+                ParticleUtils.addGlow(permitted, player);       // Packets
+
+            });
+
         }));
 
-    }
-
-    @Override
-    public void update(IObservable observable, Object object) {
-
-        if (observable.getClass().equals(BlockInteractEvent.class)) {
-            PlayerInteractEvent o = (PlayerInteractEvent) object;
-            Location l = o.getClickedBlock().getLocation();
-
-            if (!region.getCenter().equals(l)) return;
-
-            inv.open(o.getPlayer());
-
-        }
     }
 
     @Override
@@ -206,7 +184,7 @@ public class Ward implements IObserver {
         private UUID uuid = null;
         private Location location = null;
         private String id;  //TODO: implement interface
-        private Integer radius = 10;
+        private Integer radius = 30;
         private Integer timer = null;
 
         public Builder(UUID uuid) {

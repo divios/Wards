@@ -4,6 +4,7 @@ import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.wards.Ward;
+import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 
@@ -18,26 +19,28 @@ public class WardsShowTask {
     public static void generate(Player p, Ward ward) {
 
         if (executing.containsKey(p.getUniqueId())) {
-            Msg.sendMsg(p, "&7You can't only see one ward area at a time");
+            Msg.sendMsg(p, "&7You can only see one ward area at a time");
+            return;
         }
 
         int[] ticks = {0};
 
         executing.put(p.getUniqueId(), Task.syncRepeating(plugin, task -> {
 
-           if (ticks[0] == 6) {
+           if (ticks[0] == 12) {
                task.cancel();
                executing.remove(p.getUniqueId());
                return;
            }
 
             ward.getRegion().getSurface().forEach(block -> {
-                p.spawnParticle(Particle.FLAME,
-                        block.getLocation().add(0, 1, 0), 2);
+                p.spawnParticle(Particle.REDSTONE,
+                        block.getLocation().add(0, 1, 0), 1,
+                        new Particle.DustOptions(Color.NAVY, 1));
             });
             ticks[0]++;
 
-        }, 20, 20));
+        }, 0, 20));
 
     }
 
