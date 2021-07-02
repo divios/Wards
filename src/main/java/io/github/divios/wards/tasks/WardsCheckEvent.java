@@ -1,4 +1,4 @@
-package io.github.divios.wards.Task;
+package io.github.divios.wards.tasks;
 
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;

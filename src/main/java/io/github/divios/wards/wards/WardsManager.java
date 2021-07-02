@@ -1,7 +1,7 @@
 package io.github.divios.wards.wards;
 
-import io.github.divios.wards.Task.WardsCheckEvent;
-import io.github.divios.wards.Task.WardsCooldownTask;
+import io.github.divios.wards.tasks.WardsCheckEvent;
+import io.github.divios.wards.tasks.WardsCooldownTask;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.events.WardInteractEvent;
 import io.github.divios.wards.events.WardPlacedEvent;
@@ -21,8 +21,7 @@ public class WardsManager {
     private static final Wards plugin = Wards.getInstance();
     private static WardsManager instance = null;
 
-    private final Set<Ward> wards = Collections.synchronizedSet(new HashSet<>());
-    private final Map<Location, Ward> wardsL = Collections.synchronizedMap(new HashMap<>());
+    private final Map<Location, Ward> wards = Collections.synchronizedMap(new HashMap<>());
 
     private WardPlacedEvent wardPlaced;
     private WardInteractEvent wardInteract;
@@ -47,22 +46,20 @@ public class WardsManager {
     }
 
     public Ward getWard(Location l) {
-        return wardsL.get(l);
+        return wards.get(l);
     }
 
-    public Set<Ward> getWards() {
-        return Collections.unmodifiableSet(wards);
+    public Map<Location, Ward> getWards() {
+        return Collections.unmodifiableMap(wards);
     }
 
     public void createWard(Ward ward) {
-        wards.add(ward);
-        wardsL.put(ward.getLocation(), ward);
+        wards.put(ward.getLocation(), ward);
     }
 
     public void deleteWard(Location l) {
-        Ward removed = wardsL.remove(l);
+        Ward removed = wards.remove(l);
         if (removed == null) return;
-        wards.remove(removed);
         removed.destroy();
 
         Block block = l.getBlock();

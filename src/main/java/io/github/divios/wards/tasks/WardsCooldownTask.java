@@ -1,4 +1,4 @@
-package io.github.divios.wards.Task;
+package io.github.divios.wards.tasks;
 
 import com.cryptomorin.xseries.XMaterial;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
@@ -6,6 +6,7 @@ import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.utils.utils;
+import io.github.divios.wards.wards.Ward;
 import io.github.divios.wards.wards.WardsManager;
 
 /**
@@ -27,14 +28,15 @@ public class WardsCooldownTask {
         loaded = true;
 
         task = Task.asyncRepeating(plugin, () -> {
-            WManager.getWards().parallelStream().forEach(ward -> {
+            WManager.getWards().forEach((key, ward) -> {
                 ward.setTimer(ward.getTimer() - 1);
                 ward.getInv().setItem(11, new ItemBuilder(XMaterial.CLOCK)
                         .setName("&a" + FormatUtils.formatTimeOffset(ward.getTimer() * 1000L)));
             });
-            WManager.getWards().stream()
-                    .filter(ward -> ward.getTimer() <= 0)
-                    .forEach(ward -> {
+            WManager.getWards().entrySet().stream()
+                    .filter(ward -> ward.getValue().getTimer() <= 0)
+                    .forEach(wardE -> {
+                        Ward ward = wardE.getValue();
                         utils.sendMsg(ward.getOwner(), "&7Tu Ward ha expirado");
                         Task.syncDelayed(plugin, () -> WManager.deleteWard(ward), 0);
                     });
