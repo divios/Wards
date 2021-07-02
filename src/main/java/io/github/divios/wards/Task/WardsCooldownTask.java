@@ -5,6 +5,7 @@ import io.github.divios.core_lib.itemutils.ItemBuilder;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
+import io.github.divios.wards.utils.utils;
 import io.github.divios.wards.wards.WardsManager;
 
 /**
@@ -33,7 +34,10 @@ public class WardsCooldownTask {
             });
             WManager.getWards().stream()
                     .filter(ward -> ward.getTimer() <= 0)
-                    .forEach(ward -> Task.syncDelayed(plugin, () -> WManager.deleteWard(ward), 0));
+                    .forEach(ward -> {
+                        utils.sendMsg(ward.getOwner(), "&7Tu Ward ha expirado");
+                        Task.syncDelayed(plugin, () -> WManager.deleteWard(ward), 0);
+                    });
         }, 20, 20);
     }
 }

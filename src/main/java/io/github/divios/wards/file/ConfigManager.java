@@ -1,10 +1,10 @@
 package io.github.divios.wards.file;
 
-import io.github.divios.core_lib.config.configUtils;
 import io.github.divios.wards.Wards;
-import org.bukkit.Bukkit;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.stream.Stream;
 
 import static io.github.divios.core_lib.config.configUtils.copyContents;

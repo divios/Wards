@@ -1,16 +1,12 @@
 package io.github.divios.wards.Task;
 
-import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.BoundingBox;
 
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class WardsCheckEvent {
 
@@ -26,18 +22,16 @@ public class WardsCheckEvent {
         loaded = true;
         task = Task.asyncRepeating(plugin, () ->
 
-                WManager.getWards().parallelStream()
+                WManager.getWards()
                 .forEach(ward -> {
 
                     Location l = ward.getLocation();
                     int radius = ward.getRadius();
 
-                    Bukkit.getOnlinePlayers().stream()
+                    ward.updateOnSight(Bukkit.getOnlinePlayers().stream()
                             .filter(p -> p.getLocation().distance(l) <= radius)
-                            //.filter(player -> !player.getUniqueId().equals(ward.getOwner()))
-                            .forEach(player -> {
-                                player.sendMessage(FormatUtils.color("&7Estas en la zona"));
-                            });
+                            .filter(player -> !player.getUniqueId().equals(ward.getOwner()))
+                            .collect(Collectors.toList()));
 
                 }), 40, 40);
     }

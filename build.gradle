@@ -42,6 +42,8 @@ repositories {
 
     maven { url 'https://jitpack.io' }
 
+    maven { url "https://repo.dmulloy2.net/repository/public/" }
+
     maven {
         url repsyUrl
         credentials {
@@ -91,6 +93,7 @@ shadowJar {
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
+    compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0-SNAPSHOT"
 
     api 'io.github.divios:core_lib:1.0'
 }

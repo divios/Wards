@@ -1,6 +1,5 @@
 package io.github.divios.wards.events;
 
-import io.github.divios.wards.Wards;
 import io.github.divios.wards.observer.IObservable;
 import io.github.divios.wards.observer.IObserver;
 import io.github.divios.wards.observer.ObservablesManager;

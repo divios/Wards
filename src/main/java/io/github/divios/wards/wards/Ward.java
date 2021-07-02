@@ -5,7 +5,6 @@ import de.tr7zw.nbtapi.NBTItem;
 import io.github.divios.core_lib.inventory.InventoryGUI;
 import io.github.divios.core_lib.inventory.ItemButton;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
-import io.github.divios.core_lib.misc.EventListener;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
@@ -13,15 +12,15 @@ import io.github.divios.wards.observer.BlockInteractEvent;
 import io.github.divios.wards.observer.IObservable;
 import io.github.divios.wards.observer.IObserver;
 import io.github.divios.wards.observer.ObservablesManager;
+import io.github.divios.wards.utils.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -46,13 +45,14 @@ public class Ward implements IObserver {
     private final int radius;
     private int timer = 30;
 
-    private Set<UUID> acceptedP = new HashSet<>();
-    private Set<UUID> onSight = new HashSet<>();
+    private final Set<UUID> acceptedP = new HashSet<>();
+    private final Set<Player> onSight = new HashSet<>();
 
     private final InventoryGUI inv;
 
     public Ward(UUID owner, Location location, String id, Integer radius, Integer timer) {
         this.owner = owner;
+        acceptedP.add(owner);
         this.location = location;
         this.id = id;
         this.radius = radius;
@@ -95,9 +95,11 @@ public class Ward implements IObserver {
         return Collections.unmodifiableSet(acceptedP);
     }
 
-    public Set<UUID> getOnSight() {
+    public Set<Player> getOnSight() {
         return Collections.unmodifiableSet(onSight);
     }
+
+    public void openInv(Player p) { inv.open(p); }
 
     private void createInv() {
         inv.addButton(ItemButton.create(new ItemBuilder(XMaterial.BARRIER),
@@ -124,14 +126,26 @@ public class Ward implements IObserver {
     }
 
     public void updateOnSight(List<Player> players) {  //TODO
-        onSight.stream()
-                .filter(uuid -> !players.contains(Bukkit.getPlayer(uuid)))
-                .forEach(uuid -> {
-                    Optional.ofNullable(Bukkit.getPlayer(getOwner()))
-                            .ifPresent(player -> {
-                                player.sendMessage("");
-                            });
+        onSight.stream()       // Players who exited
+                .filter(player -> !players.contains(player))
+                .forEach(player -> {
+                    acceptedP.forEach(uuid -> utils.sendMsg(uuid,
+                            player.getName() + " &7exited your ward"));
                 });
+
+        players.stream()
+                .filter(player -> !onSight.contains(player))
+                .forEach(player -> {
+                    acceptedP.forEach(uuid -> utils.sendMsg(uuid,
+                            player.getName() + " &7entered your ward"));
+                });
+
+        onSight.clear();
+        onSight.addAll(players);
+
+        onSight.forEach(player -> Task.syncDelayed(plugin, () -> {
+            player.addPotionEffect(PotionEffectType.GLOWING.createEffect(50, 3));
+        }));
     }
 
     @Override

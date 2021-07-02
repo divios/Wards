@@ -5,7 +5,6 @@ import io.github.divios.core_lib.misc.EventListener;
 import io.github.divios.wards.Wards;
 import org.bukkit.event.EventPriority;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 
 public class BlockPlaceEvent extends abstractObserver implements IObservable{
 
