@@ -1,16 +1,22 @@
 package io.github.divios.wards.wards;
 
+import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.events.WardInteractEvent;
 import io.github.divios.wards.events.WardPlaceEvent;
+import io.github.divios.wards.file.jsonDatabase;
 import io.github.divios.wards.tasks.WardsCooldownTask;
+import io.github.divios.wards.tasks.WardsUpdateTask;
 import io.github.divios.wards.tasks.WardsWatchTask;
+import io.github.divios.wards.utils.utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 
+import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -27,6 +33,8 @@ public class WardsManager {
     private WardPlaceEvent wardPlaced;
     private WardInteractEvent wardInteract;
 
+    private jsonDatabase database;
+
     public static WardsManager getInstance() {
         if (instance == null) { // Check 1
             synchronized (WardsManager.class) {
@@ -40,11 +48,22 @@ public class WardsManager {
     }
 
     private void init() {
+
         types.addAll(WardsParser.parse());
+
         wardPlaced = new WardPlaceEvent(instance);
         wardInteract = new WardInteractEvent(instance);
+        database = new jsonDatabase(new File(plugin.getDataFolder() + File.separator + "data.json"));
+
         WardsCooldownTask.load();
         WardsWatchTask.load();
+        WardsUpdateTask.load(database);
+
+        Task.syncDelayed(plugin, () ->
+                database.deserialize().forEach(ward -> {
+                    plugin.getLogger().severe(ward.getCenter().toString());
+                    wards.put(ward.getCenter(), ward);
+                }), 5L);
     }
 
     public Ward getWard(Location l) {
@@ -56,7 +75,7 @@ public class WardsManager {
     public WardType getWardType(String type) {
         return types.stream()
                 .filter(type1 -> type1.getId().equals(type))
-                .findFirst().get();
+                .findFirst().orElse(null);
     }
 
     public Map<Location, Ward> getWards() {
@@ -86,5 +105,10 @@ public class WardsManager {
 
     public void clear() {
         wards.clear();
+    }
+
+    public void saveWards() {
+        utils.clearUpFile(database.getFile());
+        database.serialize(wards.values());
     }
 }

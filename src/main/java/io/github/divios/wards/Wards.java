@@ -33,7 +33,7 @@ public final class Wards extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        WardsManager.getInstance().saveWards();         // saves all wards to .json
     }
 
     public static Wards getInstance() { return INSTANCE; }

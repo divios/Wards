@@ -31,13 +31,14 @@ public class WardType {
     private final WardTypeE type;
     private final int radius;
 
-    private WardType(String id,
-                     XMaterial material,
-                     String display_name,
-                     List<String> lore,
-                     int time,
-                     WardTypeE type,
-                     int radius
+    private WardType(
+            String id,
+            XMaterial material,
+            String display_name,
+            List<String> lore,
+            int time,
+            WardTypeE type,
+            int radius
     ) {
         this.id = id;
         this.material = material;
@@ -133,7 +134,8 @@ public class WardType {
         private String type = null;
         private Integer radius = null;
 
-        public Builder() {}
+        public Builder() {
+        }
 
         public Builder(String id) {
             this.id = id;
@@ -164,7 +166,7 @@ public class WardType {
             return this;
         }
 
-        public Builder setType(String  type) {
+        public Builder setType(String type) {
             this.type = type;
             return this;
         }
@@ -207,7 +209,8 @@ public class WardType {
                 throw new WardsTypeException("Radius");
             }
 
-            return new WardType(id,
+            return new WardType(
+                    id,
                     material.get(),
                     display_name,
                     Arrays.asList(lore.split("\\|")),
@@ -226,7 +229,9 @@ public class WardType {
             this.cause = cause;
         }
 
-        public String getWho() { return cause; }
+        public String getWho() {
+            return cause;
+        }
 
     }
 

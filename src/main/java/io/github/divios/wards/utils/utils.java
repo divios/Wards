@@ -31,5 +31,14 @@ public class utils {
         return lines == 0;
     }
 
+    public static void clearUpFile(File file) {
+        if (file.delete()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }

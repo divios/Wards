@@ -214,6 +214,10 @@ public class Ward {
                     .ifPresent(player -> this.location = player.getLocation());
         }
 
+        public Builder(String uuid) {
+            this(UUID.fromString(uuid));
+        }
+
         public Builder(ItemStack item) {
             this(new NBTItem(item));
         }
