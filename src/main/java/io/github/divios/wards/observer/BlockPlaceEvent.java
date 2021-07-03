@@ -23,7 +23,7 @@ public class BlockPlaceEvent extends abstractObserver implements IObservable{
                         new FixedMetadataValue(plugin, "pizza"));
 
                 o.getBlockPlaced().setMetadata(Wards.WARD_BLOCK,
-                        new FixedMetadataValue(plugin, item.getString(Wards.WARD_UUID)));
+                        new FixedMetadataValue(plugin, item.getString(Wards.WARD_OWNER)));
 
                 updateAll(this, o);
         });

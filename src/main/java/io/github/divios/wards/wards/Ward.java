@@ -1,32 +1,20 @@
 package io.github.divios.wards.wards;
 
-import com.cryptomorin.xseries.XMaterial;
 import de.tr7zw.nbtapi.NBTItem;
 import io.github.divios.core_lib.inventory.InventoryGUI;
-import io.github.divios.core_lib.inventory.ItemButton;
-import io.github.divios.core_lib.itemutils.ItemBuilder;
-import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.core_lib.misc.Task;
-import io.github.divios.core_lib.region.Region;
 import io.github.divios.core_lib.region.SpheroidRegion;
 import io.github.divios.wards.Wards;
-import io.github.divios.wards.observer.BlockInteractEvent;
-import io.github.divios.wards.observer.IObservable;
-import io.github.divios.wards.observer.IObserver;
 import io.github.divios.wards.observer.ObservablesManager;
-import io.github.divios.wards.tasks.WardsShowTask;
 import io.github.divios.wards.utils.ParticleUtils;
-import io.github.divios.wards.utils.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -200,7 +188,7 @@ public class Ward{
         }
 
         public Builder(NBTItem item) {
-            this.uuid = UUID.fromString(item.getString(Wards.WARD_UUID));
+            this.uuid = UUID.fromString(item.getString(Wards.WARD_OWNER));
             this.id = item.getString(Wards.WARD_ID);
             this.timer = item.getInteger(Wards.WARD_TIMER);
 

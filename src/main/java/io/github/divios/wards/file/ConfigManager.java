@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.stream.Stream;
 
 import static io.github.divios.core_lib.config.configUtils.copyContents;
+import static io.github.divios.core_lib.config.configUtils.createFile;
 
 public class ConfigManager {
 
@@ -31,8 +32,9 @@ public class ConfigManager {
                 File wardFile = new File(plugin.getDataFolder() +
                         File.separator + "wards" + File.separator + s + ".yml");
 
-                if (wardFile.exists()) return;
-                createFile(wardFile);
+                if (!wardFile.exists()) {
+                    createFile(wardFile);
+                }
 
                 try {
                     copyContents(input, wardFile);
@@ -43,14 +45,5 @@ public class ConfigManager {
         }
 
     }
-
-    private static void createFile(File f) {
-        try {
-            f.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
 }

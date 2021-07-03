@@ -22,6 +22,7 @@ public class WardsManager {
     private static WardsManager instance = null;
 
     private final Map<Location, Ward> wards = Collections.synchronizedMap(new HashMap<>());
+    private final Set<WardType> types = new HashSet<>();
 
     private WardPlacedEvent wardPlaced;
     private WardInteractEvent wardInteract;
@@ -39,6 +40,7 @@ public class WardsManager {
     }
 
     private void init() {
+        types.addAll(WardsParser.parse());
         wardPlaced = new WardPlacedEvent(instance);
         wardInteract = new WardInteractEvent(instance);
         WardsCooldownTask.load();
@@ -48,6 +50,8 @@ public class WardsManager {
     public Ward getWard(Location l) {
         return wards.get(l);
     }
+
+    public Set<WardType> getWardsTypes() { return Collections.unmodifiableSet(types); }
 
     public Map<Location, Ward> getWards() {
         return Collections.unmodifiableMap(wards);
