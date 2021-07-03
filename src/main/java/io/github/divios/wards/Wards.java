@@ -14,8 +14,9 @@ public final class Wards extends JavaPlugin {
     public static final String WARD_META = "Ward_meta";
     public static final String WARD_BLOCK = "Ward_Block";
     public static final String WARD_OWNER = "Ward_uuid";
+    public static final String WARD_ACCEPTED = "Ward_accepted";
     public static final String WARD_ID = "Ward_id";
-    public static final String WARD_TIMER= "Ward_timer";
+    public static final String WARD_TIMER = "Ward_timer";
 
     @Override
     public void onEnable() {

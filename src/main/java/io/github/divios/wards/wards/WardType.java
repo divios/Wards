@@ -83,12 +83,18 @@ public class WardType {
         NBTItem item = new NBTItem(new ItemBuilder(material)
                 .setName(display_name).setLore(lore));
 
+        String uuid = p == null ? null : p.getUniqueId().toString();
+
         item.setString(Wards.WARD_META, "pizza");
         item.setString(Wards.WARD_ID, id);
-        item.setString(Wards.WARD_OWNER, p.getUniqueId().toString());
+        item.setString(Wards.WARD_OWNER, uuid);
         item.setInteger(Wards.WARD_TIMER, time);
 
         return item.getItem();
+    }
+
+    public ItemStack buildItem() {
+        return buildItem(null);
     }
 
     public RegionI getRegion(Location l) {

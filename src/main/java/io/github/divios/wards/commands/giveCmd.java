@@ -3,6 +3,7 @@ package io.github.divios.wards.commands;
 import io.github.divios.core_lib.commands.abstractCommand;
 import io.github.divios.core_lib.commands.cmdTypes;
 import io.github.divios.core_lib.inventory.inventoryUtils;
+import io.github.divios.core_lib.itemutils.ItemUtils;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.wards.wards.WardType;
 import io.github.divios.wards.wards.WardsManager;
@@ -88,9 +89,7 @@ public class giveCmd extends abstractCommand {
         WardsManager.getInstance().getWardsTypes().stream()
                 .filter(wardType -> wardType.getId().equals(args.get(0)))
                 .findFirst()
-                .ifPresent(wardType -> {
-                    p.getInventory().addItem(wardType.buildItem(p));
-                });
+                .ifPresent(wardType -> ItemUtils.give(p, wardType.buildItem(p)));
 
 
     }

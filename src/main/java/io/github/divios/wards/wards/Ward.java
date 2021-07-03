@@ -2,6 +2,7 @@ package io.github.divios.wards.wards;
 
 import de.tr7zw.nbtapi.NBTItem;
 import io.github.divios.core_lib.inventory.InventoryGUI;
+import io.github.divios.core_lib.itemutils.ItemBuilder;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.core_lib.region.SpheroidRegion;
@@ -46,13 +47,15 @@ public class Ward {
 
     private final InventoryGUI inv;
 
-    private Ward(UUID owner, WardType type, Integer timer, RegionI region) {
+    private Ward(UUID owner, WardType type, Integer timer, RegionI region, Set<UUID> acceptedP) {
 
         this.owner = owner;
         this.acceptedP.add(owner);
         this.type = type;
         this.region = region;
         this.timer = timer;
+
+        this.acceptedP.addAll(acceptedP);
 
         this.hash = Objects.hash(region.getCenter(), type);
 
@@ -112,6 +115,16 @@ public class Ward {
         inv.open(p);
     }
 
+    public ItemStack buildItem() {
+        NBTItem item = new NBTItem(type.buildItem());
+
+        item.setInteger(Wards.WARD_TIMER, timer);
+        item.setString(Wards.WARD_OWNER, owner.toString());
+        item.setObject(Wards.WARD_ACCEPTED, acceptedP);
+
+        return item.getItem();
+    }
+
     public void destroy() {
 
         new ArrayList<>(inv.getInventory().getViewers())
@@ -157,6 +170,7 @@ public class Ward {
         onSight.addAll(players);
 
         onSight.forEach(player ->       // All players on the area
+
             //player.addPotionEffect(PotionEffectType.GLOWING.createEffect(50, 3));   // effect Deprecated
             acceptedP.forEach(uuid -> {     // add glow
                 Player permitted = Bukkit.getPlayer(uuid);
@@ -187,13 +201,17 @@ public class Ward {
         private Location location = null;
         private WardType type = null;
         private Integer timer = null;
-
-        public Builder(UUID uuid) {
-            this.uuid = uuid;
-        }
+        private Set<UUID> accepted = null;
 
         public Builder(Player p) {
             this.uuid = p.getUniqueId();
+            this.location = p.getLocation();
+        }
+
+        public Builder(UUID uuid) {
+            this.uuid = uuid;
+            Optional.ofNullable(Bukkit.getPlayer(uuid))
+                    .ifPresent(player -> this.location = player.getLocation());
         }
 
         public Builder(ItemStack item) {
@@ -206,6 +224,7 @@ public class Ward {
             this.timer = item.hasKey(Wards.WARD_TIMER) ?
                     item.getInteger(Wards.WARD_TIMER) :
                     type.getTime();
+            this.accepted = item.getObject(Wards.WARD_ACCEPTED, Set.class);
         }
 
         public Builder setLocation(Location l) {
@@ -233,6 +252,11 @@ public class Ward {
             return this;
         }
 
+        public Builder setAccepted(Set<UUID> accepted) {
+            this.accepted = accepted;
+            return this;
+        }
+
         public Ward build() {
             Objects.requireNonNull(uuid, "Uuid can't be null");
             Objects.requireNonNull(type, "Type can't not be null");
@@ -241,7 +265,14 @@ public class Ward {
             if (timer == null)
                 timer = type.getTime();
 
-            return new Ward(this.uuid, this.type, this.timer, type.getRegion(location));
+            if (accepted == null) accepted = Collections.emptySet();
+
+            return new Ward(
+                    this.uuid,
+                    this.type,
+                    this.timer,
+                    type.getRegion(location),
+                    accepted);
         }
     }
 }

@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import io.github.divios.core_lib.inventory.InventoryGUI;
 import io.github.divios.core_lib.inventory.ItemButton;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
+import io.github.divios.core_lib.itemutils.ItemUtils;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.tasks.WardsShowTask;
@@ -26,12 +27,12 @@ public class WardInventory {
                 })
                 , 11);
 
-        builded.addButton(ItemButton.create(new ItemBuilder(XMaterial.BARRIER),
+        builded.addButton(ItemButton.create(new ItemBuilder(XMaterial.BARRIER).setName("&cRecoger ward"),
                 e -> {
                     Optional.ofNullable(Bukkit.getPlayer(ward.getOwner()))
                             .ifPresent(o -> o.sendMessage(FormatUtils.color("&7Removiste tu ward")));
                     WardsManager.getInstance().deleteWard(ward);
-                    // TODO: Give item back to player
+                    ItemUtils.give((Player) e.getWhoClicked(), ward.buildItem(), 1);
                     e.getWhoClicked().closeInventory();
                 }), 13);
 
