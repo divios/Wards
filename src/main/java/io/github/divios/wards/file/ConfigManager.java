@@ -21,9 +21,12 @@ public class ConfigManager {
 
         plugin.saveDefaultConfig();
         File localeDirectory = new File(plugin.getDataFolder() + File.separator + "locales");
+        File databaseFile = new File(plugin.getDataFolder() + File.separator + "data.yml");
         File wardsDirectory = new File(plugin.getDataFolder() + File.separator + "wards");
 
         if (!localeDirectory.exists()) localeDirectory.mkdir();  // TODO create languages
+
+        if (!databaseFile.exists()) createFile(databaseFile);
 
         if (!wardsDirectory.exists()) {
             wardsDirectory.mkdir();
