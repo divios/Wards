@@ -2,58 +2,60 @@ package io.github.divios.wards.regions;
 
 import io.github.divios.core_lib.region.CuboidRegion;
 import io.github.divios.wards.utils.ChunkUtils;
+import io.github.divios.wards.wards.Ward;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
+import org.bukkit.block.BlockFace;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ChunkRegion implements RegionI {
 
-    private final Set<Chunk> chunks = new HashSet<>();
-    private final Location location;
+    private final CuboidRegion region;
+    private final Location center;
     private final int radius;
 
     public ChunkRegion(Location l, int radius) {
 
         this.radius = radius;
-        this.location = l;
+        this.center = l;
+
         World world = l.getWorld();
         int[] center = {l.getChunk().getX(), l.getChunk().getZ()};
-
         int itits = 1 + 2 * (radius - 1);
+        int x = -(radius - 1);
+        int z = -(radius - 1);
 
-        for (int i = 0; i < itits; i++) {
-            for (int j = 0; j < itits; j++) {
+        Chunk topLeftChunk = world.getChunkAt(center[0] + x, center[1] + z);
+        Chunk bottomRightChunk = world.getChunkAt(center[0] + (x + itits - 1), center[1] + (z + itits - 1));
 
-                int x = -(radius - 1) + i;
-                int z = -(radius - 1) + j;
-                Chunk toAdd = world.getChunkAt(center[0] + x, center[1] + z);
-                chunks.add(toAdd);
-            }
-        }
+        Location topLeft = topLeftChunk.getBlock(0, 0, 0).getLocation();
+        Location bottomRight = bottomRightChunk.getBlock(15, 0, 15).getLocation();
+
+        Bukkit.broadcastMessage(topLeft.toString());
+        Bukkit.broadcastMessage(bottomRight.toString());
+
+        region = new CuboidRegion(topLeft, bottomRight).expand(0, 0, 255, 0, 0, 0);
+
     }
 
     @Override
     public boolean isInside(Location l) {
-        return chunks.contains(l.getChunk());
-    }
-
-    @Override
-    public boolean isInside(Player p) {
-        return isInside(p.getLocation());
+        return region.contains(l);
     }
 
     @Override
     public Set<Block> getBlocks() {
         Set<Block> blocks = new HashSet<>();
 
-        chunks.forEach(chunk -> {
+        region.getChunks().forEach(chunk -> {
             blocks.addAll(ChunkUtils.getBlocks(chunk));
         });
 
@@ -64,25 +66,32 @@ public class ChunkRegion implements RegionI {
     public Set<Block> getSurface() {
         Set<Block> surface = new HashSet<>();
 
-        chunks.forEach(chunk -> {
-            for (int x = 0; x < 16; x++) {
-                for (int z = 0; z < 16; z++) {
+        Stream.of(BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.DOWN)
+                .forEach(blockFace -> {
+                    CuboidRegion face = region.getFace(blockFace);
 
-                    double distance = location.distance(chunk.getBlock(x, location.getBlockY(), z).getLocation());
-                    if (distance < 15) continue;
+                    face.getChunks().forEach(chunk -> {
+                        surface.addAll(ChunkUtils.getBlocks(chunk,
+                                block -> face.contains(block.getLocation())));
+                    });
 
-                    for (int y = 0; y < 256; y++) {
-                        surface.add(chunk.getBlock(x, y ,z));
-                    }
-                }
-            }
-        });
+                });
 
         return surface;
     }
 
     @Override
     public Set<Chunk> getChunks() {
-        return Collections.unmodifiableSet(chunks);
+        return region.getChunks();
+    }
+
+    @Override
+    public Set<Chunk> getLoadedChunks() {
+        return region.getLoadedChunks();
+    }
+
+    @Override
+    public Location getCenter() {
+        return center;
     }
 }

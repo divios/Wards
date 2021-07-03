@@ -10,23 +10,21 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class CuboidRegion implements RegionI {
 
     private final io.github.divios.core_lib.region.CuboidRegion region;
+    private final Location center;
 
     public CuboidRegion(Location l, int radius) {
         region = io.github.divios.core_lib.region.CuboidRegion.cubeRadius(l, radius);
+        this.center = l;
     }
 
     @Override
     public boolean isInside(Location l) {
         return region.contains(l);
-    }
-
-    @Override
-    public boolean isInside(Player p) {
-        return isInside(p.getLocation());
     }
 
     @Override
@@ -45,7 +43,8 @@ public class CuboidRegion implements RegionI {
     public Set<Block> getSurface() {
         Set<Block> surface = new HashSet<>();
 
-        Arrays.stream(BlockFace.values()).forEach(blockFace -> {
+        Stream.of(BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.DOWN)
+                .forEach(blockFace -> {
             io.github.divios.core_lib.region.CuboidRegion face = region.getFace(blockFace);
 
             face.getChunks().forEach(chunk -> {
@@ -60,5 +59,15 @@ public class CuboidRegion implements RegionI {
     @Override
     public Set<Chunk> getChunks() {
         return region.getChunks();
+    }
+
+    @Override
+    public Set<Chunk> getLoadedChunks() {
+        return region.getLoadedChunks();
+    }
+
+    @Override
+    public Location getCenter() {
+        return center;
     }
 }

@@ -1,10 +1,10 @@
 package io.github.divios.wards.wards;
 
-import io.github.divios.wards.tasks.WardsWatchTask;
-import io.github.divios.wards.tasks.WardsCooldownTask;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.events.WardInteractEvent;
-import io.github.divios.wards.events.WardPlacedEvent;
+import io.github.divios.wards.events.WardPlaceEvent;
+import io.github.divios.wards.tasks.WardsCooldownTask;
+import io.github.divios.wards.tasks.WardsWatchTask;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -24,7 +24,7 @@ public class WardsManager {
     private final Map<Location, Ward> wards = Collections.synchronizedMap(new HashMap<>());
     private final Set<WardType> types = new HashSet<>();
 
-    private WardPlacedEvent wardPlaced;
+    private WardPlaceEvent wardPlaced;
     private WardInteractEvent wardInteract;
 
     public static WardsManager getInstance() {
@@ -41,7 +41,7 @@ public class WardsManager {
 
     private void init() {
         types.addAll(WardsParser.parse());
-        wardPlaced = new WardPlacedEvent(instance);
+        wardPlaced = new WardPlaceEvent(instance);
         wardInteract = new WardInteractEvent(instance);
         WardsCooldownTask.load();
         WardsWatchTask.load();

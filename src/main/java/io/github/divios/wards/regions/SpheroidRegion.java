@@ -21,11 +21,6 @@ public class SpheroidRegion implements RegionI {
     }
 
     @Override
-    public boolean isInside(Player p) {
-        return isInside(p.getLocation());
-    }
-
-    @Override
     public Set<Block> getBlocks() {
         return null;
     }
@@ -38,5 +33,15 @@ public class SpheroidRegion implements RegionI {
     @Override
     public Set<Chunk> getChunks() {
         return region.getChunks();
+    }
+
+    @Override
+    public Set<Chunk> getLoadedChunks() {
+        return region.getLoadedChunks();
+    }
+
+    @Override
+    public Location getCenter() {
+        return region.getCenter();
     }
 }

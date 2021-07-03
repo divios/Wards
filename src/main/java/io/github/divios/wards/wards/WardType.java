@@ -6,7 +6,10 @@ import io.github.divios.core_lib.itemutils.ItemBuilder;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.regions.ChunkRegion;
+import io.github.divios.wards.regions.CuboidRegion;
 import io.github.divios.wards.regions.RegionI;
+import io.github.divios.wards.regions.SpheroidRegion;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -83,8 +86,22 @@ public class WardType {
         item.setString(Wards.WARD_META, "pizza");
         item.setString(Wards.WARD_ID, id);
         item.setString(Wards.WARD_OWNER, p.getUniqueId().toString());
+        item.setInteger(Wards.WARD_TIMER, time);
 
         return item.getItem();
+    }
+
+    public RegionI getRegion(Location l) {
+        RegionI region;
+
+        if (type == WardTypeE.CHUNK)
+            region = new ChunkRegion(l, radius);
+        else if (type == WardTypeE.CUBOID)
+            region = new CuboidRegion(l, radius);
+        else
+            region = new SpheroidRegion(l, radius);
+
+        return region;
     }
 
     @Override

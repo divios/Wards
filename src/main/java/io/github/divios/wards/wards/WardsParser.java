@@ -7,7 +7,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class WardsParser {
 
@@ -38,7 +40,14 @@ public class WardsParser {
             WardType type;
             try {
 
-                type = new WardType.Builder(yaml.getString("id"))
+                String id = yaml.getString("id");
+                if (types.stream().anyMatch(wardType -> wardType.getId().equals(id))) {
+                    plugin.getLogger().info("You can't register two wards with the same id "
+                            + id + ". Skipping");
+                    return;
+                }
+
+                type = new WardType.Builder(id)
                         .setMaterial(yaml.getString("material"))
                         .setDisplay_name(yaml.getString("display_name"))
                         .setLore(yaml.getString("lore"))

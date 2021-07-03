@@ -1,12 +1,9 @@
 package io.github.divios.wards.commands;
 
-import com.cryptomorin.xseries.XMaterial;
-import de.tr7zw.nbtapi.NBTItem;
 import io.github.divios.core_lib.commands.abstractCommand;
 import io.github.divios.core_lib.commands.cmdTypes;
 import io.github.divios.core_lib.inventory.inventoryUtils;
 import io.github.divios.core_lib.misc.Msg;
-import io.github.divios.wards.Wards;
 import io.github.divios.wards.wards.WardType;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Bukkit;

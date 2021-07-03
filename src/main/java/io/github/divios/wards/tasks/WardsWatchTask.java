@@ -2,11 +2,9 @@ package io.github.divios.wards.tasks;
 
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
-import io.github.divios.wards.wards.Ward;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 import java.util.stream.Collectors;
 
@@ -27,17 +25,14 @@ public class WardsWatchTask {
 
                 WManager.getWards().forEach((key, ward) -> {
 
-                    Location l = ward.getCenter();
-                    double radius = ward.getRadius();
-
-                    if (ward.getRegion().getLoadedChunks().isEmpty()) return;
+                    if (ward.getRegion().getChunks().isEmpty()) return;
 
                     ward.updateOnSight(Bukkit.getOnlinePlayers().stream()
-                            .filter(p -> p.getLocation().distance(l) <= radius)
+                            .filter(p -> ward.isInside(p.getLocation()))
                             .filter(player -> !player.getUniqueId().equals(ward.getOwner()))
                             .collect(Collectors.toList()));
 
-                }), 30, 30);
+                }), 20, 20);
     }
 
     public static void unload() {

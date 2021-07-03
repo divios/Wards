@@ -6,9 +6,11 @@ import io.github.divios.wards.Wards;
 import io.github.divios.wards.wards.Ward;
 import org.bukkit.Color;
 import org.bukkit.Particle;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 
 public class WardsShowTask {
@@ -25,22 +27,24 @@ public class WardsShowTask {
 
         int[] ticks = {0};
 
+        Set<Block> surface = ward.getRegion().getSurface();
+
         executing.put(p.getUniqueId(), Task.syncRepeating(plugin, task -> {
 
-           if (ticks[0] == 12) {
+           if (ticks[0] == 60) {
                task.cancel();
                executing.remove(p.getUniqueId());
                return;
            }
 
-            ward.getRegion().getSurface().forEach(block -> {
+            surface.forEach(block -> {
                 p.spawnParticle(Particle.REDSTONE,
                         block.getLocation().add(0, 1, 0), 1,
                         new Particle.DustOptions(Color.NAVY, 1));
             });
             ticks[0]++;
 
-        }, 0, 20));
+        }, 0, 5));
 
     }
 

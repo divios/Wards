@@ -1,13 +1,11 @@
 package io.github.divios.wards.utils;
 
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 public class ChunkUtils {
 

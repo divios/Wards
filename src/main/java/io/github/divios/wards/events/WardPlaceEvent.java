@@ -21,12 +21,12 @@ import java.util.stream.IntStream;
  * WARD_META and WARD_UUID with the owner uuid
  */
 
-public class WardPlacedEvent implements IObserver {
+public class WardPlaceEvent implements IObserver {
 
     private final WardsManager manager;
     private final ObservablesManager OManager;
 
-    public WardPlacedEvent(WardsManager manager){
+    public WardPlaceEvent(WardsManager manager){
         this.manager = manager;
         this.OManager = ObservablesManager.getInstance();
 
@@ -49,7 +49,6 @@ public class WardPlacedEvent implements IObserver {
 
             manager.createWard(new Ward.Builder(o.getItemInHand())
                     .setLocation(l)
-                    .setTimer(30)
                     .build());
 
 

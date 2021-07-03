@@ -18,6 +18,9 @@ public class WardInventory {
 
         InventoryGUI builded = new InventoryGUI(Wards.getInstance(), 27, "&1&lWard Manager");
 
+        builded.addButton(ItemButton.create(new ItemBuilder(XMaterial.EGG)
+            .setName("&6Type: " + ward.getType().getType()), e -> {}), 4);
+
         builded.addButton(ItemButton.create(new ItemBuilder(XMaterial.CLOCK)
                         .setName("&a" + FormatUtils.formatTimeOffset(ward.getTimer() * 1000L)), e -> {
                 })

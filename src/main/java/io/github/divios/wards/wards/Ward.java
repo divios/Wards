@@ -6,11 +6,13 @@ import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.core_lib.region.SpheroidRegion;
 import io.github.divios.wards.Wards;
-import io.github.divios.wards.observer.ObservablesManager;
+import io.github.divios.wards.regions.ChunkRegion;
+import io.github.divios.wards.regions.RegionI;
 import io.github.divios.wards.utils.ParticleUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.block.data.type.Bed;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -27,14 +29,14 @@ import java.util.*;
  * the respective GUI
  */
 
-public class Ward{
+public class Ward {
 
     private static final Wards plugin = Wards.getInstance();
     private static final WardsManager WManager = WardsManager.getInstance();
 
     private final UUID owner;
     private final WardType type;
-    private final SpheroidRegion region;
+    private final RegionI region;
     private int timer;
 
     private final int hash;             // Hash of the object cached
@@ -44,13 +46,13 @@ public class Ward{
 
     private final InventoryGUI inv;
 
-    public Ward(UUID owner, Location location, WardType type, Integer timer) {
+    private Ward(UUID owner, WardType type, Integer timer, RegionI region) {
 
         this.owner = owner;
         this.acceptedP.add(owner);
         this.type = type;
-        this.region = new SpheroidRegion(location, type.getRadius());
-        this.timer = 240;
+        this.region = region;
+        this.timer = timer;
 
         this.hash = Objects.hash(region.getCenter(), type);
 
@@ -70,15 +72,21 @@ public class Ward{
         return type;
     }
 
-    public SpheroidRegion getRegion() {
+    public RegionI getRegion() {
         return this.region;
     }
 
-    public double getRadius() {
-        return region.getXRadius();
+    public boolean isInside(Location l) {
+        return region.isInside(l);
     }
 
-    public Set<Chunk> getChunks() { return region.getChunks(); }
+    public boolean isInside(Player p) {
+        return region.isInside(p.getLocation());
+    }
+
+    public Set<Chunk> getChunks() {
+        return region.getChunks();
+    }
 
     public int getTimer() {
         return timer;
@@ -108,6 +116,16 @@ public class Ward{
 
         new ArrayList<>(inv.getInventory().getViewers())
                 .forEach(HumanEntity::closeInventory);
+
+        onSight.forEach(player ->       // All players on the area
+
+                acceptedP.forEach(uuid -> {     // add glow
+                    Player permitted = Bukkit.getPlayer(uuid);
+                    if (permitted == null) return;
+                    ParticleUtils.removeGlow(permitted, player);       // Packets
+
+                }));
+
         inv.destroy();
 
     }
@@ -138,16 +156,12 @@ public class Ward{
         onSight.clear();
         onSight.addAll(players);
 
-        onSight.forEach(player -> Task.syncDelayed(plugin, () -> {      // All players on the area
-
+        onSight.forEach(player ->       // All players on the area
             //player.addPotionEffect(PotionEffectType.GLOWING.createEffect(50, 3));   // effect Deprecated
-
             acceptedP.forEach(uuid -> {     // add glow
                 Player permitted = Bukkit.getPlayer(uuid);
                 if (permitted == null) return;
                 ParticleUtils.addGlow(permitted, player);       // Packets
-
-            });
 
         }));
 
@@ -172,7 +186,6 @@ public class Ward{
         private UUID uuid = null;
         private Location location = null;
         private WardType type = null;
-        private Integer radius = 30;
         private Integer timer = null;
 
         public Builder(UUID uuid) {
@@ -190,7 +203,9 @@ public class Ward{
         public Builder(NBTItem item) {
             this.uuid = UUID.fromString(item.getString(Wards.WARD_OWNER));
             this.type = WManager.getWardType(item.getString(Wards.WARD_ID));
-            this.timer = item.getInteger(Wards.WARD_TIMER);
+            this.timer = item.hasKey(Wards.WARD_TIMER) ?
+                    item.getInteger(Wards.WARD_TIMER) :
+                    type.getTime();
         }
 
         public Builder setLocation(Location l) {
@@ -213,11 +228,6 @@ public class Ward{
             return this;
         }
 
-        public Builder setRadius(int radius) {
-            this.radius = radius;
-            return this;
-        }
-
         public Builder setTimer(Integer timer) {
             this.timer = timer;
             return this;
@@ -231,7 +241,7 @@ public class Ward{
             if (timer == null)
                 timer = type.getTime();
 
-            return new Ward(this.uuid, this.location, this.type, this.timer);
+            return new Ward(this.uuid, this.type, this.timer, type.getRegion(location));
         }
     }
 }

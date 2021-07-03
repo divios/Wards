@@ -10,9 +10,10 @@ import java.util.Set;
 public interface RegionI {
 
     boolean isInside(Location l);
-    boolean isInside(Player p);
     Set<Block> getBlocks();
     Set<Block> getSurface();
     Set<Chunk> getChunks();
+    Set<Chunk> getLoadedChunks();
+    Location getCenter();
 
 }
