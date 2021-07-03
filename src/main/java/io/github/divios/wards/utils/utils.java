@@ -1,6 +1,13 @@
 package io.github.divios.wards.utils;
 
+import io.github.divios.wards.Wards;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
+
 import java.io.*;
+import java.util.UUID;
 
 public class utils {
 
@@ -39,6 +46,18 @@ public class utils {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void setWardMetadata(Block block, UUID uuid) {
+        block.setMetadata(Wards.WARD_META,
+                new FixedMetadataValue(Wards.getInstance(), "pizza"));
+
+        block.setMetadata(Wards.WARD_BLOCK,
+                new FixedMetadataValue(Wards.getInstance(), uuid.toString()));
+    }
+
+    public static void setWardsMetadata(Location loc, UUID uuid) {
+        setWardMetadata(loc.getBlock(), uuid);
     }
 
 }

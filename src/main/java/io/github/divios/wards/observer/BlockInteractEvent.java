@@ -15,7 +15,7 @@ public class BlockInteractEvent extends abstractObserver implements IObservable{
         return new EventListener<>(plugin, PlayerInteractEvent.class, EventPriority.HIGHEST,
                 o -> {
                     if (o.getClickedBlock() == null) return;
-                    if (!o.getClickedBlock().hasMetadata(WARD_BLOCK)) return;  //TODO: check if id exist
+                    if (!o.getClickedBlock().hasMetadata(WARD_BLOCK)) return;
 
                     updateAll(this, o);
                 });

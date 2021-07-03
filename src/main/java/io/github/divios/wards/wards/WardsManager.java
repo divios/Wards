@@ -13,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.io.File;
 import java.util.*;
@@ -61,8 +62,10 @@ public class WardsManager {
 
         Task.syncDelayed(plugin, () ->
                 database.deserialize().forEach(ward -> {
-                    plugin.getLogger().severe(ward.getCenter().toString());
+
                     wards.put(ward.getCenter(), ward);
+                    utils.setWardsMetadata(ward.getCenter(), ward.getOwner());
+
                 }), 5L);
     }
 
