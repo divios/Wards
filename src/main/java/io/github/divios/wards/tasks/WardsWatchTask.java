@@ -19,6 +19,7 @@ public class WardsWatchTask {
     private static Task task;
 
     public static void load() {
+
         if (loaded) return;
 
         loaded = true;
@@ -37,6 +38,14 @@ public class WardsWatchTask {
                             .collect(Collectors.toList()));
 
                 }), 30, 30);
+    }
+
+    public static void unload() {
+
+        if (!loaded) return;
+
+        loaded = false;
+        task.cancel();
     }
 
 }
