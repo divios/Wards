@@ -53,6 +53,12 @@ public class WardsManager {
 
     public Set<WardType> getWardsTypes() { return Collections.unmodifiableSet(types); }
 
+    public WardType getWardType(String type) {
+        return types.stream()
+                .filter(type1 -> type1.getId().equals(type))
+                .findFirst().get();
+    }
+
     public Map<Location, Ward> getWards() {
         return Collections.unmodifiableMap(wards);
     }

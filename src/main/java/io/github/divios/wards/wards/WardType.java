@@ -5,6 +5,8 @@ import de.tr7zw.nbtapi.NBTItem;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.wards.Wards;
+import io.github.divios.wards.regions.ChunkRegion;
+import io.github.divios.wards.regions.RegionI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -26,7 +28,14 @@ public class WardType {
     private final WardTypeE type;
     private final int radius;
 
-    private WardType(String id, XMaterial material, String display_name, List<String> lore, int time, WardTypeE type, int radius) {
+    private WardType(String id,
+                     XMaterial material,
+                     String display_name,
+                     List<String> lore,
+                     int time,
+                     WardTypeE type,
+                     int radius
+    ) {
         this.id = id;
         this.material = material;
         this.display_name = display_name;
@@ -175,8 +184,13 @@ public class WardType {
                 throw new WardsTypeException("Radius");
             }
 
-            return new WardType(id, material.get(), display_name,
-                    Arrays.asList(lore.split("\\|")), time, WardTypeE.valueOf(type.toUpperCase()), radius);
+            return new WardType(id,
+                    material.get(),
+                    display_name,
+                    Arrays.asList(lore.split("\\|")),
+                    time,
+                    WardTypeE.valueOf(type.toUpperCase()),
+                    radius);
 
         }
     }

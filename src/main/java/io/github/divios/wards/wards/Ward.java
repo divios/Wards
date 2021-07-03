@@ -30,10 +30,10 @@ import java.util.*;
 public class Ward{
 
     private static final Wards plugin = Wards.getInstance();
-    private static final ObservablesManager OManager = ObservablesManager.getInstance();
+    private static final WardsManager WManager = WardsManager.getInstance();
 
     private final UUID owner;
-    private final String id;  //TODO: implement interface
+    private final WardType type;
     private final SpheroidRegion region;
     private int timer;
 
@@ -44,15 +44,15 @@ public class Ward{
 
     private final InventoryGUI inv;
 
-    public Ward(UUID owner, Location location, String id, Integer radius, Integer timer) {
+    public Ward(UUID owner, Location location, WardType type, Integer timer) {
 
         this.owner = owner;
         this.acceptedP.add(owner);
-        this.id = id;
-        this.region = new SpheroidRegion(location, radius);
+        this.type = type;
+        this.region = new SpheroidRegion(location, type.getRadius());
         this.timer = 240;
 
-        this.hash = Objects.hash(owner, region.getCenter(), id);
+        this.hash = Objects.hash(region.getCenter(), type);
 
         this.inv = WardInventory.build(this);
 
@@ -66,8 +66,8 @@ public class Ward{
         return region.getCenter();
     }
 
-    public String getId() {
-        return id;
+    public WardType getType() {
+        return type;
     }
 
     public SpheroidRegion getRegion() {
@@ -164,14 +164,14 @@ public class Ward{
         if (o == null || getClass() != o.getClass()) return false;
         Ward ward = (Ward) o;
         return owner.equals(ward.getOwner()) &&
-                region.getCenter().equals(ward.getCenter()) && id.equals(ward.getId());
+                region.getCenter().equals(ward.getCenter()) && type.equals(ward.getType());
     }
 
     public static class Builder {
 
         private UUID uuid = null;
         private Location location = null;
-        private String id;  //TODO: implement interface
+        private WardType type = null;
         private Integer radius = 30;
         private Integer timer = null;
 
@@ -189,9 +189,8 @@ public class Ward{
 
         public Builder(NBTItem item) {
             this.uuid = UUID.fromString(item.getString(Wards.WARD_OWNER));
-            this.id = item.getString(Wards.WARD_ID);
+            this.type = WManager.getWardType(item.getString(Wards.WARD_ID));
             this.timer = item.getInteger(Wards.WARD_TIMER);
-
         }
 
         public Builder setLocation(Location l) {
@@ -205,7 +204,12 @@ public class Ward{
         }
 
         public Builder setId(String id) {
-            this.id = id;
+            this.type = WManager.getWardType(id);
+            return this;
+        }
+
+        public Builder setId(WardType type) {
+            this.type = type;
             return this;
         }
 
@@ -221,9 +225,13 @@ public class Ward{
 
         public Ward build() {
             Objects.requireNonNull(uuid, "Uuid can't be null");
-            Objects.requireNonNull(id, "Id can't not be null");
+            Objects.requireNonNull(type, "Type can't not be null");
+            Objects.requireNonNull(location, "Location cannot be null");
 
-            return new Ward(this.uuid, this.location, this.id, this.radius, this.timer);
+            if (timer == null)
+                timer = type.getTime();
+
+            return new Ward(this.uuid, this.location, this.type, this.timer);
         }
     }
 }
