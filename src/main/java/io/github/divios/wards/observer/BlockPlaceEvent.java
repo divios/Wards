@@ -16,14 +16,9 @@ public class BlockPlaceEvent extends abstractObserver implements IObservable{
     protected EventListener initListener() {
         return new EventListener<>(plugin, org.bukkit.event.block.BlockPlaceEvent.class,
                 EventPriority.HIGHEST, o -> {
+
                 NBTItem item = new NBTItem(o.getItemInHand());
                 if (!item.hasKey(Wards.WARD_META)) return;
-
-                o.getBlockPlaced().setMetadata(Wards.WARD_META,
-                        new FixedMetadataValue(plugin, "pizza"));
-
-                o.getBlockPlaced().setMetadata(Wards.WARD_BLOCK,
-                        new FixedMetadataValue(plugin, item.getString(Wards.WARD_OWNER)));
 
                 updateAll(this, o);
         });

@@ -1,15 +1,20 @@
 package io.github.divios.wards.events;
 
+import de.tr7zw.nbtapi.NBTItem;
+import io.github.divios.wards.Wards;
 import io.github.divios.wards.observer.IObservable;
 import io.github.divios.wards.observer.IObserver;
 import io.github.divios.wards.observer.ObservablesManager;
+import io.github.divios.wards.utils.utils;
 import io.github.divios.wards.wards.Ward;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 
+import java.util.UUID;
 import java.util.stream.IntStream;
 
 /**
@@ -40,6 +45,10 @@ public class WardPlaceEvent implements IObserver {
             BlockPlaceEvent o = (BlockPlaceEvent) object;
             Block block = o.getBlockPlaced();
             Location l = block.getLocation();
+
+            String owner = new NBTItem(o.getItemInHand()).getString(Wards.WARD_OWNER);
+
+            utils.setWardMetadata(block, UUID.fromString(owner));
 
             IntStream.range(0, 40).forEach(i -> {
                 Location l2 = l.clone();
