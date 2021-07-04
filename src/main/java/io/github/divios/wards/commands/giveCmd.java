@@ -4,6 +4,7 @@ import io.github.divios.core_lib.commands.abstractCommand;
 import io.github.divios.core_lib.commands.cmdTypes;
 import io.github.divios.core_lib.inventory.inventoryUtils;
 import io.github.divios.core_lib.itemutils.ItemUtils;
+import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.wards.wards.WardType;
 import io.github.divios.wards.wards.WardsManager;
@@ -50,7 +51,8 @@ public class giveCmd extends abstractCommand {
 
     @Override
     public String getHelp() {
-        return "/wards give";
+        return FormatUtils.color("&8- &9/wards give [type] [player] &8 " +
+                "- &7Gives the a ward of the selected type for yourself or the given player");
     }
 
     @Override

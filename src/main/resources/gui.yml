@@ -17,10 +17,10 @@ gui:
   settings:
     material: PAPER
     name: "&6&lSettings"
-    lore: "Click to manage this ward settings"
+    lore: "&7Click to manage this ward settings"
   change_name:
     material: PAPER
-    name: "&a&lChange Name"
+    name: "&e&lChange Name"
     lore: "&7Click to change the name of this ward"
   return:
     material: OAK_DOOR

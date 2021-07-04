@@ -3,8 +3,10 @@ package io.github.divios.wards.commands;
 import com.cryptomorin.xseries.messages.Titles;
 import io.github.divios.core_lib.commands.abstractCommand;
 import io.github.divios.core_lib.commands.cmdTypes;
+import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.wards.Wards;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -29,12 +31,13 @@ public class reloadCmd extends abstractCommand {
 
     @Override
     public String getHelp() {
-        return "/Wards reload";
+        return FormatUtils.color("&8- &9/wards reload &8 " +
+                "- &7Reloads the plugin");
     }
 
     @Override
     public List<String> getPerms() {
-        return Collections.singletonList("Wards.reload");
+        return Collections.singletonList("wards.reload");
     }
 
     @Override
@@ -45,7 +48,8 @@ public class reloadCmd extends abstractCommand {
     @Override
     public void run(CommandSender sender, List<String> args) {
         Wards.reload();
-        Titles.sendTitle((Player) sender, 10, 20, 10,
-                "&1&lWards", "&8Successful reload");
+        if (sender instanceof Player)
+            Titles.sendTitle((Player) sender, 10, 20, 10,
+                FormatUtils.color("&9&lWards"), FormatUtils.color("&8Successful reload"));
     }
 }

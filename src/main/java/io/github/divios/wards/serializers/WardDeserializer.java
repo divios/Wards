@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import io.github.divios.core_lib.misc.LocationUtils;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.wards.Ward;
+import io.github.divios.wards.wards.WardsManager;
 
 import java.io.IOException;
 
@@ -27,6 +28,8 @@ public class WardDeserializer extends StdDeserializer<Ward> {
 
         ObjectCodec codec = p.getCodec();
         JsonNode node = codec.readTree(p);
+
+        if (WardsManager.getInstance().getWardType(node.get("type").asText()) == null) return null;
 
         return new Ward.Builder(node.get("owner").asText())
                 .setLocation(LocationUtils.fromString(Wards.getInstance(), node.get("location").asText()))

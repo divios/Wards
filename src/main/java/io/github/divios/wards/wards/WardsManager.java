@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -65,7 +66,7 @@ public class WardsManager {
             plugin.getLogger().info("Loading database...");
 
             database.deserialize().forEach(ward -> {
-
+                if (ward == null) return;
                 wards.put(ward.getCenter(), ward);
                 utils.setWardsMetadata(ward.getCenter(), ward.getOwner());
             });
@@ -112,9 +113,33 @@ public class WardsManager {
     }
 
     public void saveWards() {
+
         plugin.getLogger().info("Saving database...");
         utils.clearUpFile(database.getFile());
         database.serialize(wards.values());
         plugin.getLogger().info("Database saved correctly");
     }
+
+    public void reload() {
+        WardsCooldownTask.unload();
+        WardsWatchTask.unload();
+        WardsUpdateTask.unload();
+
+        saveWards();
+
+        types.clear();
+        wards.forEach((location, ward) -> ward.destroy());
+        wards.clear();
+
+        init();
+    }
+
+    public void destroy() {
+        WardsCooldownTask.unload();
+        WardsWatchTask.unload();
+        WardsUpdateTask.unload();
+
+        saveWards();
+    }
+
 }

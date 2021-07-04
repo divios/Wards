@@ -19,7 +19,6 @@ import java.util.*;
 public class WardType {
 
     private static final Wards plugin = Wards.getInstance();
-    private static final Set<String> ids = new HashSet<>();
 
     private final int hash;         // Hash cached
 
@@ -178,10 +177,9 @@ public class WardType {
 
         public WardType build() throws WardsTypeException {
 
-            if (id == null || id.isEmpty() || ids.contains(id)) {
+            if (id == null || id.isEmpty()) {
                 throw new WardsTypeException("id");
             }
-            ids.add(id);
 
             if (!material.isPresent()) {
                 throw new WardsTypeException("Material");

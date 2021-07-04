@@ -3,6 +3,7 @@ package io.github.divios.wards.observer;
 import de.tr7zw.nbtapi.NBTItem;
 import io.github.divios.core_lib.misc.EventListener;
 import io.github.divios.wards.Wards;
+import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.event.EventPriority;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -19,6 +20,8 @@ public class BlockPlaceEvent extends abstractObserver implements IObservable{
 
                 NBTItem item = new NBTItem(o.getItemInHand());
                 if (!item.hasKey(Wards.WARD_META)) return;
+
+                if (WardsManager.getInstance().getWardType(item.getString(Wards.WARD_ID)) == null) return;
 
                 updateAll(this, o);
         });

@@ -23,6 +23,7 @@ public class ConfigManager {
         File localeDirectory = new File(plugin.getDataFolder() + File.separator + "locales");
         File databaseFile = new File(plugin.getDataFolder() + File.separator + "data.json");
         File wardsDirectory = new File(plugin.getDataFolder() + File.separator + "wards");
+        File guiDirectory= new File(plugin.getDataFolder() + File.separator + "gui.yml");
 
         if (!localeDirectory.exists()) {
             localeDirectory.mkdir();  // TODO create languages
@@ -45,6 +46,18 @@ public class ConfigManager {
         }
 
         if (!databaseFile.exists()) createFile(databaseFile);
+
+        if (!guiDirectory.exists()) {
+            createFile(guiDirectory);
+
+            InputStream input = plugin.getResource("gui.yml");
+            try {
+                copyContents(input, guiDirectory);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
 
         if (!wardsDirectory.exists()) {
             wardsDirectory.mkdir();

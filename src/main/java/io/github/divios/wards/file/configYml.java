@@ -40,15 +40,9 @@ public class configYml {
             return;
         }
 
-        CHUNK_DISPLAY_SECONDS = yaml.contains("chunk_display_seconds") ?
-                yaml.getInt("chunk_display_seconds"):
-                DEFAULT_CHUNK_DISPLAY_SECONDS;
-        CHUNK_DISPLAY_COOLDOWN = yaml.contains("chunk_display_cooldown") ?
-                yaml.getInt("chunk_display_cooldown"):
-                DEFAULT_CHUNK_DISPLAY_COOLDOWN;
-        WARD_CHECK_SECONDS = yaml.contains("ward_check_cycle_seconds") ?
-                yaml.getInt("ward_check_cycle_seconds"):
-                DEFAULT_WARD_CHECK_SECONDS;
+        CHUNK_DISPLAY_SECONDS = yaml.getInt("chunk_display_seconds", DEFAULT_CHUNK_DISPLAY_SECONDS);
+        CHUNK_DISPLAY_COOLDOWN = yaml.getInt("chunk_display_cooldown", DEFAULT_CHUNK_DISPLAY_COOLDOWN);
+        WARD_CHECK_SECONDS = yaml.getInt("ward_check_cycle_seconds", DEFAULT_WARD_CHECK_SECONDS);
 
     }
 

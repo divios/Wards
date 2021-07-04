@@ -25,7 +25,7 @@ material: RESPAWN_ANCHOR
 #
 # The name of the item of the Ward.
 #
-display_name: '&1&lSentinel'
+display_name: '&9&lSentinel'
 
 #  lore (String)
 #

@@ -18,6 +18,7 @@ public class WardsParser {
     protected static Set<WardType> parse() {
 
         Set<WardType> types = new HashSet<>();
+        Set<String> ids = new HashSet<>();
 
         File wardsDir = new File(plugin.getDataFolder() + File.separator + "wards");
 
@@ -41,7 +42,7 @@ public class WardsParser {
             try {
 
                 String id = yaml.getString("id");
-                if (types.stream().anyMatch(wardType -> wardType.getId().equals(id))) {
+                if (ids.contains(id)) {
                     plugin.getLogger().info("You can't register two wards with the same id "
                             + id + ". Skipping");
                     return;
@@ -55,6 +56,8 @@ public class WardsParser {
                         .setType(yaml.getString("type"))
                         .setRadius(yaml.contains("radius") ? yaml.getInt("radius"):null)
                         .build();
+
+                ids.add(id);
 
             } catch (WardType.WardsTypeException e) {
                 plugin.getLogger().severe("There was a problem parsing the file " + file.getName()
