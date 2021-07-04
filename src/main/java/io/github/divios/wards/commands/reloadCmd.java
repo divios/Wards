@@ -31,8 +31,7 @@ public class reloadCmd extends abstractCommand {
 
     @Override
     public String getHelp() {
-        return FormatUtils.color("&8- &9/wards reload &8 " +
-                "- &7Reloads the plugin");
+        return Wards.langValues.RELOAD_INFO;
     }
 
     @Override

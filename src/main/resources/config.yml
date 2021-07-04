@@ -1,8 +1,8 @@
 
 # Do not change this
-version: 1.0
+version: 0.1
 
-language: US
+locale: US
 
 # Amount of seconds the ward structure is displayed
 #

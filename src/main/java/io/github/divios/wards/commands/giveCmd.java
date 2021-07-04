@@ -6,6 +6,7 @@ import io.github.divios.core_lib.inventory.inventoryUtils;
 import io.github.divios.core_lib.itemutils.ItemUtils;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.Msg;
+import io.github.divios.wards.Wards;
 import io.github.divios.wards.wards.WardType;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Bukkit;
@@ -51,8 +52,7 @@ public class giveCmd extends abstractCommand {
 
     @Override
     public String getHelp() {
-        return FormatUtils.color("&8- &9/wards give [type] [player] &8 " +
-                "- &7Gives the a ward of the selected type for yourself or the given player");
+        return Wards.langValues.GIVE_INFO;
     }
 
     @Override
@@ -83,16 +83,12 @@ public class giveCmd extends abstractCommand {
 
         Player p = args.size() == 2 ? Bukkit.getPlayer(args.get(1)): (Player) sender;
 
-        if (inventoryUtils.getFirstEmpty(p.getInventory()) == -1) {
-            Msg.sendMsg(p, "&7You don't have space in your inventory");
-            return;
-        }
-
         WardsManager.getInstance().getWardsTypes().stream()
                 .filter(wardType -> wardType.getId().equals(args.get(0)))
                 .findFirst()
                 .ifPresent(wardType -> {
-                    Msg.sendMsg(p, "Your received a " + wardType.getId() + " &7ward");
+                    Msg.sendMsg(p, Msg.singletonMsg(Wards.langValues.GIVE_ON_CMD)
+                            .add("\\{ward}", wardType.getId()).build());
                     ItemUtils.give(p, wardType.buildItem(p));
                 });
 

@@ -34,7 +34,8 @@ public class WardsCooldownTask {
                         ward.updateInv();
 
                         if (ward.getTimer() == 0) {
-                            Msg.sendMsg(ward.getOwner(), "&7Tu Ward " + ward.getName() + " &7ha expirado");
+                            Msg.sendMsg(ward.getOwner(), Msg.singletonMsg(Wards.langValues.WARD_EXPIRED)
+                                    .add("\\{ward}", ward.getName()).build());
                             utils.cleanBlock(ward.getCenter());
                             ward.getCenter().getWorld().spawnParticle(Particle.SMOKE_NORMAL,
                                     ward.getCenter().clone().add(0.5, 0.5, 0.5), 40);

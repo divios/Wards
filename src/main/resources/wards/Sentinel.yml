@@ -50,12 +50,12 @@ time: 300
 #
 type: SPHEROID
 
-# radius (Double)
+# radius (Integer)
 #
-# The distance this ward watches.
+# The distance this ward watches. Has to be > 0
 #
-# For the CHUNK type means the radius of chunks for each direction.
+# For the CHUNK type means the radius of chunks for each direction .
 #
-radius: 15.0
+radius: 20
 
 

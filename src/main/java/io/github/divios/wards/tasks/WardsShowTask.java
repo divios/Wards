@@ -25,7 +25,7 @@ public class WardsShowTask {
     public static void generate(Player p, Ward ward) {
 
         if (cache.asMap().containsKey(p.getUniqueId())) {
-            Msg.sendMsg(p, "&7A cooldown is active, wait a few seconds");
+            Msg.sendMsg(p, Wards.langValues.WARD_COOLDOWN);
             return;
         }
 
@@ -54,6 +54,7 @@ public class WardsShowTask {
     }
 
     public static void reload() {
+        cache.invalidateAll();
         cache = CacheBuilder.newBuilder()
                 .expireAfterWrite(Wards.configValues.CHUNK_DISPLAY_COOLDOWN, TimeUnit.SECONDS).build();
     }

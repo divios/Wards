@@ -20,29 +20,20 @@ public class ConfigManager {
     public static void load() {
 
         plugin.saveDefaultConfig();
-        File localeDirectory = new File(plugin.getDataFolder() + File.separator + "locales");
+        File langFile = new File(plugin.getDataFolder() + File.separator + "lang.yml");
         File databaseFile = new File(plugin.getDataFolder() + File.separator + "data.json");
         File wardsDirectory = new File(plugin.getDataFolder() + File.separator + "wards");
         File guiDirectory= new File(plugin.getDataFolder() + File.separator + "gui.yml");
 
-        if (!localeDirectory.exists()) {
-            localeDirectory.mkdir();  // TODO create languages
+        if (!langFile.exists()) {
+            createFile(langFile);
 
-            Stream.of("US").forEach(s -> {
-                InputStream input = plugin.getResource("locales/" + s + ".yml");
-                File wardFile = new File(plugin.getDataFolder() +
-                        File.separator + "locales" + File.separator + s + ".yml");
-
-                if (!wardFile.exists()) {
-                    createFile(wardFile);
-                }
-
-                try {
-                    copyContents(input, wardFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+            InputStream input = plugin.getResource("lang.yml");
+            try {
+                copyContents(input, langFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         if (!databaseFile.exists()) createFile(databaseFile);

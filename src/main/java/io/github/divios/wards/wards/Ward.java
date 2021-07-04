@@ -160,8 +160,9 @@ public class Ward {
                         Player permitted = Bukkit.getPlayer(uuid);      // Remove Glow
                         if (permitted == null) return;
 
-                        Msg.sendMsg(permitted,
-                            player.getName() + " &7exited your ward " + name);
+                        Msg.sendMsg(permitted, Msg.singletonMsg(Wards.langValues.WARD_EXITED)
+                                .add("\\{player}", player.getName())
+                                .add("\\{ward}", name).build());
                         utils.sendSound(permitted, XSound.BLOCK_BELL_USE);
 
                         ParticleUtils.removeGlow(permitted, player);       // Packets
@@ -173,8 +174,9 @@ public class Ward {
                 .filter(player -> !onSight.contains(player))
                 .forEach(player -> {
                     acceptedP.forEach(uuid -> {
-                        Msg.sendMsg(uuid,
-                            player.getName() + " &7entered your ward " + name);
+                        Msg.sendMsg(uuid, Msg.singletonMsg(Wards.langValues.WARD_ENTERED)
+                                .add("\\{player}", player.getName())
+                                .add("\\{ward}", name).build());
                         utils.sendSound(uuid, XSound.BLOCK_BELL_USE);
                     });
                 });

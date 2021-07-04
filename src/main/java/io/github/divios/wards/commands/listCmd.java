@@ -4,6 +4,7 @@ import io.github.divios.core_lib.commands.abstractCommand;
 import io.github.divios.core_lib.commands.cmdTypes;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.LocationUtils;
+import io.github.divios.wards.Wards;
 import io.github.divios.wards.wards.Ward;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Bukkit;
@@ -36,8 +37,7 @@ public class listCmd extends abstractCommand {
 
     @Override
     public String getHelp() {
-        return FormatUtils.color("&8- &9/wards list [player] &8 " +
-                "- &7Prints all the wards of yourself or given player");
+        return Wards.langValues.LIST_INFO;
     }
 
     @Override

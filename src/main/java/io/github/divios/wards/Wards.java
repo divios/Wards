@@ -10,6 +10,7 @@ import io.github.divios.wards.commands.reloadCmd;
 import io.github.divios.wards.file.ConfigManager;
 import io.github.divios.wards.file.configYml;
 import io.github.divios.wards.file.guiYml;
+import io.github.divios.wards.file.langYml;
 import io.github.divios.wards.observer.ObservablesManager;
 import io.github.divios.wards.tasks.WardsCooldownTask;
 import io.github.divios.wards.tasks.WardsShowTask;
@@ -29,6 +30,7 @@ public final class Wards extends JavaPlugin {
     public static final String WARD_ID = "Ward_id";
     public static final String WARD_TIMER = "Ward_timer";
 
+    public static langYml langValues;
     public static configYml configValues;
     public static guiYml guiValues;
 
@@ -39,6 +41,7 @@ public final class Wards extends JavaPlugin {
         ConfigManager.load();
         configValues = new configYml();
         guiValues = new guiYml();
+        langValues = new langYml();
 
         ObservablesManager.getInstance();  // Loads all Listeners
         WardsManager.getInstance();
@@ -61,6 +64,7 @@ public final class Wards extends JavaPlugin {
 
         configValues = new configYml();
         guiValues = new guiYml();
+        langValues = new langYml();
         WardsManager.getInstance().reload();
     }
 }

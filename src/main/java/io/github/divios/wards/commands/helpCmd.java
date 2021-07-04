@@ -29,8 +29,7 @@ public class helpCmd extends abstractCommand {
 
     @Override
     public String getHelp() {
-        return FormatUtils.color("&8- &9/wards help &8 " +
-                "- &7Shows the plugin's help");
+        return Wards.langValues.HELP_INFO;
     }
 
     @Override
