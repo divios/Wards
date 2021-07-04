@@ -1,0 +1,2 @@
+# Wards
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5d7b503fda1b434ab46e43510b5bf625)](https://app.codacy.com/gh/divios/Wards?utm_source=github.com&utm_medium=referral&utm_content=divios/Wards&utm_campaign=Badge_Grade_Settings)
