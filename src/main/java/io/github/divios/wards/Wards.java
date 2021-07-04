@@ -4,8 +4,13 @@ import io.github.divios.core_lib.commands.CommandManager;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.wards.commands.giveCmd;
+import io.github.divios.wards.commands.reloadCmd;
 import io.github.divios.wards.file.ConfigManager;
+import io.github.divios.wards.file.configYml;
 import io.github.divios.wards.observer.ObservablesManager;
+import io.github.divios.wards.tasks.WardsCooldownTask;
+import io.github.divios.wards.tasks.WardsShowTask;
+import io.github.divios.wards.tasks.WardsWatchTask;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,16 +26,19 @@ public final class Wards extends JavaPlugin {
     public static final String WARD_ID = "Ward_id";
     public static final String WARD_TIMER = "Ward_timer";
 
+    public static configYml configValues;
+
     @Override
     public void onEnable() {
         INSTANCE = this;
 
         ConfigManager.load();
+        configValues = new configYml();
         ObservablesManager.getInstance();  // Loads all Listeners
         WardsManager.getInstance();
 
         CommandManager.register(INSTANCE.getCommand("Wards"));  // Load command Manager
-        CommandManager.addCommand(new giveCmd());
+        CommandManager.addCommand(new giveCmd(), new reloadCmd());
 
         Msg.setPREFIX(FormatUtils.color("&9&lWards &7> "));
     }
@@ -41,4 +49,10 @@ public final class Wards extends JavaPlugin {
     }
 
     public static Wards getInstance() { return INSTANCE; }
+
+    public static void reload() {
+        configValues = new configYml();
+        WardsShowTask.reload();
+        WardsWatchTask.reload();
+    }
 }

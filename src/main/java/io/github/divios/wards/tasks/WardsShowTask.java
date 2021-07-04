@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 public class WardsShowTask {
 
     private static final Wards plugin = Wards.getInstance();
-    private static final Cache<UUID, Task> cache = CacheBuilder.newBuilder()
-            .expireAfterWrite(30, TimeUnit.SECONDS).build();
+    private static Cache<UUID, Task> cache = CacheBuilder.newBuilder()
+            .expireAfterWrite(Wards.configValues.CHUNK_DISPLAY_COOLDOWN, TimeUnit.SECONDS).build();
 
     public static void generate(Player p, Ward ward) {
 
@@ -37,7 +37,7 @@ public class WardsShowTask {
 
         cache.put(p.getUniqueId(), Task.asyncRepeating(plugin, task -> {
 
-            if (ticks[0] == 60) {
+            if (ticks[0] == Wards.configValues.CHUNK_DISPLAY_SECONDS * 4) {
                 task.cancel();
                 return;
             }
@@ -51,6 +51,11 @@ public class WardsShowTask {
 
         }, 0, 5));
 
+    }
+
+    public static void reload() {
+        cache = CacheBuilder.newBuilder()
+                .expireAfterWrite(Wards.configValues.CHUNK_DISPLAY_COOLDOWN, TimeUnit.SECONDS).build();
     }
 
 }

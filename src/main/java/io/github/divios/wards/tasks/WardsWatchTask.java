@@ -31,7 +31,7 @@ public class WardsWatchTask {
                             .filter(player -> !player.getUniqueId().equals(ward.getOwner()))
                             .collect(Collectors.toList()));
 
-                }), 30, 30);
+                }), Wards.configValues.WARD_CHECK_SECONDS, Wards.configValues.WARD_CHECK_SECONDS);
     }
 
     public static void unload() {
@@ -40,6 +40,11 @@ public class WardsWatchTask {
 
         loaded = false;
         task.cancel();
+    }
+
+    public static void reload() {
+        unload();
+        load();
     }
 
 }

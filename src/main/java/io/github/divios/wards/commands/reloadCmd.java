@@ -1,0 +1,51 @@
+package io.github.divios.wards.commands;
+
+import com.cryptomorin.xseries.messages.Titles;
+import io.github.divios.core_lib.commands.abstractCommand;
+import io.github.divios.core_lib.commands.cmdTypes;
+import io.github.divios.wards.Wards;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class reloadCmd extends abstractCommand {
+
+    public reloadCmd() {
+        super(cmdTypes.BOTH);
+    }
+
+    @Override
+    public String getName() {
+        return "reload";
+    }
+
+    @Override
+    public boolean validArgs(List<String> args) {
+        return true;
+    }
+
+    @Override
+    public String getHelp() {
+        return "/Wards reload";
+    }
+
+    @Override
+    public List<String> getPerms() {
+        return Collections.singletonList("Wards.reload");
+    }
+
+    @Override
+    public List<String> getTabCompletition(List<String> args) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void run(CommandSender sender, List<String> args) {
+        Wards.reload();
+        Titles.sendTitle((Player) sender, 10, 20, 10,
+                "&1&lWards", "&8Successful reload");
+    }
+}

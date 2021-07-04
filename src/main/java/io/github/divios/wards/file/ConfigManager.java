@@ -24,7 +24,25 @@ public class ConfigManager {
         File databaseFile = new File(plugin.getDataFolder() + File.separator + "data.json");
         File wardsDirectory = new File(plugin.getDataFolder() + File.separator + "wards");
 
-        if (!localeDirectory.exists()) localeDirectory.mkdir();  // TODO create languages
+        if (!localeDirectory.exists()) {
+            localeDirectory.mkdir();  // TODO create languages
+
+            Stream.of("US").forEach(s -> {
+                InputStream input = plugin.getResource("locales/" + s + ".yml");
+                File wardFile = new File(plugin.getDataFolder() +
+                        File.separator + "locales" + File.separator + s + ".yml");
+
+                if (!wardFile.exists()) {
+                    createFile(wardFile);
+                }
+
+                try {
+                    copyContents(input, wardFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
 
         if (!databaseFile.exists()) createFile(databaseFile);
 
