@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class WardsShowTask {
 
@@ -35,16 +36,18 @@ public class WardsShowTask {
 
         cache.put(p.getUniqueId(), Task.asyncRepeating(plugin, task -> {
 
-           if (ticks[0] == 60) {
-               task.cancel();
-               return;
-           }
+            if (ticks[0] == 60) {
+                task.cancel();
+                return;
+            }
 
-            surface.forEach(block -> {
-                p.spawnParticle(Particle.REDSTONE,
-                        block.getLocation().add(0, 1, 0), 1,
-                        new Particle.DustOptions(Color.NAVY, 1));
-            });
+            surface.stream()
+                    .filter(block -> block.getLocation().distance(p.getLocation()) < 40)
+                    .forEach(block -> {
+                        p.spawnParticle(Particle.REDSTONE,
+                                block.getLocation().add(0, 1, 0), 1,
+                                new Particle.DustOptions(Color.NAVY, 1));
+                    });
             ticks[0]++;
 
         }, 0, 5));

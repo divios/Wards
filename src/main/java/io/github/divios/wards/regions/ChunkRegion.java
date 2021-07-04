@@ -39,9 +39,6 @@ public class ChunkRegion implements RegionI {
         Location topLeft = topLeftChunk.getBlock(0, 0, 0).getLocation();
         Location bottomRight = bottomRightChunk.getBlock(15, 0, 15).getLocation();
 
-        Bukkit.broadcastMessage(topLeft.toString());
-        Bukkit.broadcastMessage(bottomRight.toString());
-
         region = new CuboidRegion(topLeft, bottomRight).expand(0, 0, 255, 0, 0, 0);
 
     }

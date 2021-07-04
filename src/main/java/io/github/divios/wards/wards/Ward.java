@@ -1,5 +1,6 @@
 package io.github.divios.wards.wards;
 
+import com.cryptomorin.xseries.XSound;
 import de.tr7zw.nbtapi.NBTItem;
 import io.github.divios.core_lib.inventory.InventoryGUI;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
@@ -10,6 +11,7 @@ import io.github.divios.wards.Wards;
 import io.github.divios.wards.regions.ChunkRegion;
 import io.github.divios.wards.regions.RegionI;
 import io.github.divios.wards.utils.ParticleUtils;
+import io.github.divios.wards.utils.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -20,6 +22,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class represents the Ward object itself, this means,
@@ -148,22 +151,28 @@ public class Ward {
         onSight.stream()       // Players who exited
                 .filter(player -> !players.contains(player))
                 .forEach(player -> {
-                    acceptedP.forEach(uuid -> Msg.sendMsg(uuid,
-                            player.getName() + " &7exited your ward"));
+                    acceptedP.forEach(uuid -> {
 
-                    acceptedP.forEach(uuid -> {     // remove glow
-                        Player permitted = Bukkit.getPlayer(uuid);
+                        Player permitted = Bukkit.getPlayer(uuid);      // Remove Glow
                         if (permitted == null) return;
-                        ParticleUtils.removeGlow(permitted, player);       // Packets
 
+                        Msg.sendMsg(permitted,
+                            player.getName() + " &7exited your ward");
+                        utils.sendSound(permitted, XSound.BLOCK_BELL_USE);
+
+                        ParticleUtils.removeGlow(permitted, player);       // Packets
                     });
+
                 });
 
         players.stream()        // Players who entered
                 .filter(player -> !onSight.contains(player))
                 .forEach(player -> {
-                    acceptedP.forEach(uuid -> Msg.sendMsg(uuid,
-                            player.getName() + " &7entered your ward"));
+                    acceptedP.forEach(uuid -> {
+                        Msg.sendMsg(uuid,
+                            player.getName() + " &7entered your ward");
+                        utils.sendSound(uuid, XSound.BLOCK_BELL_USE);
+                    });
                 });
 
         onSight.clear();
@@ -228,7 +237,7 @@ public class Ward {
             this.timer = item.hasKey(Wards.WARD_TIMER) ?
                     item.getInteger(Wards.WARD_TIMER) :
                     type.getTime();
-            this.accepted = item.getObject(Wards.WARD_ACCEPTED, Set.class);
+            setAccepted(item.getObject(Wards.WARD_ACCEPTED, List.class));
         }
 
         public Builder setLocation(Location l) {
@@ -254,6 +263,11 @@ public class Ward {
         public Builder setTimer(Integer timer) {
             this.timer = timer;
             return this;
+        }
+
+        public Builder setAccepted(List<String> accepted) {
+            if (accepted == null) return this;
+            return setAccepted(accepted.stream().map(UUID::fromString).collect(Collectors.toSet()));
         }
 
         public Builder setAccepted(Set<UUID> accepted) {

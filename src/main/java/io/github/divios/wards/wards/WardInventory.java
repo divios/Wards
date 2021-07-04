@@ -6,6 +6,7 @@ import io.github.divios.core_lib.inventory.ItemButton;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
 import io.github.divios.core_lib.itemutils.ItemUtils;
 import io.github.divios.core_lib.misc.FormatUtils;
+import io.github.divios.core_lib.misc.XSymbols;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.tasks.WardsShowTask;
 import org.bukkit.Bukkit;
@@ -23,8 +24,10 @@ public class WardInventory {
             .setName("&6Type: " + ward.getType().getType()), e -> {}), 4);
 
         builded.addButton(ItemButton.create(new ItemBuilder(XMaterial.CLOCK)
-                        .setName("&a" + FormatUtils.formatTimeOffset(ward.getTimer() * 1000L)), e -> {
-                })
+                        .setName("&a" + (ward.getTimer() == -1 ?
+                                FormatUtils.color("&c&l" + XSymbols.TIMES_3) :
+                                FormatUtils.formatTimeOffset(ward.getTimer() * 1000L))),
+                e -> {})
                 , 11);
 
         builded.addButton(ItemButton.create(new ItemBuilder(XMaterial.BARRIER).setName("&cRecoger ward"),

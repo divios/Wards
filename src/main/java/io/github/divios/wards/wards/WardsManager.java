@@ -60,13 +60,21 @@ public class WardsManager {
         WardsWatchTask.load();
         WardsUpdateTask.load(database);
 
-        Task.syncDelayed(plugin, () ->
-                database.deserialize().forEach(ward -> {
+        Task.syncDelayed(plugin, () -> {
 
-                    wards.put(ward.getCenter(), ward);
-                    utils.setWardsMetadata(ward.getCenter(), ward.getOwner());
+            long startTime = System.nanoTime();
+            plugin.getLogger().info("Loading database...");
 
-                }), 5L);
+            database.deserialize().forEach(ward -> {
+
+                wards.put(ward.getCenter(), ward);
+                utils.setWardsMetadata(ward.getCenter(), ward.getOwner());
+            });
+
+            long elapsedTime = System.nanoTime() - startTime;
+            plugin.getLogger().info("Database loaded correctly in " + elapsedTime/1000000 + " ms");
+
+        }, 5L);
     }
 
     public Ward getWard(Location l) {
@@ -111,7 +119,9 @@ public class WardsManager {
     }
 
     public void saveWards() {
+        plugin.getLogger().info("Saving database...");
         utils.clearUpFile(database.getFile());
         database.serialize(wards.values());
+        plugin.getLogger().info("Database saved correctly");
     }
 }

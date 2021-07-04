@@ -1,7 +1,10 @@
 package io.github.divios.wards.utils;
 
+import com.cryptomorin.xseries.XSound;
 import io.github.divios.wards.Wards;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -58,6 +61,24 @@ public class utils {
 
     public static void setWardsMetadata(Location loc, UUID uuid) {
         setWardMetadata(loc.getBlock(), uuid);
+    }
+
+    public static void sendSound(Player p, Sound s) {
+        if (p == null) return;
+
+        p.playSound(p.getLocation(), s, 1, 1);
+    }
+
+    public static void sendSound(UUID uuid, Sound s) {
+        sendSound(Bukkit.getPlayer(uuid), s);
+    }
+
+    public static void sendSound(Player p, XSound s) {
+        sendSound(p, s.parseSound());
+    }
+
+    public static void sendSound(UUID uuid, XSound s) {
+        sendSound(uuid, s.parseSound());
     }
 
 }

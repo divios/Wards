@@ -24,8 +24,14 @@ public class WardsUpdateTask {
 
         task = Task.asyncRepeating(plugin, () -> {
 
+            long startTime = System.nanoTime();
+            plugin.getLogger().info("Saving database...");
+
             utils.clearUpFile(database.getFile());
             database.serialize(WManager.getWards().values());
+
+            long elapsedTime = System.nanoTime() - startTime;
+            plugin.getLogger().info("Database saved correctly in " + elapsedTime/1000000 + " ms");
 
         }, 24000, 24000);
     }
