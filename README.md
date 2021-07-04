@@ -4,3 +4,13 @@ Centinels/Wards to watch a region and get notified when someone enters
 # Introduction
 
 This plugin takes inspiration in smite wards, which are items that you can buy and 'll ping the team if someone enters an specific region
+
+
+# TODO
+
+- Key that allows to break a centinel
+- Implement roles per Ward
+- Implement a potion to make a player invisible to a ward
+- Add support/compatibility with protection plugins
+- Add support/compatibility with factions plugins
+- Add a compass that indicates if a ward is nearby??
