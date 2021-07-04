@@ -1,6 +1,5 @@
 package io.github.divios.wards.file;
 
-import com.cryptomorin.xseries.XMaterial;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.wards.Wards;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -8,9 +7,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class langYml {
 

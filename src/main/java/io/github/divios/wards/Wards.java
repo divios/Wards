@@ -12,9 +12,6 @@ import io.github.divios.wards.file.configYml;
 import io.github.divios.wards.file.guiYml;
 import io.github.divios.wards.file.langYml;
 import io.github.divios.wards.observer.ObservablesManager;
-import io.github.divios.wards.tasks.WardsCooldownTask;
-import io.github.divios.wards.tasks.WardsShowTask;
-import io.github.divios.wards.tasks.WardsWatchTask;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.plugin.java.JavaPlugin;
 

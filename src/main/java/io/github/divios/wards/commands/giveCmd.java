@@ -2,9 +2,7 @@ package io.github.divios.wards.commands;
 
 import io.github.divios.core_lib.commands.abstractCommand;
 import io.github.divios.core_lib.commands.cmdTypes;
-import io.github.divios.core_lib.inventory.inventoryUtils;
 import io.github.divios.core_lib.itemutils.ItemUtils;
-import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.wards.WardType;

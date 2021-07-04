@@ -2,7 +2,6 @@ package io.github.divios.wards.file;
 
 import com.cryptomorin.xseries.XMaterial;
 import io.github.divios.wards.Wards;
-import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 

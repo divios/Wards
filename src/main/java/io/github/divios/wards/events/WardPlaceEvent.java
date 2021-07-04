@@ -12,7 +12,6 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.UUID;
 import java.util.stream.IntStream;

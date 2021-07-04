@@ -6,10 +6,8 @@ import io.github.divios.core_lib.commands.cmdTypes;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.wards.Wards;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
