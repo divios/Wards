@@ -15,6 +15,7 @@ public class langYml {
     private static final String DEFAULT_WARD_ENTERED = "{player} &7entered your ward {ward}";
     private static final String DEFAULT_WARD_EXITED = "{player} &7exited your ward {ward}";
     private static final String DEFAULT_WARD_EXPIRED = "Your ward {ward} has expired";
+    private static final String DEFAULT_WARD_PICK_UP = "You took your guard {ward}";
     private static final String DEFAULT_WARD_COOLDOWN = "&7A cooldown is active, wait a few seconds";
     
     private static final String DEFAULT_GIVE_ON_CMD = "You received a {type} &7ward";
@@ -29,6 +30,7 @@ public class langYml {
     public String WARD_ENTERED;
     public String WARD_EXITED;
     public String WARD_EXPIRED;
+    public String WARD_PICK_UP;
     public String WARD_COOLDOWN;
 
     public String GIVE_ON_CMD;
@@ -64,6 +66,7 @@ public class langYml {
         WARD_ENTERED = FormatUtils.color(yaml.getString("message.ward.entered", DEFAULT_WARD_ENTERED));
         WARD_EXITED = FormatUtils.color(yaml.getString("message.ward.exited", DEFAULT_WARD_EXITED));
         WARD_EXPIRED = FormatUtils.color(yaml.getString("message.ward.expired", DEFAULT_WARD_EXPIRED));
+        WARD_PICK_UP = FormatUtils.color(yaml.getString("message.ward.pick_up", DEFAULT_WARD_PICK_UP));
         WARD_COOLDOWN = FormatUtils.color(yaml.getString("message.ward.cooldown", DEFAULT_WARD_COOLDOWN));
 
         GIVE_ON_CMD = FormatUtils.color(yaml.getString("message.commands.give.onCmd", DEFAULT_GIVE_ON_CMD));

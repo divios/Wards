@@ -3,6 +3,7 @@ package io.github.divios.wards.events;
 import io.github.divios.core_lib.itemutils.ItemUtils;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.core_lib.misc.confirmIH;
+import io.github.divios.wards.Wards;
 import io.github.divios.wards.observer.IObservable;
 import io.github.divios.wards.observer.IObserver;
 import io.github.divios.wards.utils.utils;
@@ -30,7 +31,6 @@ public class WardInteractEvent extends abstractEvent implements IObserver {
         o.setCancelled(true);
 
         if (!ward.getAcceptedP().contains(p.getUniqueId())) {
-            Msg.sendMsg(p, "No tienes permiso para interactuar con este ward");
             return;
         }
 
@@ -41,7 +41,8 @@ public class WardInteractEvent extends abstractEvent implements IObserver {
                     WardsManager.getInstance().deleteWard(ward);
                     ItemUtils.give(p, ward.buildItem(), 1);
                     utils.cleanBlock(ward.getCenter());
-                    Msg.sendMsg(p, "&7Your took your ward " + ward.getName());
+                    Msg.sendMsg(p, Msg.singletonMsg(Wards.langValues.WARD_PICK_UP)
+                            .add("\\{ward}", ward.getName()).build());
                     player.spawnParticle(Particle.FLAME,
                             ward.getCenter().clone().add(0.5, 0.5, 0.5), 40);
 

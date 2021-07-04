@@ -4,7 +4,8 @@ messages:
     entered: "{player} &7entered your ward {ward}"
     exited: "{player} &7exited your ward {ward}"
     expired: "Your ward {ward} has expired"
-    cooldown: "&7A cooldown is active, wait a few seconds"M
+    pick_up: "You took your guard {ward}"
+    cooldown: "&7A cooldown is active, wait a few seconds"
   commands:
     give:
       onCmd: "You received a {type} &7ward"
