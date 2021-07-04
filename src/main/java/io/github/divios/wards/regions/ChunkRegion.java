@@ -2,18 +2,14 @@ package io.github.divios.wards.regions;
 
 import io.github.divios.core_lib.region.CuboidRegion;
 import io.github.divios.wards.utils.ChunkUtils;
-import io.github.divios.wards.wards.Ward;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ChunkRegion implements RegionI {

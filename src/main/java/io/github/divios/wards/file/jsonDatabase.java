@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import io.github.divios.wards.serializers.WardDeserializer;
 import io.github.divios.wards.serializers.WardSerializer;
+import io.github.divios.wards.utils.utils;
 import io.github.divios.wards.wards.Ward;
 
 import java.io.File;
@@ -45,6 +46,8 @@ public class jsonDatabase {
     }
 
     public List<Ward> deserialize() {
+
+        if (utils.isEmpty(file)) return Collections.emptyList();
 
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule("CustomWardSerializer",

@@ -1,9 +1,11 @@
 package io.github.divios.wards.utils;
 
 import com.cryptomorin.xseries.XSound;
+import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -13,6 +15,8 @@ import java.io.*;
 import java.util.UUID;
 
 public class utils {
+
+    private static final Wards plugin = Wards.getInstance();
 
     public static boolean isEmpty(File file) {
 
@@ -79,6 +83,17 @@ public class utils {
 
     public static void sendSound(UUID uuid, XSound s) {
         sendSound(uuid, s.parseSound());
+    }
+
+    public static void cleanBlock(Block block) {
+        Task.syncDelayed(plugin, () -> {        // make sure is synchronous
+            block.setType(Material.AIR);
+            block.removeMetadata(Wards.WARD_BLOCK, plugin);
+        });
+    }
+
+    public static void cleanBlock(Location l) {
+        cleanBlock(l.getBlock());
     }
 
 }

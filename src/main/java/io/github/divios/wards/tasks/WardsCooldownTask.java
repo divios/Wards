@@ -1,13 +1,11 @@
 package io.github.divios.wards.tasks;
 
-import com.cryptomorin.xseries.XMaterial;
-import io.github.divios.core_lib.itemutils.ItemBuilder;
-import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
-import io.github.divios.wards.wards.Ward;
+import io.github.divios.wards.utils.utils;
 import io.github.divios.wards.wards.WardsManager;
+import org.bukkit.Particle;
 
 /**
  * Class that takes care of decreasing the timers
@@ -28,24 +26,30 @@ public class WardsCooldownTask {
         loaded = true;
 
         task = Task.asyncRepeating(plugin, () -> {
-            WManager.getWards().entrySet().stream()
-                    .filter(locationWardEntry -> locationWardEntry.getValue().getTimer() != -1)
-                    .forEach(locationWardEntry -> {
-                        Ward ward = locationWardEntry.getValue();
+            WManager.getWards().forEach( (location, ward) -> {
+
+                        if (ward.getTimer() == -1) return;      // Ignore disabled timer
 
                         ward.setTimer(ward.getTimer() - 1);
-                        ward.getInv().setItem(11, new ItemBuilder(XMaterial.CLOCK)
-                                .setName("&a" + FormatUtils.formatTimeOffset(ward.getTimer() * 1000L)));
+                        ward.updateInv();
+
+                        if (ward.getTimer() == 0) {
+                            Msg.sendMsg(ward.getOwner(), "&7Tu Ward " + ward.getName() + " &7ha expirado");
+                            utils.cleanBlock(ward.getCenter());
+                            ward.getCenter().getWorld().spawnParticle(Particle.SMOKE_NORMAL,
+                                    ward.getCenter().clone().add(0.5, 0.5, 0.5), 40);
+                            Task.syncDelayed(plugin, () -> WManager.deleteWard(ward));
+                        }
 
                     });
-            WManager.getWards().entrySet().stream()
-                    .filter(ward -> ward.getValue().getTimer() == 0)
-                    .forEach(wardE -> {
-                        Ward ward = wardE.getValue();
 
-                        Msg.sendMsg(ward.getOwner(), "&7Tu Ward ha expirado");
-                        Task.syncDelayed(plugin, () -> WManager.deleteWard(ward));
-                    });
         }, 20, 20);
+    }
+
+    public static void unload() {
+        if (!loaded) return;
+
+        loaded = false;
+        task.cancel();
     }
 }

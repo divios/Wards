@@ -4,11 +4,7 @@ import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.file.jsonDatabase;
 import io.github.divios.wards.utils.utils;
-import io.github.divios.wards.wards.Ward;
 import io.github.divios.wards.wards.WardsManager;
-
-import java.io.File;
-import java.util.HashSet;
 
 public class WardsUpdateTask {
 
@@ -34,6 +30,7 @@ public class WardsUpdateTask {
             plugin.getLogger().info("Database saved correctly in " + elapsedTime/1000000 + " ms");
 
         }, 24000, 24000);
+
     }
 
     public static void unload() {

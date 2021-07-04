@@ -1,6 +1,8 @@
 package io.github.divios.wards;
 
 import io.github.divios.core_lib.commands.CommandManager;
+import io.github.divios.core_lib.misc.FormatUtils;
+import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.wards.commands.giveCmd;
 import io.github.divios.wards.file.ConfigManager;
 import io.github.divios.wards.observer.ObservablesManager;
@@ -13,6 +15,7 @@ public final class Wards extends JavaPlugin {
 
     public static final String WARD_META = "Ward_meta";
     public static final String WARD_BLOCK = "Ward_Block";
+    public static final String WARD_NAME = "Ward_name";
     public static final String WARD_OWNER = "Ward_uuid";
     public static final String WARD_ACCEPTED = "Ward_accepted";
     public static final String WARD_ID = "Ward_id";
@@ -29,6 +32,7 @@ public final class Wards extends JavaPlugin {
         CommandManager.register(INSTANCE.getCommand("Wards"));  // Load command Manager
         CommandManager.addCommand(new giveCmd());
 
+        Msg.setPREFIX(FormatUtils.color("&9&lWards &7> "));
     }
 
     @Override

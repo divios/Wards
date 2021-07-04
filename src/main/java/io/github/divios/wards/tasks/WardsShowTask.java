@@ -11,7 +11,6 @@ import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -32,7 +31,9 @@ public class WardsShowTask {
 
         int[] ticks = {0};
 
-        Set<Block> surface = ward.getRegion().getSurface();
+        Set<Block> surface = ward.getRegion().getSurface().stream()
+                .filter(block -> block.getLocation().distance(p.getLocation()) < 40)
+                .collect(Collectors.toSet());
 
         cache.put(p.getUniqueId(), Task.asyncRepeating(plugin, task -> {
 
@@ -41,12 +42,10 @@ public class WardsShowTask {
                 return;
             }
 
-            surface.stream()
-                    .filter(block -> block.getLocation().distance(p.getLocation()) < 40)
-                    .forEach(block -> {
+            surface.forEach(block -> {
                         p.spawnParticle(Particle.REDSTONE,
                                 block.getLocation().add(0, 1, 0), 1,
-                                new Particle.DustOptions(Color.NAVY, 1));
+                                new Particle.DustOptions(Color.ORANGE, 1));
                     });
             ticks[0]++;
 

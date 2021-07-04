@@ -5,7 +5,6 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -21,14 +20,7 @@ public class ParticleUtils {
 
     public static void circleParticle(Location l, Particle particle) {
 
-        final int[] ticks = {0};
 
-
-        Task.syncRepeating(plugin, task -> {
-            //TODO
-
-            ticks[0]++;
-        }, 5, 5);
 
     }
 
@@ -42,8 +34,8 @@ public class ParticleUtils {
         packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects()); //Make the packet's datawatcher the one we created
         try {
             protocolManager.sendServerPacket(player, packet);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (InvocationTargetException ignored) {
+
         }
     }
 
@@ -57,8 +49,7 @@ public class ParticleUtils {
         packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects()); //Make the packet's datawatcher the one we created
         try {
             protocolManager.sendServerPacket(player, packet);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (InvocationTargetException ignored) {
         }
     }
 

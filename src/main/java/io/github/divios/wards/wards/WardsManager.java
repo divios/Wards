@@ -10,14 +10,13 @@ import io.github.divios.wards.tasks.WardsUpdateTask;
 import io.github.divios.wards.tasks.WardsWatchTask;
 import io.github.divios.wards.utils.utils;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.block.Block;
-import org.bukkit.metadata.FixedMetadataValue;
 
 import java.io.File;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -28,7 +27,7 @@ public class WardsManager {
     private static final Wards plugin = Wards.getInstance();
     private static WardsManager instance = null;
 
-    private final Map<Location, Ward> wards = Collections.synchronizedMap(new HashMap<>());
+    private final Map<Location, Ward> wards = new ConcurrentHashMap<>();
     private final Set<WardType> types = new HashSet<>();
 
     private WardPlaceEvent wardPlaced;
@@ -60,7 +59,7 @@ public class WardsManager {
         WardsWatchTask.load();
         WardsUpdateTask.load(database);
 
-        Task.syncDelayed(plugin, () -> {
+        Task.asyncDelayed(plugin, () -> {
 
             long startTime = System.nanoTime();
             plugin.getLogger().info("Loading database...");
@@ -101,12 +100,6 @@ public class WardsManager {
         Ward removed = wards.remove(l);
         if (removed == null) return;
         removed.destroy();
-
-        Block block = l.getBlock();
-
-        block.setType(Material.AIR);
-        block.removeMetadata(Wards.WARD_BLOCK, plugin);
-        block.getWorld().spawnParticle(Particle.FLAME, l.clone().add(0.5, 0.5, 0.5), 40);
     }
 
     public void deleteWard(Ward ward) {

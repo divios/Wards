@@ -4,7 +4,6 @@ import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 
 import java.util.stream.Collectors;
 
@@ -32,7 +31,7 @@ public class WardsWatchTask {
                             .filter(player -> !player.getUniqueId().equals(ward.getOwner()))
                             .collect(Collectors.toList()));
 
-                }), 20, 20);
+                }), 30, 30);
     }
 
     public static void unload() {

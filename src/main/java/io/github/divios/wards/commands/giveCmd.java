@@ -89,7 +89,10 @@ public class giveCmd extends abstractCommand {
         WardsManager.getInstance().getWardsTypes().stream()
                 .filter(wardType -> wardType.getId().equals(args.get(0)))
                 .findFirst()
-                .ifPresent(wardType -> ItemUtils.give(p, wardType.buildItem(p)));
+                .ifPresent(wardType -> {
+                    Msg.sendMsg(p, "Your received a " + wardType.getId() + " &7ward");
+                    ItemUtils.give(p, wardType.buildItem(p));
+                });
 
 
     }

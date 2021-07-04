@@ -1,6 +1,5 @@
 package io.github.divios.wards.serializers;
 
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;

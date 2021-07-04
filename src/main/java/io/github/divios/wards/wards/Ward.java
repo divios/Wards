@@ -2,23 +2,17 @@ package io.github.divios.wards.wards;
 
 import com.cryptomorin.xseries.XSound;
 import de.tr7zw.nbtapi.NBTItem;
-import io.github.divios.core_lib.inventory.InventoryGUI;
-import io.github.divios.core_lib.itemutils.ItemBuilder;
+import io.github.divios.core_lib.misc.FormatUtils;
+import io.github.divios.core_lib.misc.LocationUtils;
 import io.github.divios.core_lib.misc.Msg;
-import io.github.divios.core_lib.misc.Task;
-import io.github.divios.core_lib.region.SpheroidRegion;
 import io.github.divios.wards.Wards;
-import io.github.divios.wards.regions.ChunkRegion;
 import io.github.divios.wards.regions.RegionI;
 import io.github.divios.wards.utils.ParticleUtils;
 import io.github.divios.wards.utils.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.block.data.type.Bed;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -38,6 +32,7 @@ public class Ward {
     private static final Wards plugin = Wards.getInstance();
     private static final WardsManager WManager = WardsManager.getInstance();
 
+    private String name;
     private final UUID owner;
     private final WardType type;
     private final RegionI region;
@@ -48,10 +43,11 @@ public class Ward {
     private final Set<UUID> acceptedP = new HashSet<>();
     private final Set<Player> onSight = new HashSet<>();
 
-    private final InventoryGUI inv;
+    private final WardInventory inv;
 
-    private Ward(UUID owner, WardType type, Integer timer, RegionI region, Set<UUID> acceptedP) {
+    private Ward(String name, UUID owner, WardType type, Integer timer, RegionI region, Set<UUID> acceptedP) {
 
+        this.name = name;
         this.owner = owner;
         this.acceptedP.add(owner);
         this.type = type;
@@ -62,8 +58,16 @@ public class Ward {
 
         this.hash = Objects.hash(region.getCenter(), type);
 
-        this.inv = WardInventory.build(this);
+        this.inv = new WardInventory(this);
 
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    protected void setName(String name) {
+        this.name = name;
     }
 
     public UUID getOwner() {
@@ -102,8 +106,8 @@ public class Ward {
         this.timer = timer;
     }
 
-    public Inventory getInv() {
-        return inv.getInventory();
+    public void updateInv() {
+        inv.update();
     }
 
     public Set<UUID> getAcceptedP() {
@@ -115,12 +119,13 @@ public class Ward {
     }
 
     public void openInv(Player p) {
-        inv.open(p);
+        inv.show(p);
     }
 
     public ItemStack buildItem() {
         NBTItem item = new NBTItem(type.buildItem());
 
+        item.setString(Wards.WARD_NAME, name);
         item.setInteger(Wards.WARD_TIMER, timer);
         item.setString(Wards.WARD_OWNER, owner.toString());
         item.setObject(Wards.WARD_ACCEPTED, acceptedP);
@@ -130,8 +135,7 @@ public class Ward {
 
     public void destroy() {
 
-        new ArrayList<>(inv.getInventory().getViewers())
-                .forEach(HumanEntity::closeInventory);
+        inv.destroy();
 
         onSight.forEach(player ->       // All players on the area
 
@@ -157,7 +161,7 @@ public class Ward {
                         if (permitted == null) return;
 
                         Msg.sendMsg(permitted,
-                            player.getName() + " &7exited your ward");
+                            player.getName() + " &7exited your ward " + name);
                         utils.sendSound(permitted, XSound.BLOCK_BELL_USE);
 
                         ParticleUtils.removeGlow(permitted, player);       // Packets
@@ -170,7 +174,7 @@ public class Ward {
                 .forEach(player -> {
                     acceptedP.forEach(uuid -> {
                         Msg.sendMsg(uuid,
-                            player.getName() + " &7entered your ward");
+                            player.getName() + " &7entered your ward " + name);
                         utils.sendSound(uuid, XSound.BLOCK_BELL_USE);
                     });
                 });
@@ -206,6 +210,7 @@ public class Ward {
 
     public static class Builder {
 
+        private String name = null;
         private UUID uuid = null;
         private Location location = null;
         private WardType type = null;
@@ -232,6 +237,7 @@ public class Ward {
         }
 
         public Builder(NBTItem item) {
+            this.name = item.hasKey(Wards.WARD_NAME) ? item.getString(Wards.WARD_NAME):null;
             this.uuid = UUID.fromString(item.getString(Wards.WARD_OWNER));
             this.type = WManager.getWardType(item.getString(Wards.WARD_ID));
             this.timer = item.hasKey(Wards.WARD_TIMER) ?
@@ -242,6 +248,11 @@ public class Ward {
 
         public Builder setLocation(Location l) {
             this.location = l;
+            return this;
+        }
+
+        public Builder setName(String name) {
+            this.name = name;
             return this;
         }
 
@@ -280,12 +291,17 @@ public class Ward {
             Objects.requireNonNull(type, "Type can't not be null");
             Objects.requireNonNull(location, "Location cannot be null");
 
+            if (name == null) {
+                name = FormatUtils.color("&f" + type.getId() + " " + LocationUtils.toString(location));
+            }
+
             if (timer == null)
                 timer = type.getTime();
 
             if (accepted == null) accepted = Collections.emptySet();
 
             return new Ward(
+                    this.name,
                     this.uuid,
                     this.type,
                     this.timer,
