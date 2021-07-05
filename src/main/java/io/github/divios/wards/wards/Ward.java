@@ -289,8 +289,8 @@ public class Ward {
         }
 
         public Ward build() {
-            Objects.requireNonNull(uuid, "Uuid can't be null");
-            Objects.requireNonNull(type, "Type can't not be null");
+            Objects.requireNonNull(uuid, "Uuid cannot be null");
+            Objects.requireNonNull(type, "Type cannot be null");
             Objects.requireNonNull(location, "Location cannot be null");
 
             if (name == null) {
