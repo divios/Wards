@@ -39,6 +39,7 @@ public class WardsParser {
             }
 
             WardType type;
+
             try {
 
                 String id = yaml.getString("id");
