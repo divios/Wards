@@ -14,3 +14,4 @@ This plugin takes inspiration in smite wards, which are items that you can buy a
 - Add support/compatibility with protection plugins
 - Add support/compatibility with factions plugins
 - Add a compass that indicates if a ward is nearby??
+- Limit amount of wards per player with permissions
