@@ -13,6 +13,7 @@ import io.github.divios.wards.file.guiYml;
 import io.github.divios.wards.file.langYml;
 import io.github.divios.wards.observer.ObservablesManager;
 import io.github.divios.wards.wards.WardsManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Wards extends JavaPlugin {
@@ -26,6 +27,8 @@ public final class Wards extends JavaPlugin {
     public static final String WARD_ACCEPTED = "Ward_accepted";
     public static final String WARD_ID = "Ward_id";
     public static final String WARD_TIMER = "Ward_timer";
+
+    public static final int MID_VERSION = Integer.parseInt(getServerVersion().split("\\.")[1]);
 
     public static langYml langValues;
     public static configYml configValues;
@@ -63,5 +66,11 @@ public final class Wards extends JavaPlugin {
         guiValues = new guiYml();
         langValues = new langYml();
         WardsManager.getInstance().reload();
+    }
+
+    public static String getServerVersion() {
+        String version = Bukkit.getVersion();
+        String[] split = version.split(" ");
+        return split[split.length - 1].trim().replace(")", "");
     }
 }

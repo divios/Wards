@@ -6,6 +6,8 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import io.github.divios.wards.Wards;
+import org.bukkit.Color;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
@@ -17,12 +19,6 @@ public class ParticleUtils {
 
     private static final Wards plugin = Wards.getInstance();
     private static final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();;
-
-    public static void circleParticle(Location l, Particle particle) {
-
-
-
-    }
 
     public static void addGlow(Player player, Entity to) {
         PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
@@ -51,6 +47,22 @@ public class ParticleUtils {
             protocolManager.sendServerPacket(player, packet);
         } catch (InvocationTargetException ignored) {
         }
+    }
+
+    public static void spawnParticleShape(Player p, Location l) {
+        if (Wards.MID_VERSION > 12)
+            p.spawnParticle(Particle.REDSTONE, l, 1, new Particle.DustOptions(Color.ORANGE, 1));
+        else if (Wards.MID_VERSION > 8)
+            p.spawnParticle(Particle.REDSTONE, l, 0, 1, 139/255F, 0, 1);
+        else
+            l.getWorld().playEffect(l, Effect.valueOf("COLOURED_DUST"), null);
+    }
+
+    public static void spawnParticlePlace(Player p, Location l) {
+        if (Wards.MID_VERSION <= 12) return;
+
+        p.spawnParticle(Particle.SPELL_WITCH,
+                l.add(Math.random(), Math.random(), Math.random()), 1);
     }
 
 }

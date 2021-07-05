@@ -5,9 +5,8 @@ import com.google.common.cache.CacheBuilder;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
+import io.github.divios.wards.utils.ParticleUtils;
 import io.github.divios.wards.wards.Ward;
-import org.bukkit.Color;
-import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -42,9 +41,7 @@ public class WardsShowTask {
             surface.stream()
                     .filter(block -> block.getLocation().distance(p.getLocation()) < 40)
                     .forEach(block -> {
-                        p.spawnParticle(Particle.REDSTONE,
-                                block.getLocation().add(0, 1, 0), 1,
-                                new Particle.DustOptions(Color.ORANGE, 1));
+                        ParticleUtils.spawnParticleShape(p, block.getLocation().add(0, 1, 0));
                     });
             ticks[0]++;
 

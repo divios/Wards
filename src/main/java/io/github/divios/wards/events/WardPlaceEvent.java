@@ -5,11 +5,11 @@ import io.github.divios.wards.Wards;
 import io.github.divios.wards.observer.IObservable;
 import io.github.divios.wards.observer.IObserver;
 import io.github.divios.wards.observer.ObservablesManager;
+import io.github.divios.wards.utils.ParticleUtils;
 import io.github.divios.wards.utils.utils;
 import io.github.divios.wards.wards.Ward;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockPlaceEvent;
 
@@ -50,9 +50,7 @@ public class WardPlaceEvent implements IObserver {
             utils.setWardMetadata(block, UUID.fromString(owner));
 
             IntStream.range(0, 40).forEach(i -> {
-                Location l2 = l.clone();
-                o.getPlayer().spawnParticle(Particle.SPELL_WITCH,
-                        l2.add(Math.random(), Math.random(), Math.random()), 1);
+                ParticleUtils.spawnParticlePlace(o.getPlayer(), l.clone());
             });
 
             manager.createWard(new Ward.Builder(o.getItemInHand())

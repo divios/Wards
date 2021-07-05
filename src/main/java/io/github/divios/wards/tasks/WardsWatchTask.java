@@ -24,7 +24,7 @@ public class WardsWatchTask {
 
                 WManager.getWards().forEach((key, ward) -> {
 
-                    if (ward.getRegion().getChunks().isEmpty()) return;
+                    if (ward.getRegion().getLoadedChunks().isEmpty()) return;
 
                     ward.updateOnSight(Bukkit.getOnlinePlayers().stream()
                             .filter(p -> ward.isInside(p.getLocation()))
