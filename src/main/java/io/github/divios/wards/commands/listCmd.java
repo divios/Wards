@@ -3,7 +3,9 @@ package io.github.divios.wards.commands;
 import io.github.divios.core_lib.commands.abstractCommand;
 import io.github.divios.core_lib.commands.cmdTypes;
 import io.github.divios.core_lib.misc.LocationUtils;
+import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.wards.Wards;
+import io.github.divios.wards.guis.wardListGui;
 import io.github.divios.wards.wards.Ward;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Bukkit;
@@ -13,6 +15,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class listCmd extends abstractCommand {
@@ -58,15 +61,15 @@ public class listCmd extends abstractCommand {
 
         Player p = args.size() == 1 ? Bukkit.getPlayer(args.get(0)) : (Player) sender;
 
-        WardsManager.getInstance().getWards().entrySet().stream()
-                .filter(locationWardEntry -> {
-                    Ward ward = locationWardEntry.getValue();
-                    return ward.getOwner().equals(p.getUniqueId());
-                }).map(locationWardEntry -> {
-                     Ward ward = locationWardEntry.getValue();
+        List<Ward> wards = WardsManager.getInstance().getWards().values().stream()
+                .filter(ward -> ward.getOwner().equals(p.getUniqueId()))
+                .collect(Collectors.toList());
 
-                     return ward.getName() + LocationUtils.toString(ward.getCenter()) + "";
-        }).forEach(p::sendMessage);
+        if (wards.isEmpty()) {
+            Msg.sendMsg(p, "&7You dont have any wards");
+            return;
+        }
 
+        wardListGui.prompt(p, wards);
     }
 }
