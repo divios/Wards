@@ -86,7 +86,7 @@ public class giveCmd extends abstractCommand {
                 .findFirst()
                 .ifPresent(wardType -> {
                     Msg.sendMsg(p, Msg.singletonMsg(Wards.langValues.GIVE_ON_CMD)
-                            .add("\\{ward}", wardType.getId()).build());
+                            .add("\\{type}", wardType.getId()).build());
                     ItemUtils.give(p, wardType.buildItem(p));
                 });
 
