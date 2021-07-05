@@ -120,9 +120,8 @@ public class WardInventory {
                         }, 1L);
 
                     }, motive -> {
-
                         if (WardsManager.getInstance().getWard(ward.getCenter()) == null) return;
-                        settingsInv.open(p);
+                        Task.syncDelayed(plugin, () -> settingsInv.open(p));
                     }, "&e&lChange name", "&7Input new name");
                 }), 11);
 
