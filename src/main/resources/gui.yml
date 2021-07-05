@@ -22,7 +22,14 @@ gui:
     material: PAPER
     name: "&e&lChange Name"
     lore: "&7Click to change the name of this ward"
+    title: "&e&lChange name"
+    subtitle: "&7Input new name"
+    not_empty: "&7The name cannot be empty!"
   return:
     material: OAK_DOOR
     name: "&c&lReturn"
     lore: "&7Click to go back"
+  confirm:
+    title: "&8Confirm Action"
+    yes: "&aYES"
+    no: "&cNO"

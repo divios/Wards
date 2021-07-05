@@ -36,10 +36,17 @@ public class guiYml {
     private static final XMaterial DEFAULT_CHANGE_NAME_MATERIAL = XMaterial.PAPER;
     private static final String DEFAULT_CHANGE_NAME_NAME = "&E&lChange Name";
     private static final List<String> DEFAULT_CHANGE_NAME_LORE = Collections.singletonList("&7Click to change the name of this ward");
+    private static final String DEFAULT_CHANGE_NAME_TITLE = "&e&lChange name";
+    private static final String DEFAULT_CHANGE_NAME_SUBTITLE= "&7Input new name";
+    private static final String DEFAULT_CHANGE_NAME_NOT_EMPTY = "&7The name cannot be empty!";
 
     private static final XMaterial DEFAULT_RETURN_MATERIAL = XMaterial.PAPER;
     private static final String DEFAULT_RETURN_NAME = "&c&lReturn";
     private static final List<String> DEFAULT_RETURN_LORE = Collections.singletonList("&7Click to go back");
+
+    private static final String DEFAULT_CONFIRM_TITLE = "&8Confirm Action";
+    private static final String DEFAULT_CONFIRM_YES = "&aYES";
+    private static final String DEFAULT_CONFIRM_NO = "&cNO";
 
     public XMaterial GLASS_PANE_1;
     public XMaterial GLASS_PANE_2;
@@ -57,9 +64,15 @@ public class guiYml {
     public XMaterial CHANGE_NAME_MATERIAL;
     public String CHANGE_NAME_NAME;
     public List<String> CHANGE_NAME_LORE;
+    public String CHANGE_NAME_TITLE;
+    public String CHANGE_NAME_SUBTITLE;
+    public String CHANGE_NAME_NOT_EMPTY;
     public XMaterial RETURN_MATERIAL;
     public String RETURN_NAME;
     public List<String> RETURN_LORE;
+    public String CONFIRM_TITLE = "&8Confirm Action";
+    public String CONFIRM_YES = "&aYES";
+    public String CONFIRM_NO = "&cNO";
 
     public guiYml() {
         init();
@@ -116,12 +129,19 @@ public class guiYml {
         CHANGE_NAME_LORE = yaml.contains("gui.change_name.lore") ?
                 Arrays.asList(yaml.getString("gui.change_name.lore").split("\\|")):
                 DEFAULT_CHANGE_NAME_LORE;
+        CHANGE_NAME_TITLE = yaml.getString("gui.change_name.title", DEFAULT_CHANGE_NAME_TITLE);
+        CHANGE_NAME_SUBTITLE = yaml.getString("gui.change_name.subtitle", DEFAULT_CHANGE_NAME_SUBTITLE);
+        CHANGE_NAME_NOT_EMPTY = yaml.getString("gui.change_name.not_empty", DEFAULT_CHANGE_NAME_NOT_EMPTY);
 
         RETURN_MATERIAL = XMaterial.matchXMaterial(yaml.getString("gui.return.material", "CLOCK")).get();
         RETURN_NAME = yaml.getString("gui.return.name", DEFAULT_RETURN_NAME);
         RETURN_LORE = yaml.contains("gui.return.lore") ?
                 Arrays.asList(yaml.getString("gui.return.lore").split("\\|")):
                 DEFAULT_RETURN_LORE;
+
+        CONFIRM_TITLE = yaml.getString("gui.confirm.title", DEFAULT_CONFIRM_TITLE);
+        CONFIRM_YES = yaml.getString("gui.confirm.yes", DEFAULT_CONFIRM_YES);
+        CONFIRM_NO = yaml.getString("gui.confirm.no", DEFAULT_CONFIRM_NO);
 
     }
 
@@ -142,9 +162,15 @@ public class guiYml {
         CHANGE_NAME_MATERIAL = DEFAULT_CHANGE_NAME_MATERIAL;
         CHANGE_NAME_NAME = DEFAULT_CHANGE_NAME_NAME;
         CHANGE_NAME_LORE = DEFAULT_CHANGE_NAME_LORE;
+        CHANGE_NAME_TITLE = DEFAULT_CHANGE_NAME_TITLE;
+        CHANGE_NAME_SUBTITLE = DEFAULT_CHANGE_NAME_SUBTITLE;
+        CHANGE_NAME_NOT_EMPTY = DEFAULT_CHANGE_NAME_NOT_EMPTY;
         RETURN_MATERIAL = DEFAULT_RETURN_MATERIAL;
         RETURN_NAME = DEFAULT_RETURN_NAME;
         RETURN_LORE = DEFAULT_RETURN_LORE;
+        CONFIRM_TITLE = DEFAULT_CONFIRM_TITLE;
+        CONFIRM_YES = DEFAULT_CONFIRM_YES;
+        CONFIRM_NO = DEFAULT_CONFIRM_NO;
     }
 
 
