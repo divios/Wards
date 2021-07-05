@@ -103,11 +103,12 @@ public class WardInventory {
                         .setName(Wards.guiValues.CHANGE_NAME_NAME)
                         .addLore(Wards.guiValues.CHANGE_NAME_LORE),
                 e -> {
-                    new ChatPrompt(plugin, (Player) e.getWhoClicked(), (player, s) -> {
 
+                    Player p = (Player) e.getWhoClicked();
+                    ChatPrompt.prompt(plugin, p, s -> {
                         if (s.isEmpty()) {
-                            settingsInv.open(player);
-                            Msg.sendMsg(player, "&7The name cannot be empty!");
+                            settingsInv.open(p);
+                            Msg.sendMsg(p, "&7The name cannot be empty!");
                         }
 
                         ward.setName(s);
@@ -115,15 +116,14 @@ public class WardInventory {
                         Task.syncDelayed(plugin, () -> {
                             mainInv = build();
                             settingsInv = createSettings();
-                            settingsInv.open(player);
+                            settingsInv.open(p);
                         }, 1L);
 
-                    }, player -> {
+                    }, motive -> {
 
                         if (WardsManager.getInstance().getWard(ward.getCenter()) == null) return;
-                        settingsInv.open(player);
-
-                    }, "&e&lChange Name", "&7Input new name");
+                        settingsInv.open(p);
+                    }, "&e&lChange name", "&7Input new name");
                 }), 11);
 
         builded.addButton(ItemButton.create(new ItemBuilder(Wards.guiValues.RETURN_MATERIAL)
