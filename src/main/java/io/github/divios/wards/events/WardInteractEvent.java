@@ -48,7 +48,7 @@ public class WardInteractEvent extends abstractEvent implements IObserver {
 
                 }
                 p.closeInventory();
-            }, ward.getType().buildItem(), Wards.guiValues.CONFIRM_TITLE,      // TODO
+            }, ward.getType().buildItem(), Wards.guiValues.CONFIRM_TITLE,
                     Wards.guiValues.CONFIRM_YES, Wards.guiValues.CONFIRM_NO);
         }
 
