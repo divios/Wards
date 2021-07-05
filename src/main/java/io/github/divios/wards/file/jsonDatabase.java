@@ -31,8 +31,7 @@ public class jsonDatabase {
 
     public void serialize(Collection<Ward> wards) {
         ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule("CustomWardSerializer",
-                new Version(1, 0, 0, null, null, null));
+        SimpleModule module = new SimpleModule();
         module.addSerializer(Ward.class, serializer);
         mapper.registerModule(module);
 
