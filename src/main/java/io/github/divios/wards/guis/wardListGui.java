@@ -4,11 +4,13 @@ import com.cryptomorin.xseries.XMaterial;
 import io.github.divios.core_lib.inventory.InventoryGUI;
 import io.github.divios.core_lib.inventory.ItemButton;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
+import io.github.divios.core_lib.itemutils.ItemUtils;
 import io.github.divios.core_lib.misc.LocationUtils;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.wards.Ward;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -18,11 +20,14 @@ public class wardListGui {
 
     private final Player p;
     private final List<Ward> wards;
-    private List<InventoryGUI> invs;
+    private final List<InventoryGUI> invs;
 
     private wardListGui(Player p, List<Ward> wards) {
         this.p = p;
         this.wards = wards;
+        invs = new ArrayList<>();
+
+        open();
     }
 
     public static void prompt(Player p, List<Ward> wards) {
@@ -30,6 +35,7 @@ public class wardListGui {
     }
 
     private void open() {
+
         IntStream.range(0, wards.isEmpty() ? 1 : (int) Math.ceil(wards.size() / 32D))
                 .forEach(value -> invs.add(new InventoryGUI(plugin, 54,
                         "&9Wards list of &f" + p.getName())));
@@ -83,18 +89,22 @@ public class wardListGui {
                 if (sum[0] >= wards.size()) break;
 
                 Ward ward = wards.get(sum[0]);
+                if (!ItemUtils.isEmpty(inventoryGUI.getInventory().getItem(i))) continue;
 
                 inventoryGUI.addButton(ItemButton.create(new ItemBuilder(ward.buildItem())
                         .setName(ward.getName())
-                        .setLore("&8 - &7Type: &9" + ward.getType())
-                        .setLore("&8 - &7Radius: &9" + ward.getType().getRadius())
-                        .setLore("&8 - &7Location: &9" + LocationUtils.toString(ward.getCenter()))
-                        .setLore("", "&9Click to view more information")
+                        .addLore("")
+                        .addLore("&8 - &7Type: &9" + ward.getType().getDisplay_name())
+                        .addLore("&8 - &7Radius: &9" + ward.getType().getRadius())
+                        .addLore("&8 - &7Location: &9" + LocationUtils.toString(ward.getCenter()))
+                        .addLore("", "&9Click to view more information")
                         , e-> ward.openInv((Player) e.getWhoClicked()) ), i);
 
                 sum[0]++;
             }
         });
+
+        invs.get(0).open(p);
     }
 
 }
