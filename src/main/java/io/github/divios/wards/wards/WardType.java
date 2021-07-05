@@ -128,7 +128,7 @@ public class WardType {
     protected static class Builder {
 
         private String id = null;
-        private Optional<XMaterial> material = Optional.empty();
+        private String material = null;
         private String display_name = null;
         private String lore = null;
         private Integer time = null;
@@ -148,7 +148,7 @@ public class WardType {
         }
 
         public Builder setMaterial(String material) {
-            this.material = XMaterial.matchXMaterial(material);
+            this.material = material;
             return this;
         }
 
@@ -183,7 +183,8 @@ public class WardType {
                 throw new WardsTypeException("id");
             }
 
-            if (!material.isPresent()) {
+            if (material == null || material.isEmpty() ||
+                    !XMaterial.matchXMaterial(material).isPresent()) {
                 throw new WardsTypeException("Material");
             }
 
@@ -211,7 +212,7 @@ public class WardType {
 
             return new WardType(
                     id,
-                    material.get(),
+                    XMaterial.valueOf(material),
                     display_name,
                     Arrays.asList(lore.split("\\|")),
                     time,
