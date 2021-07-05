@@ -21,6 +21,12 @@ jobs:
       with:
         java-version: '16'
         distribution: 'adopt'
+        
+    - name: gradle.properties
+      env:
+        repsyUrl: ${{  repsy_credentials.REPSYURL }}
+        repsyUsernam:  ${{  repsy_credentials.REPSYUSERNAME }}
+        repsyPassword:  ${{  repsy_credentials.REPSYPASSWORD }}
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
