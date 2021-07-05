@@ -87,7 +87,8 @@ shadowJar {
     relocate('org.bstats', 'io.github.divios.wards.shaded.bstats')
     relocate('io.github.divios.core_lib', 'io.github.divios.wards.shaded.Core_lib')
     relocate('com.cryptomorin.xseries', 'io.github.divios.wards.shaded.XSeries')
-    relocate "com.fasterxml.jackson.core", "io.github.divios.wards.shaded.Jackson"
+    relocate "com.fasterxml.jackson", "io.github.divios.wards.shaded.Jackson"
+    relocate "org.yaml.snakeyaml", "io.github.divios.wards.shaded.snakeYaml"
 
     minimize()
 }
