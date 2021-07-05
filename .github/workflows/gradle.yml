@@ -21,12 +21,14 @@ jobs:
       with:
         java-version: '16'
         distribution: 'adopt'
-        
-    - name: gradle.properties
+    - name: Restore gradle.properties
       env:
-        repsyUrl: ${{  repsy_credentials.REPSYURL }}
-        repsyUsernam:  ${{  repsy_credentials.REPSYUSERNAME }}
-        repsyPassword:  ${{  repsy_credentials.REPSYPASSWORD }}
+          GRADLE_PROPERTIES: ${{ secrets.GRADLE_PROPERTIES }}
+      shell: bash
+      run: |
+          mkdir -p ~/.gradle/
+          echo "GRADLE_USER_HOME=${HOME}/.gradle" >> $GITHUB_ENV
+          echo "${GRADLE_PROPERTIES}" > ~/.gradle/gradle.properties
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
