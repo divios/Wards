@@ -12,20 +12,20 @@ public class langYml {
 
     private static final Wards plugin = Wards.getInstance();
 
-    private static final String DEFAULT_WARD_ENTERED = "{player} &7entered your ward {ward}";
-    private static final String DEFAULT_WARD_EXITED = "{player} &7exited your ward {ward}";
-    private static final String DEFAULT_WARD_EXPIRED = "Your ward {ward} has expired";
-    private static final String DEFAULT_WARD_PICK_UP = "You took your guard {ward}";
-    private static final String DEFAULT_WARD_COOLDOWN = "&7A cooldown is active, wait a few seconds";
+    private static final String DEFAULT_WARD_ENTERED = FormatUtils.color("{player} &7entered your ward {ward}");
+    private static final String DEFAULT_WARD_EXITED = FormatUtils.color("{player} &7exited your ward {ward}");
+    private static final String DEFAULT_WARD_EXPIRED = FormatUtils.color("Your ward {ward} has expired");
+    private static final String DEFAULT_WARD_PICK_UP = FormatUtils.color("You took your guard {ward}");
+    private static final String DEFAULT_WARD_COOLDOWN = FormatUtils.color("&7A cooldown is active, wait a few seconds");
     
-    private static final String DEFAULT_GIVE_ON_CMD = "You received a {type} &7ward";
-    private static final String DEFAULT_GIVE_INFO = "&8- &9/wards give [type] [player] &8 - &7Gives the a ward of the selected type for yourself or the given player";
+    private static final String DEFAULT_GIVE_ON_CMD = FormatUtils.color("You received a {type} &7ward");
+    private static final String DEFAULT_GIVE_INFO = FormatUtils.color("&8- &9/wards give [type] [player] &8 - &7Gives the a ward of the selected type for yourself or the given player");
     
-    private static final String DEFAULT_LIST_INFO = "&8- &9/wards list [player] &8 - &7Prints all the wards of yourself or given player";
+    private static final String DEFAULT_LIST_INFO = FormatUtils.color("&8- &9/wards list [player] &8 - &7Prints all the wards of yourself or given player");
 
-    private static final String DEFAULT_HELP_INFO = "&8- &9/wards help &8 - &7Shows the plugin's help";
+    private static final String DEFAULT_HELP_INFO = FormatUtils.color("&8- &9/wards help &8 - &7Shows the plugin's help");
     
-    private static final String DEFAULT_RELOAD_INFO = "&8- &9/wards reload &8 - &7Reloads the plugin";
+    private static final String DEFAULT_RELOAD_INFO = FormatUtils.color("&8- &9/wards reload &8 - &7Reloads the plugin");
 
     public String WARD_ENTERED;
     public String WARD_EXITED;
