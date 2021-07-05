@@ -14,9 +14,6 @@ public abstract class abstractObserver {
     private final Set<IObserver> subscribers = new HashSet<>();
     private final EventListener listener;
 
-    public static final String WARD_META = Wards.WARD_META;
-    public static final String WARD_BLOCK = Wards.WARD_BLOCK;
-
     protected abstractObserver() {
         this.listener = initListener();
     }
