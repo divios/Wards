@@ -4,6 +4,7 @@ main: io.github.divios.wards.Wards
 api-version: 1.13
 prefix: Wards
 description: Centinels/Wards to watch a region and get notified when someone enters
+depend: [ ProtocolLib ]
 
 commands:
   Wards:
