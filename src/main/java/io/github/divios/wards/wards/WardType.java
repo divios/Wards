@@ -184,7 +184,10 @@ public class WardType {
             }
 
             if (material == null || material.isEmpty() ||
-                    !XMaterial.matchXMaterial(material).isPresent()) {
+                    !XMaterial.matchXMaterial(material).isPresent() ||
+                    XMaterial.matchXMaterial(material).get().parseItem() == null ||
+                    !XMaterial.matchXMaterial(material).get().parseMaterial().isBlock()
+            ) {
                 throw new WardsTypeException("Material");
             }
 
