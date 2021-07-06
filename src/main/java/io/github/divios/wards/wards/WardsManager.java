@@ -30,9 +30,6 @@ public class WardsManager {
     private final Map<Location, Ward> wards = new ConcurrentHashMap<>();
     private final Set<WardType> types = new HashSet<>();
 
-    private WardPlaceEvent wardPlaced;
-    private WardInteractEvent wardInteract;
-
     private jsonDatabase database;
 
     public static WardsManager getInstance() {
@@ -51,13 +48,7 @@ public class WardsManager {
 
         types.addAll(WardsParser.parse());
 
-        wardPlaced = new WardPlaceEvent(instance);
-        wardInteract = new WardInteractEvent(instance);
         database = new jsonDatabase(new File(plugin.getDataFolder() + File.separator + "data.json"));
-
-        WardsCooldownTask.load();
-        WardsWatchTask.load();
-        WardsUpdateTask.load(database);
 
         Task.asyncDelayed(plugin, () -> {
 
@@ -73,7 +64,12 @@ public class WardsManager {
             long elapsedTime = System.nanoTime() - startTime;
             plugin.getLogger().info("Database loaded correctly in " + elapsedTime/1000000 + " ms");
 
-        }, 5L);
+            WardsCooldownTask.load();
+            WardsWatchTask.load();
+            WardsUpdateTask.load(database);
+
+        });
+
     }
 
     public Ward getWard(Location l) {

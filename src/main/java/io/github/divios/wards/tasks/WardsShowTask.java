@@ -2,6 +2,9 @@ package io.github.divios.wards.tasks;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import io.github.divios.core_lib.bucket.Bucket;
+import io.github.divios.core_lib.bucket.factory.BucketFactory;
+import io.github.divios.core_lib.bucket.partitioning.PartitioningStrategies;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
@@ -29,23 +32,25 @@ public class WardsShowTask {
 
         int[] ticks = {0};
 
-        Set<Block> surface = ward.getRegion().getSurface();
+        Bucket<Block> bucket = BucketFactory.newHashSetBucket(5, PartitioningStrategies.lowestSize());
+
+        bucket.addAll(ward.getRegion().getSurface());
 
         cache.put(p.getUniqueId(), Task.asyncRepeating(plugin, task -> {
 
-            if (ticks[0] == Wards.configValues.CHUNK_DISPLAY_SECONDS * 4) {
+            if (ticks[0] == Wards.configValues.CHUNK_DISPLAY_SECONDS * 4 * 5) {
                 task.cancel();
                 return;
             }
 
-            surface.stream()
+            bucket.asCycle().next().stream()
                     .filter(block -> block.getLocation().distance(p.getLocation()) < 40)
                     .forEach(block -> {
                         ParticleUtils.spawnParticleShape(p, block.getLocation().add(0, 1, 0));
                     });
             ticks[0]++;
 
-        }, 0, 5));
+        }, 0, 1));
 
     }
 
