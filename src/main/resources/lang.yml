@@ -8,7 +8,7 @@ messages:
     cooldown: "&7A cooldown is active, wait a few seconds"
   commands:
     give:
-      onCmd: "You received a {type} &7ward"
+      onCmd: "You received {amount} {type} &7wards"
       info: "&8- &9/wards give [type] [player] &8 - &7Gives the a ward of the selected type for yourself or the given player"
     list:
       info: "&8- &9/wards list [player] &8 - &7Prints all the wards of yourself or given player"

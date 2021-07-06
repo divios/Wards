@@ -51,7 +51,7 @@ public class giveCmd extends abstractCommand {
             return WardsManager.getInstance().getWardsTypes().stream()
                     .anyMatch(wardType -> wardType.getId().equals(args.get(0))) &&
                     Bukkit.getPlayer(args.get(1)) != null &&
-                    !utils.isInteger(args.get(2));
+                    utils.isInteger(args.get(2));
         }
 
         return false;
@@ -105,7 +105,8 @@ public class giveCmd extends abstractCommand {
                 .findFirst()
                 .ifPresent(wardType -> {
                     Msg.sendMsg(p, Msg.singletonMsg(Wards.langValues.GIVE_ON_CMD)
-                            .add("\\{type}", wardType.getId()).build());
+                            .add("\\{type}", wardType.getId())
+                            .add("\\{amount}", String.valueOf(amount)).build());
                     ItemUtils.give(p, wardType.buildItem(p), amount);
                 });
 
