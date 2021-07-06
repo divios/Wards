@@ -85,6 +85,7 @@ task updateJars {
 
 shadowJar {
     relocate('org.bstats', 'io.github.divios.wards.shaded.bstats')
+    relocate "de.tr7zw.nbtapi", "io.github.divios.wards.shaded.nbtApi"
     relocate('io.github.divios.core_lib', 'io.github.divios.wards.shaded.Core_lib')
     relocate('com.cryptomorin.xseries', 'io.github.divios.wards.shaded.XSeries')
     relocate "com.fasterxml.jackson", "io.github.divios.wards.shaded.Jackson"
@@ -99,8 +100,9 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.6.1'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.6.1'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.6.1'
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.28'
 
-    api 'io.github.divios:core_lib:1.0'
+    implementation 'io.github.divios:core_lib:1.0'
 }
 
 processResources {
