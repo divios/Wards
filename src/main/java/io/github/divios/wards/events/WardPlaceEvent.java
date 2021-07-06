@@ -1,6 +1,5 @@
 package io.github.divios.wards.events;
 
-import io.github.divios.wards.wards.Ward;
 import io.github.divios.wards.wards.WardType;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

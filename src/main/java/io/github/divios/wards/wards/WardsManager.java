@@ -2,14 +2,11 @@ package io.github.divios.wards.wards;
 
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
-import io.github.divios.wards.events.WardInteractEvent;
-import io.github.divios.wards.events.WardPlaceEvent;
 import io.github.divios.wards.file.jsonDatabase;
 import io.github.divios.wards.tasks.WardsCooldownTask;
 import io.github.divios.wards.tasks.WardsUpdateTask;
 import io.github.divios.wards.tasks.WardsWatchTask;
 import io.github.divios.wards.utils.utils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.io.File;

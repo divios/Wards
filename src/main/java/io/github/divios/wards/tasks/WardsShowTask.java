@@ -13,7 +13,6 @@ import io.github.divios.wards.wards.Ward;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 

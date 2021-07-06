@@ -2,7 +2,6 @@ package io.github.divios.wards.commands;
 
 import io.github.divios.core_lib.commands.abstractCommand;
 import io.github.divios.core_lib.commands.cmdTypes;
-import io.github.divios.core_lib.misc.LocationUtils;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.guis.wardListGui;
@@ -15,7 +14,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class listCmd extends abstractCommand {
