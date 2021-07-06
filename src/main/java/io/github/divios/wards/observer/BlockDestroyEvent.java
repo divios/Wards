@@ -5,7 +5,7 @@ import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockExplodeEvent;
 
-public class BlockDestroyEvent extends abstractObserver implements IObservable {
+public class BlockDestroyEvent extends abstractObserver {
 
     protected BlockDestroyEvent() {
         super();

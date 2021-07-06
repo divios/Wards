@@ -1,57 +1,48 @@
 package io.github.divios.wards.events;
 
-import io.github.divios.core_lib.itemutils.ItemUtils;
-import io.github.divios.core_lib.misc.Msg;
-import io.github.divios.core_lib.misc.confirmIH;
-import io.github.divios.wards.Wards;
-import io.github.divios.wards.observer.IObservable;
-import io.github.divios.wards.observer.IObserver;
-import io.github.divios.wards.utils.utils;
 import io.github.divios.wards.wards.Ward;
-import io.github.divios.wards.wards.WardsManager;
-import org.bukkit.Particle;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
-public class WardInteractEvent extends abstractEvent implements IObserver {
+public class WardInteractEvent extends Event implements Cancellable {
 
-    public WardInteractEvent(WardsManager manager) {
-        super(manager);
-        OManager.sToInteract(this);
+    private static final HandlerList HANDLERS_LIST = new HandlerList();
+    private boolean isCanceled = false;
+
+    private final Player p;
+    private final Ward ward;
+
+    public WardInteractEvent(Player p, Ward ward) {
+        this.p = p;
+        this.ward = ward;
+    }
+
+    public Player getP() {
+        return p;
+    }
+
+    public Ward getWard() {
+        return ward;
     }
 
     @Override
-    public void update(IObservable observable, Object object) {
-        PlayerInteractEvent o = (PlayerInteractEvent) object;
+    public HandlerList getHandlers() {
+        return HANDLERS_LIST;
+    }
 
-        Player p = o.getPlayer();
-        Ward ward = manager.getWard(o.getClickedBlock().getLocation());
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
+    }
 
-        if (ward == null) return;
-        o.setCancelled(true);
+    @Override
+    public boolean isCancelled() {
+        return isCanceled;
+    }
 
-        if (!ward.getAcceptedP().contains(p.getUniqueId())) {
-            return;
-        }
-
-        if (o.getPlayer().isSneaking()) {
-            new confirmIH(plugin, p, (player, aBoolean) -> {
-                if (aBoolean) {
-
-                    WardsManager.getInstance().deleteWard(ward);
-                    ItemUtils.give(p, ward.buildItem(), 1);
-                    utils.cleanBlock(ward.getCenter());
-                    Msg.sendMsg(p, Msg.singletonMsg(Wards.langValues.WARD_PICK_UP)
-                            .add("\\{ward}", ward.getName()).build());
-                    player.spawnParticle(Particle.FLAME,
-                            ward.getCenter().clone().add(0.5, 0.5, 0.5), 40);
-
-                }
-                p.closeInventory();
-            }, ward.getType().buildItem(), Wards.guiValues.CONFIRM_TITLE,
-                    Wards.guiValues.CONFIRM_YES, Wards.guiValues.CONFIRM_NO);
-        }
-
-        else ward.openInv(o.getPlayer());
+    @Override
+    public void setCancelled(boolean cancel) {
+        isCanceled = cancel;
     }
 }

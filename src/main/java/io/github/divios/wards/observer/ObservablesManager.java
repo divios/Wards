@@ -14,22 +14,15 @@ public class ObservablesManager {
         return INSTANCE;
     }
 
-    public void sToInteract(IObserver observer) {
-        interactEvent.subscribe(observer);
+    public BlockDestroyEvent getDestroyEvent() {
+        return destroyEvent;
     }
 
-    public void unToInteract(IObserver observer) {
-        interactEvent.unsubscribe(observer);
+    public BlockInteractEvent getInteractEvent() {
+        return interactEvent;
     }
 
-    public void sToPlaceEvent(IObserver observer) {
-        placeEvent.subscribe(observer);
+    public BlockPlaceEvent getPlaceEvent() {
+        return placeEvent;
     }
-
-    public void unToPlaceEvent(IObserver observer) {
-        placeEvent.unsubscribe(observer);
-    }
-
-
-
 }

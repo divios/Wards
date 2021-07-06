@@ -1,20 +1,12 @@
 package io.github.divios.wards.events;
 
-import de.tr7zw.nbtapi.NBTItem;
-import io.github.divios.wards.Wards;
-import io.github.divios.wards.observer.IObservable;
-import io.github.divios.wards.observer.IObserver;
-import io.github.divios.wards.observer.ObservablesManager;
-import io.github.divios.wards.utils.ParticleUtils;
-import io.github.divios.wards.utils.utils;
 import io.github.divios.wards.wards.Ward;
-import io.github.divios.wards.wards.WardsManager;
+import io.github.divios.wards.wards.WardType;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.event.block.BlockPlaceEvent;
-
-import java.util.UUID;
-import java.util.stream.IntStream;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
  * Class that is called by WardsManager and subscribes
@@ -25,39 +17,50 @@ import java.util.stream.IntStream;
  * WARD_META and WARD_UUID with the owner uuid
  */
 
-public class WardPlaceEvent implements IObserver {
+public class WardPlaceEvent extends Event implements Cancellable {
 
-    private final WardsManager manager;
-    private final ObservablesManager OManager;
+    private static final HandlerList HANDLERS_LIST = new HandlerList();
+    private boolean isCanceled = false;
 
-    public WardPlaceEvent(WardsManager manager){
-        this.manager = manager;
-        this.OManager = ObservablesManager.getInstance();
 
-        OManager.sToPlaceEvent(this);
+    private final Player p;
+    private final Location l;
+    private final WardType type;
+
+    public WardPlaceEvent(Player p, Location l, WardType type) {
+        this.p = p;
+        this.l = l;
+        this.type = type;
+    }
+
+    public Player getP() {
+        return p;
+    }
+
+    public Location getLocation() {
+        return l;
+    }
+
+    public WardType getType() {
+        return type;
     }
 
     @Override
-    public void update(IObservable observable, Object object) {
-        if (observable.getClass().equals(io.github.divios.wards.observer.BlockPlaceEvent.class)) {
+    public HandlerList getHandlers() {
+        return HANDLERS_LIST;
+    }
 
-            BlockPlaceEvent o = (BlockPlaceEvent) object;
-            Block block = o.getBlockPlaced();
-            Location l = block.getLocation();
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
+    }
 
-            String owner = new NBTItem(o.getItemInHand()).getString(Wards.WARD_OWNER);
+    @Override
+    public boolean isCancelled() {
+        return isCanceled;
+    }
 
-            utils.setWardMetadata(block, UUID.fromString(owner));
-
-            IntStream.range(0, 40).forEach(i -> {
-                ParticleUtils.spawnParticlePlace(o.getPlayer(), l.clone());
-            });
-
-            manager.createWard(new Ward.Builder(o.getItemInHand())
-                    .setLocation(l)
-                    .build());
-
-
-        }
+    @Override
+    public void setCancelled(boolean cancel) {
+        isCanceled = cancel;
     }
 }
