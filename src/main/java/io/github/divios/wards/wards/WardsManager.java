@@ -9,6 +9,7 @@ import io.github.divios.wards.tasks.WardsCooldownTask;
 import io.github.divios.wards.tasks.WardsUpdateTask;
 import io.github.divios.wards.tasks.WardsWatchTask;
 import io.github.divios.wards.utils.utils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.io.File;
@@ -57,6 +58,7 @@ public class WardsManager {
 
             database.deserialize().forEach(ward -> {
                 if (ward == null) return;
+
                 wards.put(ward.getCenter(), ward);
                 utils.setWardsMetadata(ward.getCenter(), ward.getOwner());
             });

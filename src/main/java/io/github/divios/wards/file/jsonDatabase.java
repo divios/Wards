@@ -1,25 +1,19 @@
 package io.github.divios.wards.file;
 
-import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import io.github.divios.wards.serializers.WardDeserializer;
-import io.github.divios.wards.serializers.WardSerializer;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
+import io.github.divios.core_lib.misc.LocationUtils;
+import io.github.divios.wards.Wards;
 import io.github.divios.wards.utils.utils;
 import io.github.divios.wards.wards.Ward;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class jsonDatabase {
 
-    private final StdSerializer<Ward> serializer = new WardSerializer();
-    private final StdDeserializer<Ward> deserializer = new WardDeserializer();
 
     private final File file;
 
@@ -30,34 +24,63 @@ public class jsonDatabase {
     public File getFile() { return file; }
 
     public void serialize(Collection<Ward> wards) {
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(Ward.class, serializer);
-        mapper.registerModule(module);
+        GsonBuilder gsonBuilder = new GsonBuilder();
 
-        ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
+        JsonSerializer<Ward> serializer = (ward, typeOfSrc, context) -> {
+            JsonObject jsonMerchant = new JsonObject();
 
+            jsonMerchant.addProperty("owner", ward.getOwner().toString());
+            jsonMerchant.addProperty("location", LocationUtils.toString(ward.getCenter()));
+            jsonMerchant.addProperty("type", ward.getType().getId());
+            jsonMerchant.addProperty("time", ward.getTimer());
+
+            return jsonMerchant;
+        };
+
+        gsonBuilder.registerTypeAdapter(Ward.class, serializer);
+
+        Gson customGson = gsonBuilder.setPrettyPrinting().create();
         try {
-            writer.writeValue(file, wards);
+            Writer writer = new FileWriter(file);
+            customGson.toJson(wards, writer);
+            writer.flush();
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public List<Ward> deserialize() {
 
         if (utils.isEmpty(file)) return Collections.emptyList();
 
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule("CustomWardSerializer",
-                new Version(1, 0, 0, null, null, null));
-        module.addDeserializer(Ward.class, deserializer);
-        mapper.registerModule(module);
-
         List<Ward> wards = new ArrayList<>();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+
+        JsonDeserializer<List<Ward>> deserializer = (json, typeOfT, context) -> {
+
+            List<Ward> wards1 = new ArrayList<>();
+
+            json.getAsJsonArray().forEach(jsonElement -> {
+                JsonObject jsonObject = jsonElement.getAsJsonObject();
+
+                wards1.add(new Ward.Builder(jsonObject.get("owner").getAsString())
+                        .setLocation(LocationUtils.fromString(Wards.getInstance(),
+                                jsonObject.get("location").getAsString()))
+                        .setId(jsonObject.get("type").getAsString())
+                        .setTimer(jsonObject.get("time").getAsInt())
+                        .build());
+            });
+            return wards1;
+        };
+        gsonBuilder.registerTypeAdapter(ArrayList.class, deserializer);
+
+        Gson customGson = gsonBuilder.create();
+
         try {
-            wards = Arrays.asList(mapper.readValue(file, Ward[].class));
-        } catch (IOException e) {
+            wards = customGson.fromJson(new JsonReader(new FileReader(file)), ArrayList.class);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 

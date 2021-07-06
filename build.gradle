@@ -88,7 +88,6 @@ shadowJar {
     relocate "de.tr7zw.nbtapi", "io.github.divios.wards.shaded.nbtApi"
     relocate('io.github.divios.core_lib', 'io.github.divios.wards.shaded.Core_lib')
     relocate('com.cryptomorin.xseries', 'io.github.divios.wards.shaded.XSeries')
-    relocate "com.fasterxml.jackson", "io.github.divios.wards.shaded.Jackson"
     relocate "org.yaml.snakeyaml", "io.github.divios.wards.shaded.snakeYaml"
 
     minimize()
@@ -97,9 +96,6 @@ shadowJar {
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
     compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0-SNAPSHOT"
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.6.1'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.6.1'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.6.1'
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.28'
 
     implementation 'io.github.divios:core_lib:1.0'
