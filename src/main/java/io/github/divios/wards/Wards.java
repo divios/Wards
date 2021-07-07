@@ -1,5 +1,6 @@
 package io.github.divios.wards;
 
+import io.github.divios.core_lib.Core_lib;
 import io.github.divios.core_lib.commands.CommandManager;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.Msg;
@@ -37,14 +38,15 @@ public final class Wards extends JavaPlugin {
     @Override
     public void onEnable() {
         INSTANCE = this;
+        Core_lib.setPlugin(this);
 
         ConfigManager.load();
         configValues = new configYml();
         guiValues = new guiYml();
         langValues = new langYml();
 
-        ObservablesManager.getInstance();  // Loads all Listeners
         WardsManager.getInstance();
+        ObservablesManager.getInstance();  // Loads all Listeners
 
         CommandManager.register(INSTANCE.getCommand("Wards"));      // Load command Manager
         CommandManager.addCommand(new giveCmd(), new reloadCmd(), new helpCmd(), new listCmd());
