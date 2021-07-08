@@ -2,6 +2,8 @@ package io.github.divios.wards.wards;
 
 import com.cryptomorin.xseries.XSound;
 import de.tr7zw.nbtapi.NBTItem;
+import io.github.divios.core_lib.cooldown.ComposedCooldownMap;
+import io.github.divios.core_lib.cooldown.Cooldown;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.LocationUtils;
 import io.github.divios.core_lib.misc.Msg;
@@ -16,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -36,7 +39,7 @@ public class Ward {
     private final UUID owner;
     private final WardType type;
     private final RegionI region;
-    private int timer;
+    private Long time;
 
     private final int hash;             // Hash of the object cached
 
@@ -45,14 +48,15 @@ public class Ward {
 
     private final WardInventory inv;
 
-    private Ward(String name, UUID owner, WardType type, Integer timer, RegionI region, Set<UUID> acceptedP) {
+    private Ward(String name, UUID owner, WardType type, Long timer, RegionI region, Set<UUID> acceptedP) {
 
         this.name = name;
         this.owner = owner;
         this.acceptedP.add(owner);
         this.type = type;
         this.region = region;
-        this.timer = timer;
+
+        this.time = timer;
 
         this.acceptedP.addAll(acceptedP);
 
@@ -98,16 +102,12 @@ public class Ward {
         return region.getChunks();
     }
 
-    public int getTimer() {
-        return timer;
+    public long getTimer() {
+        return time;
     }
 
-    public void setTimer(int timer) {
-        this.timer = timer;
-    }
-
-    public void updateInv() {
-        inv.update();
+    public void setTimer(long timer) {
+        this.time = timer;
     }
 
     public Set<UUID> getAcceptedP() {
@@ -123,10 +123,11 @@ public class Ward {
     }
 
     public ItemStack buildItem() {
+
         NBTItem item = new NBTItem(type.buildItem());
 
         item.setString(Wards.WARD_NAME, name);
-        item.setInteger(Wards.WARD_TIMER, timer);
+        item.setLong(Wards.WARD_TIMER, time);
         item.setString(Wards.WARD_OWNER, owner.toString());
         item.setObject(Wards.WARD_ACCEPTED, acceptedP);
 
@@ -210,16 +211,38 @@ public class Ward {
                 region.getCenter().equals(ward.getCenter()) && type.equals(ward.getType());
     }
 
+
+    public static Builder builder(String p) {
+        return new Builder(p);
+    }
+
+    public static Builder builder(Player p) {
+        return new Builder(p);
+    }
+
+    public static Builder builder(UUID uuid) {
+        return new Builder(uuid);
+    }
+
+    public static Builder builder(ItemStack item) {
+        return new Builder(item);
+    }
+
+    public static Builder builder(NBTItem item) {
+        return new Builder(item);
+    }
+
     public static class Builder {
 
         private String name = null;
         private UUID uuid = null;
         private Location location = null;
         private WardType type = null;
-        private Integer timer = null;
+        private Long timer = null;
         private Set<UUID> accepted = null;
 
         public Builder(Player p) {
+            Objects.requireNonNull(p, "Player cannot be null");
             this.uuid = p.getUniqueId();
             this.location = p.getLocation();
         }
@@ -243,7 +266,7 @@ public class Ward {
             this.uuid = UUID.fromString(item.getString(Wards.WARD_OWNER));
             this.type = WManager.getWardType(item.getString(Wards.WARD_ID));
             this.timer = item.hasKey(Wards.WARD_TIMER) ?
-                    item.getInteger(Wards.WARD_TIMER) :
+                    item.getLong(Wards.WARD_TIMER) :
                     type.getTime();
             setAccepted(item.getObject(Wards.WARD_ACCEPTED, List.class));
         }
@@ -273,7 +296,7 @@ public class Ward {
             return this;
         }
 
-        public Builder setTimer(Integer timer) {
+        public Builder setTimer(Long timer) {
             this.timer = timer;
             return this;
         }

@@ -1,10 +1,12 @@
 package io.github.divios.wards.tasks;
 
+import io.github.divios.core_lib.Events;
+import io.github.divios.core_lib.Schedulers;
 import io.github.divios.core_lib.bucket.Bucket;
 import io.github.divios.core_lib.bucket.factory.BucketFactory;
 import io.github.divios.core_lib.bucket.partitioning.PartitioningStrategies;
-import io.github.divios.core_lib.misc.EventListener;
-import io.github.divios.core_lib.misc.Task;
+import io.github.divios.core_lib.event.SingleSubscription;
+import io.github.divios.core_lib.scheduler.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.events.WardPlaceEvent;
 import io.github.divios.wards.events.WardRemoveEvent;
@@ -23,8 +25,8 @@ public class WardsWatchTask {
     private static boolean loaded = false;
     private static Task task;
     private static Bucket<Location> bucket;
-    private static EventListener<WardPlaceEvent> placeE;
-    private static EventListener<WardRemoveEvent> removeE;
+    private static SingleSubscription<WardPlaceEvent> placeE;
+    private static SingleSubscription<WardRemoveEvent> removeE;
 
     public static void load() {
 
@@ -37,29 +39,33 @@ public class WardsWatchTask {
 
         WManager.getWards().forEach((location, ward) -> bucket.add(location));  // Initial population
 
-        placeE = new EventListener<>(plugin, WardPlaceEvent.class, e -> {
-            if (e.isCancelled()) return;
+        placeE = Events.subscribe(WardPlaceEvent.class)
+                .filter(o -> !o.isCancelled())
+                .handler(e -> bucket.add(e.getLocation()));
 
-            bucket.add(e.getLocation());
-        });
+        removeE = Events.subscribe(WardRemoveEvent.class)
+                .handler(e -> bucket.remove(e.getWard().getCenter()));
 
-        removeE = new EventListener<>(plugin, WardRemoveEvent.class, e -> bucket.remove(e.getWard().getCenter()));
+        task = Schedulers.builder()
+                .async()
+                .after(1)
+                .every(1)
+                .run(() -> {
 
-        task = Task.asyncRepeating(plugin, () ->
+                    bucket.asCycle().next().forEach(l -> {
 
-                bucket.asCycle().next().forEach(l -> {
+                        Ward ward = WManager.getWard(l);
+                        if (ward == null) return;  // Just in case
 
-                    Ward ward = WManager.getWard(l);
-                    if (ward == null) return;  // Just in case
+                        if (ward.getRegion().getLoadedChunks().isEmpty()) return;
 
-                    if (ward.getRegion().getLoadedChunks().isEmpty()) return;
+                        ward.updateOnSight(Bukkit.getOnlinePlayers().stream()
+                                .filter(p -> ward.isInside(p.getLocation()))
+                                .filter(player -> !player.getUniqueId().equals(ward.getOwner()))
+                                .collect(Collectors.toList()));
+                    });
 
-                    ward.updateOnSight(Bukkit.getOnlinePlayers().stream()
-                            .filter(p -> ward.isInside(p.getLocation()))
-                            .filter(player -> !player.getUniqueId().equals(ward.getOwner()))
-                            .collect(Collectors.toList()));
-
-                }), 1, 1);
+                });
     }
 
     public static void unload() {
@@ -70,7 +76,7 @@ public class WardsWatchTask {
         placeE.unregister();
         removeE.unregister();
         bucket.clear();
-        task.cancel();
+        task.close();
     }
 
     public static void reload() {

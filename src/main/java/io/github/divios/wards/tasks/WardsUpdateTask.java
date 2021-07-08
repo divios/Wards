@@ -1,6 +1,7 @@
 package io.github.divios.wards.tasks;
 
-import io.github.divios.core_lib.misc.Task;
+import io.github.divios.core_lib.Schedulers;
+import io.github.divios.core_lib.scheduler.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.file.jsonDatabase;
 import io.github.divios.wards.utils.utils;
@@ -18,18 +19,19 @@ public class WardsUpdateTask {
         if (loaded) return;
         loaded = true;
 
-        task = Task.asyncRepeating(plugin, () -> {
+        task = Schedulers.builder()
+                .async()
+                .every(24000)
+                .consume(task1 -> {
+                    long startTime = System.nanoTime();
+                    plugin.getLogger().info("Saving database...");
 
-            long startTime = System.nanoTime();
-            plugin.getLogger().info("Saving database...");
+                    utils.clearUpFile(database.getFile());
+                    database.serialize(WManager.getWards().values());
 
-            utils.clearUpFile(database.getFile());
-            database.serialize(WManager.getWards().values());
-
-            long elapsedTime = System.nanoTime() - startTime;
-            plugin.getLogger().info("Database saved correctly in " + elapsedTime/1000000 + " ms");
-
-        }, 24000, 24000);
+                    long elapsedTime = System.nanoTime() - startTime;
+                    plugin.getLogger().info("Database saved correctly in " + elapsedTime/1000000 + " ms");
+                });
 
     }
 
@@ -37,7 +39,7 @@ public class WardsUpdateTask {
         if(!loaded) return;
 
         loaded = false;
-        task.cancel();
+        task.close();
     }
 
 }

@@ -1,11 +1,13 @@
 package io.github.divios.wards.tasks;
 
+import io.github.divios.core_lib.Events;
+import io.github.divios.core_lib.Schedulers;
 import io.github.divios.core_lib.bucket.Bucket;
 import io.github.divios.core_lib.bucket.factory.BucketFactory;
 import io.github.divios.core_lib.bucket.partitioning.PartitioningStrategies;
-import io.github.divios.core_lib.misc.EventListener;
+import io.github.divios.core_lib.event.SingleSubscription;
 import io.github.divios.core_lib.misc.Msg;
-import io.github.divios.core_lib.misc.Task;
+import io.github.divios.core_lib.scheduler.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.events.WardPlaceEvent;
 import io.github.divios.wards.events.WardRemoveEvent;
@@ -29,10 +31,12 @@ public class WardsCooldownTask {
     private static boolean loaded = false;
     private static Task task;
     private static Bucket<Location> bucket;
-    private static EventListener<WardPlaceEvent> placeE;
-    private static EventListener<WardRemoveEvent> removeE;
+    private static SingleSubscription<WardPlaceEvent> placeE;
+    private static SingleSubscription<WardRemoveEvent> removeE;
 
+    @Deprecated
     public static void load() {
+
         if (loaded) return;
         loaded = true;
 
@@ -40,17 +44,19 @@ public class WardsCooldownTask {
 
         WManager.getWards().forEach((location, ward) -> bucket.add(location));  // Initial population
 
-        placeE = new EventListener<>(plugin, WardPlaceEvent.class, e -> {
-            if (e.isCancelled()) return;
+        placeE = Events.subscribe(WardPlaceEvent.class)
+                .filter(o -> !o.isCancelled())
+                .handler(e -> bucket.add(e.getLocation()));
 
-            bucket.add(e.getLocation());
-        });
+        removeE = Events.subscribe(WardRemoveEvent.class)
+                .handler(e -> bucket.remove(e.getWard().getCenter()));
 
-        removeE = new EventListener<>(plugin, WardRemoveEvent.class, e -> bucket.remove(e.getWard().getCenter()));
-
-        task = Task.asyncRepeating(plugin, () -> {
-
-            bucket.asCycle().next().forEach( l -> {
+        task = Schedulers.builder()
+                .async()
+                .after(1)
+                .every(1)
+                .run(() -> {
+                    bucket.asCycle().next().forEach(l -> {
 
                         Ward ward = WManager.getWard(l);
                         if (ward == null) return;  // Just in case
@@ -58,7 +64,7 @@ public class WardsCooldownTask {
                         if (ward.getTimer() == -1) return;      // Ignore disabled timer
 
                         ward.setTimer(ward.getTimer() - 1);
-                        ward.updateInv();
+                        //ward.updateInv();
 
                         if (ward.getTimer() == 0) {
                             Msg.sendMsg(ward.getOwner(), Msg.singletonMsg(Wards.langValues.WARD_EXPIRED)
@@ -66,12 +72,10 @@ public class WardsCooldownTask {
                             utils.cleanBlock(ward.getCenter());
                             ward.getCenter().getWorld().spawnParticle(Particle.SMOKE_NORMAL,
                                     ward.getCenter().clone().add(0.5, 0.5, 0.5), 40);
-                            Task.syncDelayed(plugin, () -> WManager.deleteWard(ward));
+                            Schedulers.sync().run(() -> WManager.deleteWard(ward));
                         }
-
                     });
-
-        }, 1, 1);
+                });
     }
 
     public static void unload() {
@@ -81,6 +85,6 @@ public class WardsCooldownTask {
         placeE.unregister();
         removeE.unregister();
         bucket.clear();
-        task.cancel();
+        task.close();
     }
 }

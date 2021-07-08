@@ -11,7 +11,7 @@ plugins {
 apply plugin: 'maven-publish'
 
 group = 'io.github.divios'
-def pluginVersion = "1.0"
+def pluginVersion = "1.1"
 version = pluginVersion
 
 sourceCompatibility = '1.8'
@@ -88,7 +88,6 @@ shadowJar {
     relocate "de.tr7zw.nbtapi", "io.github.divios.wards.shaded.nbtApi"
     relocate('io.github.divios.core_lib', 'io.github.divios.wards.shaded.Core_lib')
     relocate('com.cryptomorin.xseries', 'io.github.divios.wards.shaded.XSeries')
-    relocate "org.yaml.snakeyaml", "io.github.divios.wards.shaded.snakeYaml"
 
     minimize()
 }
@@ -96,9 +95,9 @@ shadowJar {
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
     compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0-SNAPSHOT"
-    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.28'
+    //implementation 'org.ehcache:ehcache:3.8.1'
 
-    implementation 'io.github.divios:core_lib:1.0'
+    implementation 'io.github.divios:core_lib:2.0'
 }
 
 processResources {

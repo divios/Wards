@@ -1,5 +1,7 @@
 package io.github.divios.wards.wards;
 
+import io.github.divios.core_lib.Schedulers;
+import io.github.divios.core_lib.cooldown.Cooldown;
 import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.file.jsonDatabase;
@@ -15,6 +17,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -25,10 +28,14 @@ public class WardsManager {
     private static final Wards plugin = Wards.getInstance();
     private static WardsManager instance = null;
 
-    private final Map<Location, Ward> wards = new ConcurrentHashMap<>();
-    private final Set<WardType> types = new HashSet<>();
-
+    private final Map<Location, Ward> wards;
+    private final Set<WardType> types;
     private jsonDatabase database;
+
+    private WardsManager() {
+        wards = new ConcurrentHashMap<>();
+        types =  new HashSet<>();
+    }
 
     public static WardsManager getInstance() {
         if (instance == null) { // Check 1
@@ -48,7 +55,7 @@ public class WardsManager {
 
         database = new jsonDatabase(new File(plugin.getDataFolder() + File.separator + "data.json"));
 
-        Task.asyncDelayed(plugin, () -> {
+        Schedulers.async().run(() -> {
 
             long startTime = System.nanoTime();
             plugin.getLogger().info("Loading database...");
@@ -110,7 +117,7 @@ public class WardsManager {
 
         plugin.getLogger().info("Saving database...");
         utils.clearUpFile(database.getFile());
-        database.serialize(wards.values());
+        if (!wards.isEmpty()) database.serialize(wards.values());
         plugin.getLogger().info("Database saved correctly");
     }
 

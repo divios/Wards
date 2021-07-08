@@ -1,5 +1,7 @@
 package io.github.divios.wards.observer;
 
+import io.github.divios.core_lib.Events;
+import io.github.divios.core_lib.event.SingleSubscription;
 import io.github.divios.core_lib.itemutils.ItemUtils;
 import io.github.divios.core_lib.misc.EventListener;
 import io.github.divios.core_lib.misc.Msg;
@@ -23,15 +25,15 @@ public class BlockInteractEvent extends abstractObserver {
     }
 
     @Override
-    protected EventListener initListener() {
-        return new EventListener<>(plugin, PlayerInteractEvent.class, EventPriority.HIGHEST,
-                o -> {
-                    if (o.getClickedBlock() == null) return;
-                    if (WardsManager.getInstance()
-                                    .getWard(o.getClickedBlock().getLocation()) == null) return;
+    protected SingleSubscription<PlayerInteractEvent> initListener() {
+
+        return Events.subscribe(PlayerInteractEvent.class, EventPriority.HIGHEST)
+                .filter(o -> o.getClickedBlock() != null)
+                .filter(o -> manager.getWard(o.getClickedBlock().getLocation()) != null)
+                .handler(o -> {
 
                     Player p = o.getPlayer();
-                    Ward ward = WardsManager.getInstance().getWard(o.getClickedBlock().getLocation());
+                    Ward ward = manager.getWard(o.getClickedBlock().getLocation());
 
                     if (ward == null) return;
                     o.setCancelled(true);
@@ -45,7 +47,7 @@ public class BlockInteractEvent extends abstractObserver {
 
                     if (event.isCancelled()) return;
 
-                    if (o.getPlayer().isSneaking()) {
+                    if (o.getPlayer().isSneaking()) {           // Confirm Menu
                         new confirmIH(plugin, p, (player, aBoolean) -> {
                             if (aBoolean) {
 
@@ -67,5 +69,6 @@ public class BlockInteractEvent extends abstractObserver {
 
                     else ward.openInv(o.getPlayer());
                 });
+
     }
 }

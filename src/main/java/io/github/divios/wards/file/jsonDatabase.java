@@ -66,11 +66,10 @@ public class jsonDatabase {
             json.getAsJsonArray().forEach(jsonElement -> {
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
 
-                wards1.add(new Ward.Builder(jsonObject.get("owner").getAsString())
-                        .setLocation(LocationUtils.fromString(Wards.getInstance(),
-                                jsonObject.get("location").getAsString()))
+                wards1.add(Ward.builder(jsonObject.get("owner").getAsString())
+                        .setLocation(LocationUtils.fromString(jsonObject.get("location").getAsString()))
                         .setId(jsonObject.get("type").getAsString())
-                        .setTimer(jsonObject.get("time").getAsInt())
+                        .setTimer(jsonObject.get("time").getAsLong())
                         .build());
             });
             return wards1;

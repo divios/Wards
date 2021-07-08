@@ -27,7 +27,7 @@ public class WardType {
     private final XMaterial material;
     private final String display_name;
     private final List<String> lore;
-    private final int time;
+    private final long time;
     private final WardTypeE type;
     private final int radius;
 
@@ -36,7 +36,7 @@ public class WardType {
             XMaterial material,
             String display_name,
             List<String> lore,
-            int time,
+            long time,
             WardTypeE type,
             int radius
     ) {
@@ -67,7 +67,7 @@ public class WardType {
         return lore;
     }
 
-    public int getTime() {
+    public long getTime() {
         return time;
     }
 
@@ -89,7 +89,7 @@ public class WardType {
         item.setString(Wards.WARD_META, "pizza");
         item.setString(Wards.WARD_ID, id);
         item.setString(Wards.WARD_OWNER, uuid);
-        item.setInteger(Wards.WARD_TIMER, time);
+        item.setLong(Wards.WARD_TIMER, time);
 
         return item.getItem();
     }
@@ -130,7 +130,7 @@ public class WardType {
         private String material = null;
         private String display_name = null;
         private String lore = null;
-        private Integer time = null;
+        private Long time = null;
         private String type = null;
         private Integer radius = null;
 
@@ -161,8 +161,13 @@ public class WardType {
             return this;
         }
 
-        public Builder setTime(Integer time) {
+        public Builder setTime(Long time) {
             this.time = time;
+            return this;
+        }
+
+        public Builder setTime(Integer time) {
+            this.time = time.longValue();
             return this;
         }
 

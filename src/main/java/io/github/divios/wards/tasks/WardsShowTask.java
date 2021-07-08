@@ -2,6 +2,7 @@ package io.github.divios.wards.tasks;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import io.github.divios.core_lib.Schedulers;
 import io.github.divios.core_lib.bucket.Bucket;
 import io.github.divios.core_lib.bucket.factory.BucketFactory;
 import io.github.divios.core_lib.bucket.partitioning.PartitioningStrategies;
@@ -15,11 +16,12 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class WardsShowTask {
 
     private static final Wards plugin = Wards.getInstance();
-    private static Cache<UUID, Task> cache = CacheBuilder.newBuilder()
+    private static Cache<UUID, Player> cache = CacheBuilder.newBuilder()
             .expireAfterWrite(Wards.configValues.CHUNK_DISPLAY_COOLDOWN, TimeUnit.SECONDS).build();
 
     public static void generate(Player p, Ward ward) {
@@ -29,28 +31,27 @@ public class WardsShowTask {
             return;
         }
 
-        int[] ticks = {0};
-
+        cache.put(p.getUniqueId(), p);
         Bucket<Block> bucket = BucketFactory.newHashSetBucket(5, PartitioningStrategies.lowestSize());
-
         bucket.addAll(ward.getRegion().getSurface());
 
-        cache.put(p.getUniqueId(), Task.asyncRepeating(plugin, task -> {
+        AtomicInteger counter = new AtomicInteger(0);
+        Schedulers.builder()
+                .sync()
+                .every(1)
+                .consume((task) -> {
 
-            if (ticks[0] == Wards.configValues.CHUNK_DISPLAY_SECONDS * 4 * 5) {
-                task.cancel();
-                return;
-            }
+                    if (counter.get() >= Wards.configValues.CHUNK_DISPLAY_SECONDS * 4 * 5)
+                        task.stop();
 
-            bucket.asCycle().next().stream()
-                    .filter(block -> block.getLocation().distance(p.getLocation()) < 40)
-                    .forEach(block -> {
-                        ParticleUtils.spawnParticleShape(p, block.getLocation().add(0, 1, 0));
-                    });
-            ticks[0]++;
+                    bucket.asCycle().next().stream()
+                            .filter(block -> block.getLocation().distance(p.getLocation()) < 40)
+                            .forEach(block ->
+                                    ParticleUtils.spawnParticleShape(p,
+                                            block.getLocation().add(0, 1, 0)));
 
-        }, 0, 1));
-
+                    counter.incrementAndGet();
+                });
     }
 
     public static void reload() {

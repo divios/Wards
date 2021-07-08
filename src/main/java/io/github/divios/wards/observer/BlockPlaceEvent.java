@@ -1,6 +1,8 @@
 package io.github.divios.wards.observer;
 
 import de.tr7zw.nbtapi.NBTItem;
+import io.github.divios.core_lib.Events;
+import io.github.divios.core_lib.event.SingleSubscription;
 import io.github.divios.core_lib.misc.EventListener;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.events.WardPlaceEvent;
@@ -25,37 +27,41 @@ public class BlockPlaceEvent extends abstractObserver {
     }
 
     @Override
-    protected EventListener<org.bukkit.event.block.BlockPlaceEvent> initListener() {
-        return new EventListener<>(plugin, org.bukkit.event.block.BlockPlaceEvent.class,
-                EventPriority.HIGHEST, o -> {
+    protected SingleSubscription initListener() {
 
-            NBTItem item = new NBTItem(o.getItemInHand());
-            if (!item.hasKey(Wards.WARD_META)) return;
 
-            String id = item.getString(Wards.WARD_ID);
-            Player p = o.getPlayer();
-            Block block = o.getBlockPlaced();
-            Location l = block.getLocation();
-            WardType type = WardsManager.getInstance().getWardType(id);
+        return Events.subscribe(org.bukkit.event.block.BlockPlaceEvent.class, EventPriority.HIGHEST)
+                .handler(o -> {
 
-            if (type == null) return;
+                    NBTItem item = new NBTItem(o.getItemInHand());
+                    if (!item.hasKey(Wards.WARD_META)) return;
 
-            WardPlaceEvent event = new WardPlaceEvent(p, l, type);
-            Bukkit.getPluginManager().callEvent(event);
+                    String id = item.getString(Wards.WARD_ID);
+                    Player p = o.getPlayer();
+                    Block block = o.getBlockPlaced();
+                    Location l = block.getLocation();
+                    WardType type = WardsManager.getInstance().getWardType(id);
 
-            if (event.isCancelled()) return;
+                    if (type == null) return;
 
-            String owner = new NBTItem(o.getItemInHand()).getString(Wards.WARD_OWNER);
+                    WardPlaceEvent event = new WardPlaceEvent(p, l, type);
+                    Bukkit.getPluginManager().callEvent(event);
 
-            utils.setWardMetadata(block, UUID.fromString(owner));
+                    if (event.isCancelled()) return;
 
-            IntStream.range(0, 40).forEach(i -> {
-                ParticleUtils.spawnParticlePlace(p, l.clone());
-            });
+                    String owner = new NBTItem(o.getItemInHand()).getString(Wards.WARD_OWNER);
 
-            WardsManager.getInstance().createWard(new Ward.Builder(o.getItemInHand())
-                    .setLocation(l)
-                    .build());
-        });
+                    utils.setWardMetadata(block, UUID.fromString(owner));
+
+                    IntStream.range(0, 40).forEach(i -> {
+                        ParticleUtils.spawnParticlePlace(p, l.clone());
+                    });
+
+                    manager.createWard(Ward.builder(o.getItemInHand())
+                            .setLocation(l)
+                            .build());
+
+                });
+
     }
 }
