@@ -5,10 +5,10 @@ import de.tr7zw.nbtapi.NBTItem;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.wards.Wards;
-import io.github.divios.wards.regions.ChunkRegion;
-import io.github.divios.wards.regions.CuboidRegion;
+import io.github.divios.wards.regions.ChunkRegionImpl;
+import io.github.divios.wards.regions.CuboidRegionImpl;
 import io.github.divios.wards.regions.RegionI;
-import io.github.divios.wards.regions.SpheroidRegion;
+import io.github.divios.wards.regions.SpheroidRegionImpl;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -102,11 +102,11 @@ public class WardType {
         RegionI region;
 
         if (type == WardTypeE.CHUNK)
-            region = new ChunkRegion(l, radius);
+            region = new ChunkRegionImpl(l, radius);
         else if (type == WardTypeE.CUBOID)
-            region = new CuboidRegion(l, radius);
+            region = new CuboidRegionImpl(l, radius);
         else
-            region = new SpheroidRegion(l, radius);
+            region = new SpheroidRegionImpl(l, radius);
 
         return region;
     }

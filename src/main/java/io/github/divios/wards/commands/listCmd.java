@@ -4,7 +4,7 @@ import io.github.divios.core_lib.commands.abstractCommand;
 import io.github.divios.core_lib.commands.cmdTypes;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.wards.Wards;
-import io.github.divios.wards.guis.wardListGui;
+import io.github.divios.wards.menus.wardListGui;
 import io.github.divios.wards.wards.Ward;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Bukkit;
