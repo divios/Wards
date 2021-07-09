@@ -32,19 +32,17 @@ public class WardsShowTask {
         }
 
         cache.put(p.getUniqueId(), p);
-        Bucket<Block> bucket = BucketFactory.newHashSetBucket(5, PartitioningStrategies.lowestSize());
-        bucket.addAll(ward.getRegion().getSurface());
 
         AtomicInteger counter = new AtomicInteger(0);
         Schedulers.builder()
                 .sync()
-                .every(1)
+                .every(20)
                 .consume((task) -> {
 
-                    if (counter.get() >= Wards.configValues.CHUNK_DISPLAY_SECONDS * 4 * 5)
+                    if (counter.get() >= Wards.configValues.CHUNK_DISPLAY_SECONDS)
                         task.stop();
 
-                    bucket.asCycle().next().stream()
+                    ward.getRegion().getSurface().stream()
                             .filter(block -> block.getLocation().distance(p.getLocation()) < 40)
                             .forEach(block ->
                                     ParticleUtils.spawnParticleShape(p,
