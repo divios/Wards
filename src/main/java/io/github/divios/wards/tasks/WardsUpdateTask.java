@@ -21,8 +21,9 @@ public class WardsUpdateTask {
 
         task = Schedulers.builder()
                 .async()
+                .after(24000)
                 .every(24000)
-                .consume(task1 -> {
+                .run(() -> {
                     long startTime = System.nanoTime();
                     plugin.getLogger().info("Saving database...");
 
