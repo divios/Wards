@@ -5,6 +5,8 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.cryptomorin.xseries.particles.ParticleDisplay;
+import com.cryptomorin.xseries.particles.XParticle;
 import io.github.divios.wards.Wards;
 import org.bukkit.Color;
 import org.bukkit.Effect;
@@ -50,19 +52,23 @@ public class ParticleUtils {
     }
 
     public static void spawnParticleShape(Player p, Location l) {
+
+        ParticleDisplay.simple(l, Particle.VILLAGER_HAPPY)
+                .withForce(true).spawn(l, p);
+
+        /*
         if (Wards.MID_VERSION > 12)
-            p.spawnParticle(Particle.REDSTONE, l, 1, new Particle.DustOptions(Color.ORANGE, 1));
+            p.spawnParticle(Particle.REDSTONE, l, 5, new Particle.DustOptions(Color.ORANGE, 1));
         else if (Wards.MID_VERSION > 8)
             p.spawnParticle(Particle.REDSTONE, l, 0, 1, 139/255F, 0, 1);
         else
-            l.getWorld().playEffect(l, Effect.valueOf("COLOURED_DUST"), null);
+            l.getWorld().playEffect(l, Effect.valueOf("COLOURED_DUST"), null); */
     }
 
     public static void spawnParticlePlace(Player p, Location l) {
-        if (Wards.MID_VERSION <= 12) return;
+        ParticleDisplay.simple(l.clone(), Particle.SPELL_WITCH)
+                .spawn(l.add(Math.random(), Math.random(), Math.random()), p);
 
-        p.spawnParticle(Particle.SPELL_WITCH,
-                l.add(Math.random(), Math.random(), Math.random()), 1);
     }
 
 }
