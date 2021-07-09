@@ -7,7 +7,7 @@ import io.github.divios.core_lib.bucket.Bucket;
 import io.github.divios.core_lib.bucket.factory.BucketFactory;
 import io.github.divios.core_lib.bucket.partitioning.PartitioningStrategies;
 import io.github.divios.core_lib.misc.Msg;
-import io.github.divios.core_lib.misc.Task;
+import io.github.divios.core_lib.scheduler.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.utils.ParticleUtils;
 import io.github.divios.wards.wards.Ward;
@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class WardsShowTask {
 
     private static final Wards plugin = Wards.getInstance();
-    private static Cache<UUID, Player> cache = CacheBuilder.newBuilder()
+    private static Cache<UUID, Task> cache = CacheBuilder.newBuilder()
             .expireAfterWrite(Wards.configValues.CHUNK_DISPLAY_COOLDOWN, TimeUnit.SECONDS).build();
 
     public static void generate(Player p, Ward ward) {
@@ -31,11 +31,9 @@ public class WardsShowTask {
             return;
         }
 
-        cache.put(p.getUniqueId(), p);
-
         AtomicInteger counter = new AtomicInteger(0);
-        Schedulers.builder()
-                .sync()
+        cache.put(p.getUniqueId(), Schedulers.builder()
+                .async()
                 .every(20)
                 .consume((task) -> {
 
@@ -49,13 +47,12 @@ public class WardsShowTask {
                                             block.getLocation().add(0, 1, 0)));
 
                     counter.incrementAndGet();
-                });
+                }));
     }
 
-    public static void reload() {
+    public static void unloadAll() {
+        cache.asMap().values().forEach(Task::close);
         cache.invalidateAll();
-        cache = CacheBuilder.newBuilder()
-                .expireAfterWrite(Wards.configValues.CHUNK_DISPLAY_COOLDOWN, TimeUnit.SECONDS).build();
     }
 
 }
