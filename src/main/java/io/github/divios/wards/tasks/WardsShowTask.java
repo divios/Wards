@@ -51,7 +51,7 @@ public class WardsShowTask {
     }
 
     public static void unloadAll() {
-        cache.asMap().values().forEach(Task::close);
+        cache.asMap().values().forEach(Task::stop);
         cache.invalidateAll();
     }
 
