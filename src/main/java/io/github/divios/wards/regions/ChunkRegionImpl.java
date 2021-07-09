@@ -1,6 +1,7 @@
 package io.github.divios.wards.regions;
 
 import io.github.divios.core_lib.region.CuboidRegion;
+import io.github.divios.core_lib.region.Region;
 import io.github.divios.wards.utils.ChunkUtils;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -12,17 +13,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public class ChunkRegion implements RegionI {
+public class ChunkRegionImpl extends RegionI {
 
-    private final CuboidRegion region;
-    private final Location center;
-    private final int radius;
+    public ChunkRegionImpl(Location l, int radius) {
+        super(l, () -> generateRegion(l, radius));
+    }
 
-    public ChunkRegion(Location l, int radius) {
-
-        this.radius = radius;
-        this.center = l;
-
+    private static Region generateRegion(Location l, int radius) {
         World world = l.getWorld();
         int[] center = {l.getChunk().getX(), l.getChunk().getZ()};
         int itits = 1 + 2 * (radius - 1);
@@ -35,17 +32,11 @@ public class ChunkRegion implements RegionI {
         Location topLeft = topLeftChunk.getBlock(0, 0, 0).getLocation();
         Location bottomRight = bottomRightChunk.getBlock(15, 0, 15).getLocation();
 
-        region = new CuboidRegion(topLeft, bottomRight).expand(0, 0, 255, 0, 0, 0);
-
+        return new CuboidRegion(topLeft, bottomRight).expand(0, 0, 255, 0, 0, 0);
     }
 
     @Override
-    public boolean isInside(Location l) {
-        return region.contains(l);
-    }
-
-    @Override
-    public Set<Block> getBlocks() {
+    Set<Block> getBlocksImpl() {
         Set<Block> blocks = new HashSet<>();
 
         region.getChunks().forEach(chunk -> {
@@ -56,12 +47,12 @@ public class ChunkRegion implements RegionI {
     }
 
     @Override
-    public Set<Block> getSurface() {
+    Set<Block> getSurfaceImpl() {
         Set<Block> surface = new HashSet<>();
 
         Stream.of(BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.DOWN)
                 .forEach(blockFace -> {
-                    CuboidRegion face = region.getFace(blockFace);
+                    CuboidRegion face = ((CuboidRegion)region).getFace(blockFace);
 
                     face.getChunks().forEach(chunk -> {
                         surface.addAll(ChunkUtils.getBlocks(chunk,
@@ -73,18 +64,4 @@ public class ChunkRegion implements RegionI {
         return surface;
     }
 
-    @Override
-    public Set<Chunk> getChunks() {
-        return region.getChunks();
-    }
-
-    @Override
-    public Set<Chunk> getLoadedChunks() {
-        return region.getLoadedChunks();
-    }
-
-    @Override
-    public Location getCenter() {
-        return center;
-    }
 }
