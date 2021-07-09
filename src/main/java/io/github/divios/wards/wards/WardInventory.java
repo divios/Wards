@@ -218,10 +218,10 @@ public class WardInventory {
 
                             if (e.getViewers().size() != 1) return;
 
-                            Bukkit.broadcastMessage("Iniciado listener");
+                            //Bukkit.broadcastMessage("Iniciado listener");
                             update = Schedulers.builder().sync().every(20).run(() -> {
 
-                                    Bukkit.broadcastMessage("updated");
+                                    //Bukkit.broadcastMessage("updated");
                                     inv.getMainInv().getInventory().setItem(11,
                                     new ItemBuilder(Wards.guiValues.TIME_MATERIAL)
                                     .setName(Wards.guiValues.TIME_NAME)
@@ -234,7 +234,7 @@ public class WardInventory {
 
                             if (e.getViewers().size() - 1 != 0) return;
                             update.close();
-                            Bukkit.broadcastMessage("destroyer listener");
+                            //Bukkit.broadcastMessage("destroyer listener");
                         }
 
                     });

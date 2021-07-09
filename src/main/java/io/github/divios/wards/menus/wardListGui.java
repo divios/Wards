@@ -1,4 +1,4 @@
-package io.github.divios.wards.guis;
+package io.github.divios.wards.menus;
 
 import com.cryptomorin.xseries.XMaterial;
 import io.github.divios.core_lib.inventory.InventoryGUI;

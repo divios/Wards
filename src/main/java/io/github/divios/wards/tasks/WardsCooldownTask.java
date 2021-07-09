@@ -56,6 +56,7 @@ public class WardsCooldownTask {
                 .after(1)
                 .every(1)
                 .run(() -> {
+
                     bucket.asCycle().next().forEach(l -> {
 
                         Ward ward = WManager.getWard(l);
