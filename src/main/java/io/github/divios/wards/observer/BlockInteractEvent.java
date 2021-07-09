@@ -3,7 +3,6 @@ package io.github.divios.wards.observer;
 import io.github.divios.core_lib.Events;
 import io.github.divios.core_lib.event.SingleSubscription;
 import io.github.divios.core_lib.itemutils.ItemUtils;
-import io.github.divios.core_lib.misc.EventListener;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.core_lib.misc.confirmIH;
 import io.github.divios.wards.Wards;

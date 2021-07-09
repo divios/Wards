@@ -2,7 +2,6 @@ package io.github.divios.wards.observer;
 
 import io.github.divios.core_lib.Events;
 import io.github.divios.core_lib.Schedulers;
-import io.github.divios.core_lib.cooldown.Cooldown;
 import io.github.divios.core_lib.cooldown.CooldownEvent;
 import io.github.divios.core_lib.event.SingleSubscription;
 import io.github.divios.core_lib.misc.Msg;
@@ -11,7 +10,6 @@ import io.github.divios.wards.utils.utils;
 import io.github.divios.wards.wards.Ward;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Particle;
-import org.bukkit.event.Event;
 
 public class WardCooldownEvent extends abstractObserver{
 

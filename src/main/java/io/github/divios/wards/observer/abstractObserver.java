@@ -2,7 +2,6 @@ package io.github.divios.wards.observer;
 
 
 import io.github.divios.core_lib.event.SingleSubscription;
-import io.github.divios.core_lib.misc.EventListener;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.wards.WardsManager;
 

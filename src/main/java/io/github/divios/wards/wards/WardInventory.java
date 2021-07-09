@@ -14,13 +14,11 @@ import io.github.divios.core_lib.misc.XSymbols;
 import io.github.divios.core_lib.scheduler.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.tasks.WardsShowTask;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-
 
 import java.util.ArrayList;
 import java.util.stream.IntStream;

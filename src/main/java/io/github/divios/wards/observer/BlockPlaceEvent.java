@@ -3,7 +3,6 @@ package io.github.divios.wards.observer;
 import de.tr7zw.nbtapi.NBTItem;
 import io.github.divios.core_lib.Events;
 import io.github.divios.core_lib.event.SingleSubscription;
-import io.github.divios.core_lib.misc.EventListener;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.events.WardPlaceEvent;
 import io.github.divios.wards.utils.ParticleUtils;

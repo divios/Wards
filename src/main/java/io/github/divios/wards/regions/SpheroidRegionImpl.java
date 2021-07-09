@@ -2,11 +2,9 @@ package io.github.divios.wards.regions;
 
 import io.github.divios.core_lib.region.SpheroidRegion;
 import io.github.divios.wards.utils.ChunkUtils;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 

@@ -3,7 +3,6 @@ package io.github.divios.wards.file;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import io.github.divios.core_lib.misc.LocationUtils;
-import io.github.divios.wards.Wards;
 import io.github.divios.wards.utils.utils;
 import io.github.divios.wards.wards.Ward;
 

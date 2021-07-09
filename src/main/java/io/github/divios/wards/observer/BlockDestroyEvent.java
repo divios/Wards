@@ -2,7 +2,6 @@ package io.github.divios.wards.observer;
 
 import io.github.divios.core_lib.Events;
 import io.github.divios.core_lib.event.SingleSubscription;
-import io.github.divios.core_lib.misc.EventListener;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockExplodeEvent;
