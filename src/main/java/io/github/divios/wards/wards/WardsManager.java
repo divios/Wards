@@ -6,6 +6,7 @@ import io.github.divios.core_lib.misc.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.file.jsonDatabase;
 import io.github.divios.wards.tasks.WardsCooldownTask;
+import io.github.divios.wards.tasks.WardsShowTask;
 import io.github.divios.wards.tasks.WardsUpdateTask;
 import io.github.divios.wards.tasks.WardsWatchTask;
 import io.github.divios.wards.utils.utils;
@@ -125,6 +126,7 @@ public class WardsManager {
         WardsCooldownTask.unload();
         WardsWatchTask.unload();
         WardsUpdateTask.unload();
+        WardsShowTask.unloadAll();
 
         saveWards();
 
