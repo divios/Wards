@@ -6,6 +6,7 @@ import io.github.divios.core_lib.Schedulers;
 import io.github.divios.core_lib.event.MergedSubscription;
 import io.github.divios.core_lib.inventory.InventoryGUI;
 import io.github.divios.core_lib.inventory.ItemButton;
+import io.github.divios.core_lib.inventory.builder.inventoryPopulator;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
 import io.github.divios.core_lib.misc.ChatPrompt;
 import io.github.divios.core_lib.misc.FormatUtils;
@@ -56,23 +57,15 @@ public class WardInventory {
 
         InventoryGUI builded = new InventoryGUI(plugin, 27, ward.getName());
 
-        IntStream.of(0, 1, 7, 8, 9, 17, 18, 19, 25).forEach(value -> {
-            builded.addButton(ItemButton.create(new ItemBuilder(Wards.guiValues.GLASS_PANE_1)
-                    .setName("&c"), e -> {
-            }), value);
-        });
-
-        IntStream.of(2, 6, 10, 16, 20, 24).forEach(value -> {
-            builded.addButton(ItemButton.create(new ItemBuilder(Wards.guiValues.GLASS_PANE_2)
-                    .setName("&c"), e -> {
-            }), value);
-        });
-
-        IntStream.of(3, 4, 5, 12, 14, 21, 22, 23).forEach(value -> {
-            builded.addButton(ItemButton.create(new ItemBuilder(Wards.guiValues.GLASS_PANE_3)
-                    .setName("&c"), e -> {
-            }), value);
-        });
+        inventoryPopulator.builder()
+                .ofGlass()
+                .mask("111111111")
+                .mask("110111011")
+                .mask("111111111")
+                .scheme(11, 11, 3, 7, 7, 7, 3, 11, 11)
+                .scheme(11, 3, 7, 7, 3, 11)
+                .scheme(11, 11, 3, 7, 7, 7, 3, 11, 11)
+                .apply(builded.getInventory());
 
         builded.addButton(ItemButton.create(new ItemBuilder(Wards.guiValues.TIME_MATERIAL)
                         .setName(Wards.guiValues.TIME_NAME)
@@ -112,25 +105,19 @@ public class WardInventory {
     }
 
     private InventoryGUI createSettings() {
+
         InventoryGUI builded = new InventoryGUI(plugin, 27, ward.getName());
 
-        IntStream.of(0, 1, 7, 8, 9, 17, 18, 19, 25).forEach(value -> {
-            builded.addButton(ItemButton.create(new ItemBuilder(XMaterial.BLUE_STAINED_GLASS_PANE)
-                    .setName("&c"), e -> {
-            }), value);
-        });
+        inventoryPopulator.builder()
+                .ofGlass()
+                .mask("111111111")
+                .mask("110111011")
+                .mask("111111111")
+                .scheme(11, 11, 3, 7, 7, 7, 3, 11, 11)
+                .scheme(11, 3, 7, 7, 7, 3, 11)
+                .scheme(11, 11, 3, 7, 7, 7, 3, 11, 11)
+                .apply(builded.getInventory());
 
-        IntStream.of(2, 6, 10, 15, 16, 20, 24).forEach(value -> {
-            builded.addButton(ItemButton.create(new ItemBuilder(XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE)
-                    .setName("&c"), e -> {
-            }), value);
-        });
-
-        IntStream.of(3, 4, 5, 12, 13, 14, 21, 22, 23).forEach(value -> {
-            builded.addButton(ItemButton.create(new ItemBuilder(XMaterial.GRAY_STAINED_GLASS_PANE)
-                    .setName("&c"), e -> {
-            }), value);
-        });
 
         builded.addButton(ItemButton.create(new ItemBuilder(XMaterial.PAPER)
                         .setName(Wards.guiValues.CHANGE_NAME_NAME)

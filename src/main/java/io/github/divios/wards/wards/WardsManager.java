@@ -66,7 +66,8 @@ public class WardsManager {
             });
 
             long elapsedTime = System.nanoTime() - startTime;
-            plugin.getLogger().info("Database loaded correctly in " + elapsedTime/1000000 + " ms");
+            plugin.getLogger().info("Loaded " + wards.size() + " elements correctly in "
+                    + elapsedTime/1000000 + " ms");
 
             WardsCooldownTask.load();
             WardsWatchTask.load();
