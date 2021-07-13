@@ -178,7 +178,7 @@ public class WardInventory {
 
     }
 
-    public static class Watcher {
+    private static final class Watcher {
 
         private final WardInventory inv;
         private Task update;

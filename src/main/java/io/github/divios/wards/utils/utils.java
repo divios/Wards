@@ -106,4 +106,12 @@ public class utils {
         return true;
     }
 
+    public static void playSound(Player p, XSound sound) {
+        playSound(p, sound.parseSound());
+    }
+
+    public static void playSound(Player p, Sound sound) {
+        p.playSound(p.getLocation(), sound, 1, 1);
+    }
+
 }

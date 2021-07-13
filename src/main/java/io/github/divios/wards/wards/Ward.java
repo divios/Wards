@@ -76,7 +76,7 @@ public class Ward {
     }
 
     public Location getCenter() {
-        return region.getCenter();
+        return region.getCenter().clone();
     }
 
     public WardType getType() {
