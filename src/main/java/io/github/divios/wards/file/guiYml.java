@@ -1,6 +1,7 @@
 package io.github.divios.wards.file;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.google.common.base.Splitter;
 import io.github.divios.wards.Wards;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -48,6 +49,13 @@ public class guiYml {
     private static final String DEFAULT_CONFIRM_YES = "&aYES";
     private static final String DEFAULT_CONFIRM_NO = "&cNO";
 
+    private static final String DEFAULT_LIST_TITLE = "&9Wards list of &f {player}";
+    private static final List<String> DEFAULT_LIST_LORE= Arrays.asList("", "&8 - &7Type: &9{type}",
+            "&8 - &7Radius: &9{radius}", "&8 - &7Location: &9{loc}", "", "&f- Left Click&9 to view more information", "&f- Right Click&9 to teleport");
+    private static final String DEFAULT_LIST_NOT_SAFE = "&7The ward you want to teleport is not safe";
+    private static final String DEFAULT_LIST_PREVIOUS = "&1&lPrevious";
+    private static final String DEFAULT_LIST_NEXT = "&1&lNext";
+
     public XMaterial GLASS_PANE_1;
     public XMaterial GLASS_PANE_2;
     public XMaterial GLASS_PANE_3;
@@ -70,9 +78,14 @@ public class guiYml {
     public XMaterial RETURN_MATERIAL;
     public String RETURN_NAME;
     public List<String> RETURN_LORE;
-    public String CONFIRM_TITLE = "&8Confirm Action";
-    public String CONFIRM_YES = "&aYES";
-    public String CONFIRM_NO = "&cNO";
+    public String CONFIRM_TITLE;
+    public String CONFIRM_YES;
+    public String CONFIRM_NO;
+    public String LIST_TITLE;
+    public List<String> LIST_LORE;
+    public String LIST_NOT_SAFE;
+    public String LIST_PREVIOUS;
+    public String LIST_NEXT;
 
     public guiYml() {
         init();
@@ -143,6 +156,13 @@ public class guiYml {
         CONFIRM_YES = yaml.getString("gui.confirm.yes", DEFAULT_CONFIRM_YES);
         CONFIRM_NO = yaml.getString("gui.confirm.no", DEFAULT_CONFIRM_NO);
 
+        LIST_TITLE = yaml.getString("gui.list_gui.title", DEFAULT_LIST_TITLE);
+        LIST_LORE = yaml.contains("gui.list_gui.lore") ?
+                Splitter.on("|").splitToList(yaml.getString("gui.list_gui.lore")):
+                DEFAULT_LIST_LORE;
+        LIST_NOT_SAFE = yaml.getString("gui.list_gui.not_safe", DEFAULT_LIST_NOT_SAFE);
+        LIST_NEXT = yaml.getString("gui.list_gui.next", DEFAULT_LIST_NEXT);
+        LIST_PREVIOUS = yaml.getString("gui.list_gui.previous", DEFAULT_LIST_PREVIOUS);
     }
 
     private void setDefaults() {
@@ -171,6 +191,11 @@ public class guiYml {
         CONFIRM_TITLE = DEFAULT_CONFIRM_TITLE;
         CONFIRM_YES = DEFAULT_CONFIRM_YES;
         CONFIRM_NO = DEFAULT_CONFIRM_NO;
+        LIST_TITLE = DEFAULT_LIST_TITLE;
+        LIST_LORE = DEFAULT_LIST_LORE;
+        LIST_NOT_SAFE = DEFAULT_LIST_NOT_SAFE;
+        LIST_NEXT = DEFAULT_LIST_NEXT;
+        LIST_PREVIOUS = DEFAULT_LIST_PREVIOUS;
     }
 
 
