@@ -4,6 +4,7 @@ import io.github.divios.core_lib.Core_lib;
 import io.github.divios.core_lib.commands.CommandManager;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.Msg;
+import io.github.divios.core_lib.utils.Log;
 import io.github.divios.wards.commands.giveCmd;
 import io.github.divios.wards.commands.helpCmd;
 import io.github.divios.wards.commands.listCmd;
@@ -39,6 +40,12 @@ public final class Wards extends JavaPlugin {
     public void onEnable() {
         INSTANCE = this;
         Core_lib.setPlugin(this);
+
+        if (MID_VERSION < 12) {
+            Log.severe("Unsupported version, disabling...");
+            Bukkit.getPluginManager().disablePlugin(INSTANCE);
+            return;
+        }
 
         ConfigManager.load();
         configValues = new configYml();

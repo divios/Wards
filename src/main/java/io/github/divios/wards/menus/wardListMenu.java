@@ -17,11 +17,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.List;
 
-public class wardListGui {
+public class wardListMenu {
 
     public static Wards plugin = Wards.getInstance();
 
-    private wardListGui() {}
+    private wardListMenu() {}
 
     public static void prompt(Player p, List<Ward> wards) {
 
@@ -38,6 +38,9 @@ public class wardListGui {
                                 .setName(Wards.guiValues.LIST_NEXT)
                                 .applyTexture("19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf")
                         , 51)
+
+                .withExitButton(ItemBuilder.of(XMaterial.OAK_DOOR).setName("&cReturn"),
+                        e -> p.closeInventory(), 8)
 
                 .withPopulator(inventoryPopulator.builder().ofGlass()
                         .mask("111111111")

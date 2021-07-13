@@ -14,6 +14,7 @@ import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.core_lib.misc.XSymbols;
 import io.github.divios.core_lib.scheduler.Task;
 import io.github.divios.wards.Wards;
+import io.github.divios.wards.menus.wardRolesMenu;
 import io.github.divios.wards.tasks.WardsShowTask;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -63,11 +64,11 @@ public class WardInventory {
                 .mask("110111011")
                 .mask("111111111")
                 .scheme(11, 11, 3, 7, 7, 7, 3, 11, 11)
-                .scheme(11, 3, 7, 7, 3, 11)
+                .scheme(11, 3, 7, 7, 7, 3, 11)
                 .scheme(11, 11, 3, 7, 7, 7, 3, 11, 11)
                 .apply(builded.getInventory());
 
-        builded.addButton(ItemButton.create(new ItemBuilder(Wards.guiValues.TIME_MATERIAL)
+        builded.addButton(ItemButton.create(ItemBuilder.of(Wards.guiValues.TIME_MATERIAL)
                         .setName(Wards.guiValues.TIME_NAME)
                         .addLore(Msg.msgList(Wards.guiValues.TIME_LORE)
                                 .add("\\{time}", (ward.getTimer() == -1 ?
@@ -78,7 +79,7 @@ public class WardInventory {
                 , 11);
 
 
-        builded.addButton(ItemButton.create(new ItemBuilder(ward.getType().buildItem())
+        builded.addButton(ItemButton.create(ItemBuilder.of(ward.getType().buildItem())
                         .setLore(Msg.msgList(Wards.guiValues.TYPE_LORE)
                                 .add("\\{type}", "" + ward.getType().getType())
                                 .add("\\{radius}", ward.getType().getRadius() + "")
@@ -87,14 +88,14 @@ public class WardInventory {
                 }), 13);
 
 
-        builded.addButton(ItemButton.create(new ItemBuilder(Wards.guiValues.SHOW_MATERIAL)
+        builded.addButton(ItemButton.create(ItemBuilder.of(Wards.guiValues.SHOW_MATERIAL)
                         .setName(Wards.guiValues.SHOW_NAME).addLore(Wards.guiValues.SHOW_LORE),
                 e -> {
                     e.getWhoClicked().closeInventory();
                     WardsShowTask.generate((Player) e.getWhoClicked(), ward);
                 }), 15);
 
-        builded.addButton(ItemButton.create(new ItemBuilder(Wards.guiValues.SETTINGS_MATERIAL)
+        builded.addButton(ItemButton.create(ItemBuilder.of(Wards.guiValues.SETTINGS_MATERIAL)
                         .setName(Wards.guiValues.SETTINGS_NAME)
                         .addLore(Wards.guiValues.SETTINGS_LORE),
                 e -> settingsInv.open((Player) e.getWhoClicked())), 26);
@@ -119,7 +120,7 @@ public class WardInventory {
                 .apply(builded.getInventory());
 
 
-        builded.addButton(ItemButton.create(new ItemBuilder(XMaterial.PAPER)
+        builded.addButton(ItemButton.create(ItemBuilder.of(XMaterial.PAPER)
                         .setName(Wards.guiValues.CHANGE_NAME_NAME)
                         .addLore(Wards.guiValues.CHANGE_NAME_LORE),
                 e -> {
@@ -148,7 +149,14 @@ public class WardInventory {
 
                 }), 11);
 
-        builded.addButton(ItemButton.create(new ItemBuilder(Wards.guiValues.RETURN_MATERIAL)
+        builded.addButton(ItemButton.create(ItemBuilder.of(XMaterial.BLACK_BANNER)
+                        .setName("&9Configure Roles")
+                        .setLore("&7Click to configure roles of this ward"),
+                e -> {
+                    wardRolesMenu.prompt((Player) e.getWhoClicked(), ward); }
+        ), 15);
+
+        builded.addButton(ItemButton.create(ItemBuilder.of(Wards.guiValues.RETURN_MATERIAL)
                         .setName(Wards.guiValues.RETURN_NAME)
                         .addLore(Wards.guiValues.RETURN_LORE),
                 e -> mainInv.open((Player) e.getWhoClicked())), 26);
@@ -206,13 +214,13 @@ public class WardInventory {
                             //Bukkit.broadcastMessage("Iniciado listener");
                             update = Schedulers.builder().sync().every(20).run(() -> {
 
-                                    //Bukkit.broadcastMessage("updated");
-                                    inv.getMainInv().getInventory().setItem(11,
-                                    new ItemBuilder(Wards.guiValues.TIME_MATERIAL)
-                                    .setName(Wards.guiValues.TIME_NAME)
-                                    .addLore(Msg.msgList(Wards.guiValues.TIME_LORE)
-                                            .add("\\{time}", FormatUtils.formatTimeOffset(
-                                                    inv.getWard().getTimer() * 1000L) + "").build()));
+                                //Bukkit.broadcastMessage("updated");
+                                inv.getMainInv().getInventory().setItem(11,
+                                        new ItemBuilder(Wards.guiValues.TIME_MATERIAL)
+                                                .setName(Wards.guiValues.TIME_NAME)
+                                                .addLore(Msg.msgList(Wards.guiValues.TIME_LORE)
+                                                        .add("\\{time}", FormatUtils.formatTimeOffset(
+                                                                inv.getWard().getTimer() * 1000L) + "").build()));
                             });
 
                         } else if ((e instanceof InventoryCloseEvent)) {

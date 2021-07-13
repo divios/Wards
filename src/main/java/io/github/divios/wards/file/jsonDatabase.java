@@ -31,6 +31,7 @@ public class jsonDatabase {
 
             jsonMerchant.addProperty("owner", ward.getOwner().toString());
             jsonMerchant.addProperty("location", LocationUtils.toString(ward.getCenter()));
+            jsonMerchant.addProperty("roles", new Gson().toJson(ward.getAcceptedP()));
             jsonMerchant.addProperty("type", ward.getType().getId());
             jsonMerchant.addProperty("time", ward.getTimer());
 
@@ -68,6 +69,7 @@ public class jsonDatabase {
                 wards1.add(Ward.builder(jsonObject.get("owner").getAsString())
                         .setLocation(LocationUtils.fromString(jsonObject.get("location").getAsString()))
                         .setId(jsonObject.get("type").getAsString())
+                        .setAccepted(new Gson().fromJson(jsonObject.get("roles").getAsString(), ArrayList.class))
                         .setTimer(jsonObject.get("time").getAsLong())
                         .build());
             });

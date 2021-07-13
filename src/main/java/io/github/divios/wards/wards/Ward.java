@@ -111,6 +111,10 @@ public class Ward {
         return Collections.unmodifiableSet(acceptedP);
     }
 
+    public boolean addAccepted(UUID uuid) { return acceptedP.add(uuid); }
+
+    public boolean removeAccepted(UUID uuid) { return acceptedP.remove(uuid); }
+
     public Set<Player> getOnSight() {
         return Collections.unmodifiableSet(onSight);
     }

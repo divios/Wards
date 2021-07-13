@@ -33,6 +33,7 @@ public class giveCmd extends abstractCommand {
 
     @Override
     public boolean validArgs(List<String> args) {
+
         if (args.size() == 0) return false;
 
         if (args.size() == 1 &&
@@ -53,7 +54,6 @@ public class giveCmd extends abstractCommand {
                     Bukkit.getPlayer(args.get(1)) != null &&
                     utils.isInteger(args.get(2));
         }
-
         return false;
 
     }
