@@ -1,8 +1,3 @@
----
-description: How to install and setup Wards on Spigot
----
-
-# Getting Started
 
 ## What is Wards?
 
