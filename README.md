@@ -11,5 +11,11 @@ When a spigot server starts, all .yml inside the folder wards are parsed into a 
 
 If the above explanation doesn't convince you, then let me tell you this. I've tested the plug-in with more than one hundred players with farms working and more than 80 wards placed with no stress on the cpu from Wards whatsoever. This was achieve by running all the heavy task in async and optimized them as hard as possible
 
-
-
+## TODO
+Key that allows to break a centinel
+Implement roles per Ward
+Implement a potion to make a player invisible to a ward
+Add support/compatibility with protection plugins
+Add support/compatibility with factions plugins
+Add a compass that indicates if a ward is nearby??
+Limit amount of wards per player with permissions
