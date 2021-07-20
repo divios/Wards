@@ -61,7 +61,7 @@ public class WardsWatchTask {
 
                         ward.updateOnSight(Bukkit.getOnlinePlayers().stream()
                                 .filter(p -> ward.isInside(p.getLocation()))
-                                .filter(player -> !player.getUniqueId().equals(ward.getOwner()))
+                                .filter(p -> !ward.getAcceptedP().contains(p.getUniqueId()))
                                 .collect(Collectors.toList()));
                     });
 
