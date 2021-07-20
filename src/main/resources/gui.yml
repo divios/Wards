@@ -1,4 +1,6 @@
-
+# Wards gui Options
+# You must restart for changes to take affect when editing this file!
+# =========================================================
 gui:
   glass:
     glass_pane_1: BLUE_STAINED_GLASS_PANE
@@ -31,11 +33,18 @@ gui:
     lore: "&7Click to go back"
   confirm:
     title: "&8Confirm Action"
-    yes: "&aYES"
-    no: "&cNO"
+    yes_name: "&aYES"
+    no_name: "&cNO"
   list_gui:
     title: "&9Wards list of &f {player}"
     lore: "|&8 - &7Type: &9{type}|&8 - &7Radius: &9{radius}|&8 - &7Location: &9{loc}||&f- Left Click&9 to view more information|&f- Right Click&9 to teleport"
     not_safe: "&7The ward you want to teleport is not safe"
     previous: "&1&lPrevious"
     next: "&1&lNext"
+  roles_gui:
+    title: "&f&lRoles"
+    return: "&cReturn"
+    add_name: "&9Add player"
+    add_lore: "&7Click to add player"
+    prompt_title: "&eInput player name"
+    prompt_subtitle: ""

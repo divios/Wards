@@ -10,9 +10,6 @@ import io.github.divios.wards.commands.helpCmd;
 import io.github.divios.wards.commands.listCmd;
 import io.github.divios.wards.commands.reloadCmd;
 import io.github.divios.wards.file.ConfigManager;
-import io.github.divios.wards.file.configYml;
-import io.github.divios.wards.file.guiYml;
-import io.github.divios.wards.file.langYml;
 import io.github.divios.wards.observer.ObservablesManager;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Bukkit;
@@ -30,27 +27,20 @@ public final class Wards extends JavaPlugin {
     public static final String WARD_ID = "Ward_id";
     public static final String WARD_TIMER = "Ward_timer";
 
-    public static final int MID_VERSION = Integer.parseInt(getServerVersion().split("\\.")[1]);
-
-    public static langYml langValues;
-    public static configYml configValues;
-    public static guiYml guiValues;
+    public static ConfigManager configManager;
 
     @Override
     public void onEnable() {
         INSTANCE = this;
         Core_lib.setPlugin(this);
 
-        if (MID_VERSION < 12) {
+        if (Core_lib.MID_VERSION < 12) {
             Log.severe("Unsupported version, disabling...");
             Bukkit.getPluginManager().disablePlugin(INSTANCE);
             return;
         }
 
-        ConfigManager.load();
-        configValues = new configYml();
-        guiValues = new guiYml();
-        langValues = new langYml();
+        configManager = ConfigManager.load();
 
         WardsManager.getInstance();
         ObservablesManager.getInstance();  // Loads all Listeners
@@ -59,6 +49,7 @@ public final class Wards extends JavaPlugin {
         CommandManager.addCommand(new giveCmd(), new reloadCmd(), new helpCmd(), new listCmd());
 
         Msg.setPREFIX(FormatUtils.color("&9&lWards &7> "));
+        Msg.setTeleportCancelled(configManager.getLangValues().WARD_TELEPORT_CANCELLED);
     }
 
     @Override
@@ -71,15 +62,10 @@ public final class Wards extends JavaPlugin {
     public static void reload() {
         INSTANCE.reloadConfig();
 
-        configValues = new configYml();
-        guiValues = new guiYml();
-        langValues = new langYml();
+        configManager.reload();
         WardsManager.getInstance().reload();
+
+        Msg.setTeleportCancelled(configManager.getLangValues().WARD_TELEPORT_CANCELLED);
     }
 
-    public static String getServerVersion() {
-        String version = Bukkit.getVersion();
-        String[] split = version.split(" ");
-        return split[split.length - 1].trim().replace(")", "");
-    }
 }

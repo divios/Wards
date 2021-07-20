@@ -60,7 +60,7 @@ public class giveCmd extends abstractCommand {
 
     @Override
     public String getHelp() {
-        return Wards.langValues.GIVE_INFO;
+        return Wards.configManager.getLangValues().GIVE_INFO;
     }
 
     @Override
@@ -104,7 +104,7 @@ public class giveCmd extends abstractCommand {
                 .filter(wardType -> wardType.getId().equals(args.get(0)))
                 .findFirst()
                 .ifPresent(wardType -> {
-                    Msg.sendMsg(p, Msg.singletonMsg(Wards.langValues.GIVE_ON_CMD)
+                    Msg.sendMsg(p, Msg.singletonMsg(Wards.configManager.getLangValues().GIVE_ON_CMD)
                             .add("\\{type}", wardType.getId())
                             .add("\\{amount}", String.valueOf(amount)).build());
                     ItemUtils.give(p, wardType.buildItem(p), amount);

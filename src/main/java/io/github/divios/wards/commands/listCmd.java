@@ -37,7 +37,7 @@ public class listCmd extends abstractCommand {
 
     @Override
     public String getHelp() {
-        return Wards.langValues.LIST_INFO;
+        return Wards.configManager.getLangValues().LIST_INFO;
     }
 
     @Override

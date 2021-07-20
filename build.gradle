@@ -11,7 +11,7 @@ plugins {
 apply plugin: 'maven-publish'
 
 group = 'io.github.divios'
-def pluginVersion = "1.3"
+def pluginVersion = "1.4"
 version = pluginVersion
 
 sourceCompatibility = '1.8'
@@ -88,6 +88,7 @@ shadowJar {
     relocate "de.tr7zw.nbtapi", "io.github.divios.wards.shaded.nbtApi"
     relocate('io.github.divios.core_lib', 'io.github.divios.wards.shaded.Core_lib')
     relocate('com.cryptomorin.xseries', 'io.github.divios.wards.shaded.XSeries')
+    relocate "org.bstats", "io.github.divios.core_lib.shaded.bstats"
 
     minimize()
 }
@@ -95,7 +96,8 @@ shadowJar {
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
     compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0-SNAPSHOT"
-    //implementation 'org.ehcache:ehcache:3.8.1'
+    implementation "org.bstats:bstats-bukkit:1.8"
+    implementation 'com.github.simplix-softworks:simplixstorage:3.2.3'
 
     implementation 'io.github.divios:core_lib:2.0'
 }

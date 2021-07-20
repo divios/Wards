@@ -11,6 +11,7 @@ import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.utils.utils;
 import io.github.divios.wards.wards.Ward;
+import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -21,21 +22,33 @@ public class wardListMenu {
 
     public static Wards plugin = Wards.getInstance();
 
-    private wardListMenu() {}
+    private final Player p;
+    private final List<Ward> wards;
+
+    private wardListMenu(Player p, List<Ward> wards) {
+        this.p = p;
+        this.wards = wards;
+
+        init();
+    }
 
     public static void prompt(Player p, List<Ward> wards) {
+        new wardListMenu(p, wards);
+    }
+
+    private void init() {
 
         paginatedGui.Builder()
 
                 .withBackButton(
                         new ItemBuilder(XMaterial.PLAYER_HEAD)
-                                .setName(Wards.guiValues.LIST_PREVIOUS)
+                                .setName(Wards.configManager.getGuiValues().LIST_PREVIOUS)
                                 .applyTexture("bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9")
                         , 47)
 
                 .withNextButton(
                         new ItemBuilder(XMaterial.PLAYER_HEAD)
-                                .setName(Wards.guiValues.LIST_NEXT)
+                                .setName(Wards.configManager.getGuiValues().LIST_NEXT)
                                 .applyTexture("19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf")
                         , 51)
 
@@ -60,46 +73,58 @@ public class wardListMenu {
                 .withItems(
                         wards.stream()
                                 .map(ward -> ItemButton.create(new ItemBuilder(ward.buildItem())
-                                        .setName(ward.getName())
-                                        .addLorewithPlaces(Wards.guiValues.LIST_LORE,
-                                                s -> lorePlaces(s, ward, p)),
-                                    e -> action(e, ward, p))))
+                                                .setName(ward.getName())
+                                                .addLorewithPlaces(Wards.configManager.getGuiValues().LIST_LORE,
+                                                        s -> lorePlaces(s, ward)),
+                                        e -> action(e, ward))))
 
-                .withTitle(Msg.singletonMsg(Wards.guiValues.LIST_TITLE)
+                .withTitle(Msg.singletonMsg(Wards.configManager.getGuiValues().LIST_TITLE)
                         .add("\\{player}", p.getName()).build())
                 .build().open(p);
-
     }
 
-    private static void action (InventoryClickEvent e, Ward ward, Player p) {
+    private void action(InventoryClickEvent e, Ward ward) {
+
+        if (WardsManager.getInstance().getWard(ward.getCenter()) == null) {     // If removed or expired while checking gui
+            prompt(p, wards);
+            return;
+        }
+
         if (e.isLeftClick())
             ward.openInv((Player) e.getWhoClicked());
 
         else if (e.isRightClick()) {
 
+            if (!p.hasPermission("wards.teleport")) {
+                Msg.sendMsg(p, Wards.configManager.getLangValues().WARD_NO_PERMS);
+                return;
+            }
+
             Location wardLocation = ward.getCenter();
 
-            if (LocationUtils.isSafe(wardLocation.add(0, 1, 0))) {
-                p.teleport(wardLocation);
-                utils.playSound(p, XSound.ENTITY_ENDERMAN_TELEPORT);
-                return;
-            }
-
             Location safeLoc = LocationUtils
-                    .getNearestSafeLocation(wardLocation, 8);
+                    .getNearestSafeLocation(wardLocation.add(0, 1, 0), 8);
 
             if (safeLoc == null) {
-                Msg.sendMsg(p, Wards.guiValues.LIST_NOT_SAFE);
+                Msg.sendMsg(p, Wards.configManager.getGuiValues().LIST_NOT_SAFE);
                 return;
             }
 
-            p.teleport(safeLoc);
-            utils.playSound(p, XSound.ENTITY_ENDERMAN_TELEPORT);
+            p.closeInventory();
+            Msg.sendMsg(p, Msg.singletonMsg(Wards.configManager.getLangValues().WARD_TELEPORT_COOLDOWN)
+                    .add("\\{cooldown}",
+                            String.valueOf(Wards.configManager.getConfigValues().WARD_TELEPORT_DELAY / 20D))
+                    .build());
+            LocationUtils.delayedTeleport(p, wardLocation, Wards.configManager.getConfigValues().WARD_TELEPORT_DELAY,
+                    aBoolean -> {
+                        if (aBoolean)
+                            utils.playSound(p, XSound.ENTITY_ENDERMAN_TELEPORT);
+                    });
 
         }
     }
 
-    private static String lorePlaces(String s, Ward ward, Player p) {
+    private String lorePlaces(String s, Ward ward) {
 
         if (s.equalsIgnoreCase("player"))
             return p.getName();

@@ -29,7 +29,7 @@ public class helpCmd extends abstractCommand {
 
     @Override
     public String getHelp() {
-        return Wards.langValues.HELP_INFO;
+        return Wards.configManager.getLangValues().HELP_INFO;
     }
 
     @Override

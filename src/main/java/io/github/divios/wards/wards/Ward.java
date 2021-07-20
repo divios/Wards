@@ -162,7 +162,7 @@ public class Ward {
                         Player permitted = Bukkit.getPlayer(uuid);      // Remove Glow
                         if (permitted == null) return;
 
-                        Msg.sendMsg(permitted, Msg.singletonMsg(Wards.langValues.WARD_EXITED)
+                        Msg.sendMsg(permitted, Msg.singletonMsg(Wards.configManager.getLangValues().WARD_EXITED)
                                 .add("\\{player}", player.getName())
                                 .add("\\{ward}", name).build());
                         utils.sendSound(permitted, XSound.BLOCK_BELL_USE);
@@ -176,7 +176,7 @@ public class Ward {
                 .filter(player -> !onSight.contains(player))
                 .forEach(player -> {
                     acceptedP.forEach(uuid -> {
-                        Msg.sendMsg(uuid, Msg.singletonMsg(Wards.langValues.WARD_ENTERED)
+                        Msg.sendMsg(uuid, Msg.singletonMsg(Wards.configManager.getLangValues().WARD_ENTERED)
                                 .add("\\{player}", player.getName())
                                 .add("\\{ward}", name).build());
                         utils.sendSound(uuid, XSound.BLOCK_BELL_USE);
