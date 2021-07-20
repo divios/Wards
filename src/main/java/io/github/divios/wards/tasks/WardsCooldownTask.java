@@ -68,7 +68,7 @@ public class WardsCooldownTask {
                         //ward.updateInv();
 
                         if (ward.getTimer() == 0) {
-                            Msg.sendMsg(ward.getOwner(), Msg.singletonMsg(Wards.langValues.WARD_EXPIRED)
+                            Msg.sendMsg(ward.getOwner(), Msg.singletonMsg(Wards.configManager.getLangValues().WARD_EXPIRED)
                                     .add("\\{ward}", ward.getName()).build());
                             utils.cleanBlock(ward.getCenter());
                             ward.getCenter().getWorld().spawnParticle(Particle.SMOKE_NORMAL,

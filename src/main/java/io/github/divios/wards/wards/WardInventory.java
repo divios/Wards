@@ -23,7 +23,6 @@ import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 
 import java.util.ArrayList;
-import java.util.stream.IntStream;
 
 public class WardInventory {
 
@@ -68,9 +67,9 @@ public class WardInventory {
                 .scheme(11, 11, 3, 7, 7, 7, 3, 11, 11)
                 .apply(builded.getInventory());
 
-        builded.addButton(ItemButton.create(ItemBuilder.of(Wards.guiValues.TIME_MATERIAL)
-                        .setName(Wards.guiValues.TIME_NAME)
-                        .addLore(Msg.msgList(Wards.guiValues.TIME_LORE)
+        builded.addButton(ItemButton.create(ItemBuilder.of(Wards.configManager.getGuiValues().TIME_MATERIAL)
+                        .setName(Wards.configManager.getGuiValues().TIME_NAME)
+                        .addLore(Msg.msgList(Wards.configManager.getGuiValues().TIME_LORE)
                                 .add("\\{time}", (ward.getTimer() == -1 ?
                                         FormatUtils.color("&c&l" + XSymbols.TIMES_3.parseSymbol()) :
                                         FormatUtils.formatTimeOffset(ward.getTimer() * 1000L) + "")).build()),
@@ -80,7 +79,7 @@ public class WardInventory {
 
 
         builded.addButton(ItemButton.create(ItemBuilder.of(ward.getType().buildItem())
-                        .setLore(Msg.msgList(Wards.guiValues.TYPE_LORE)
+                        .setLore(Msg.msgList(Wards.configManager.getGuiValues().TYPE_LORE)
                                 .add("\\{type}", "" + ward.getType().getType())
                                 .add("\\{radius}", ward.getType().getRadius() + "")
                                 .build())
@@ -88,16 +87,16 @@ public class WardInventory {
                 }), 13);
 
 
-        builded.addButton(ItemButton.create(ItemBuilder.of(Wards.guiValues.SHOW_MATERIAL)
-                        .setName(Wards.guiValues.SHOW_NAME).addLore(Wards.guiValues.SHOW_LORE),
+        builded.addButton(ItemButton.create(ItemBuilder.of(Wards.configManager.getGuiValues().SHOW_MATERIAL)
+                        .setName(Wards.configManager.getGuiValues().SHOW_NAME).addLore(Wards.configManager.getGuiValues().SHOW_LORE),
                 e -> {
                     e.getWhoClicked().closeInventory();
                     WardsShowTask.generate((Player) e.getWhoClicked(), ward);
                 }), 15);
 
-        builded.addButton(ItemButton.create(ItemBuilder.of(Wards.guiValues.SETTINGS_MATERIAL)
-                        .setName(Wards.guiValues.SETTINGS_NAME)
-                        .addLore(Wards.guiValues.SETTINGS_LORE),
+        builded.addButton(ItemButton.create(ItemBuilder.of(Wards.configManager.getGuiValues().SETTINGS_MATERIAL)
+                        .setName(Wards.configManager.getGuiValues().SETTINGS_NAME)
+                        .addLore(Wards.configManager.getGuiValues().SETTINGS_LORE),
                 e -> settingsInv.open((Player) e.getWhoClicked())), 26);
 
         builded.setDestroyOnClose(false);
@@ -121,15 +120,15 @@ public class WardInventory {
 
 
         builded.addButton(ItemButton.create(ItemBuilder.of(XMaterial.PAPER)
-                        .setName(Wards.guiValues.CHANGE_NAME_NAME)
-                        .addLore(Wards.guiValues.CHANGE_NAME_LORE),
+                        .setName(Wards.configManager.getGuiValues().CHANGE_NAME_NAME)
+                        .addLore(Wards.configManager.getGuiValues().CHANGE_NAME_LORE),
                 e -> {
 
                     Player p = (Player) e.getWhoClicked();
                     ChatPrompt.prompt(plugin, p, s -> {
                         if (s.isEmpty()) {
                             settingsInv.open(p);
-                            Msg.sendMsg(p, Wards.guiValues.CHANGE_NAME_NOT_EMPTY);
+                            Msg.sendMsg(p, Wards.configManager.getGuiValues().CHANGE_NAME_NOT_EMPTY);
                         }
 
                         ward.setName(s);
@@ -145,7 +144,7 @@ public class WardInventory {
                         if (WardsManager.getInstance().getWard(ward.getCenter()) == null) return;
                         Schedulers.sync().run(() -> settingsInv.open(p));
 
-                    }, Wards.guiValues.CHANGE_NAME_TITLE, Wards.guiValues.CHANGE_NAME_SUBTITLE);
+                    }, Wards.configManager.getGuiValues().CHANGE_NAME_TITLE, Wards.configManager.getGuiValues().CHANGE_NAME_SUBTITLE);
 
                 }), 11);
 
@@ -156,9 +155,9 @@ public class WardInventory {
                     wardRolesMenu.prompt((Player) e.getWhoClicked(), ward); }
         ), 15);
 
-        builded.addButton(ItemButton.create(ItemBuilder.of(Wards.guiValues.RETURN_MATERIAL)
-                        .setName(Wards.guiValues.RETURN_NAME)
-                        .addLore(Wards.guiValues.RETURN_LORE),
+        builded.addButton(ItemButton.create(ItemBuilder.of(Wards.configManager.getGuiValues().RETURN_MATERIAL)
+                        .setName(Wards.configManager.getGuiValues().RETURN_NAME)
+                        .addLore(Wards.configManager.getGuiValues().RETURN_LORE),
                 e -> mainInv.open((Player) e.getWhoClicked())), 26);
 
         builded.setDestroyOnClose(false);
@@ -216,9 +215,9 @@ public class WardInventory {
 
                                 //Bukkit.broadcastMessage("updated");
                                 inv.getMainInv().getInventory().setItem(11,
-                                        new ItemBuilder(Wards.guiValues.TIME_MATERIAL)
-                                                .setName(Wards.guiValues.TIME_NAME)
-                                                .addLore(Msg.msgList(Wards.guiValues.TIME_LORE)
+                                        new ItemBuilder(Wards.configManager.getGuiValues().TIME_MATERIAL)
+                                                .setName(Wards.configManager.getGuiValues().TIME_NAME)
+                                                .addLore(Msg.msgList(Wards.configManager.getGuiValues().TIME_LORE)
                                                         .add("\\{time}", FormatUtils.formatTimeOffset(
                                                                 inv.getWard().getTimer() * 1000L) + "").build()));
                             });

@@ -18,12 +18,12 @@ public class WardsShowTask {
 
     private static final Wards plugin = Wards.getInstance();
     private static Cache<UUID, Task> cache = CacheBuilder.newBuilder()
-            .expireAfterWrite(Wards.configValues.CHUNK_DISPLAY_COOLDOWN, TimeUnit.SECONDS).build();
+            .expireAfterWrite(Wards.configManager.getConfigValues().CHUNK_DISPLAY_COOLDOWN, TimeUnit.SECONDS).build();
 
     public static void generate(Player p, Ward ward) {
 
         if (cache.asMap().containsKey(p.getUniqueId())) {
-            Msg.sendMsg(p, Wards.langValues.WARD_COOLDOWN);
+            Msg.sendMsg(p, Wards.configManager.getLangValues().WARD_COOLDOWN);
             return;
         }
 
@@ -33,7 +33,7 @@ public class WardsShowTask {
                 .every(20)
                 .consume((task) -> {
 
-                    if (counter.get() >= Wards.configValues.CHUNK_DISPLAY_SECONDS)
+                    if (counter.get() >= Wards.configManager.getConfigValues().CHUNK_DISPLAY_SECONDS)
                         task.stop();
 
                     ward.getRegion().getSurface().stream()

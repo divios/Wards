@@ -1,14 +1,23 @@
-
+# Wards Lang
+# You must restart for changes to take affect when editing this file!
+# =========================================================
 messages:
   ward:
     entered: "{player} &7entered your ward {ward}"
     exited: "{player} &7exited your ward {ward}"
-    expired: "Your ward {ward} has expired"
-    pick_up: "You took your guard {ward}"
-    cooldown: "&7A cooldown is active, wait a few seconds"
+    expired: "&7Your ward {ward} has expired"
+    pick_up: "&7You took your guard {ward}"
+    cooldown: "&7A cool-down is active, wait a few seconds"
+    limit: "&7Your reached your limit of wards: {limit}"
+    pick_deny: "&7Only the owner can pick up the ward"
+    player_not_exits: "&7That player doesn't exist"
+    owner_deny_remove: "&7You can't remove the owner of this ward"
+    teleport_cooldown: "&7You 'll be teleported in {cooldown} seconds&7. Dont move!"
+    teleport_cancelled: "&7Teleport cancelled"
+    no_perms: "&7You don't have enough permissions to do that"
   commands:
     give:
-      onCmd: "You received {amount} {type} &7wards"
+      onCmd: "&7You received {amount} {type} &7wards"
       info: "&8- &9/wards give [type] [player] &8 - &7Gives the a ward of the selected type for yourself or the given player"
     list:
       info: "&8- &9/wards list [player] &8 - &7Prints all the wards of yourself or given player"

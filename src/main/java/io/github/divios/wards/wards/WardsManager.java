@@ -9,6 +9,7 @@ import io.github.divios.wards.tasks.WardsUpdateTask;
 import io.github.divios.wards.tasks.WardsWatchTask;
 import io.github.divios.wards.utils.utils;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.Collections;
@@ -16,6 +17,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -91,6 +93,12 @@ public class WardsManager {
 
     public Map<Location, Ward> getWards() {
         return Collections.unmodifiableMap(wards);
+    }
+
+    public Set<Ward> getWards(Player p) {
+        return wards.values().stream()
+                .filter(ward -> ward.getOwner().equals(p.getUniqueId()))
+                .collect(Collectors.toSet());
     }
 
     public void createWard(Ward ward) {

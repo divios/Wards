@@ -1,5 +1,6 @@
 package io.github.divios.wards.wards;
 
+import io.github.divios.core_lib.utils.Log;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.utils.utils;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -8,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +23,11 @@ public class WardsParser {
         Set<String> ids = new HashSet<>();
 
         File wardsDir = new File(plugin.getDataFolder() + File.separator + "wards");
+
+        if (!wardsDir.exists()) {
+            Log.severe("The directory /wards doesn't exits, unable to parse any ward configuration");
+            return Collections.emptySet();
+        }
 
         Arrays.stream(wardsDir.listFiles()).forEach(file -> {
 

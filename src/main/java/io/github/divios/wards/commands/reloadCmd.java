@@ -29,7 +29,7 @@ public class reloadCmd extends abstractCommand {
 
     @Override
     public String getHelp() {
-        return Wards.langValues.RELOAD_INFO;
+        return Wards.configManager.getLangValues().RELOAD_INFO;
     }
 
     @Override

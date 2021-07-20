@@ -34,7 +34,7 @@ public class WardsWatchTask {
 
         loaded = true;
 
-        bucket = BucketFactory.newHashSetBucket(Wards.configValues.WARD_CHECK_SECONDS,
+        bucket = BucketFactory.newHashSetBucket(Wards.configManager.getConfigValues().WARD_CHECK_SECONDS,
                 PartitioningStrategies.lowestSize());
 
         WManager.getWards().forEach((location, ward) -> bucket.add(location));  // Initial population

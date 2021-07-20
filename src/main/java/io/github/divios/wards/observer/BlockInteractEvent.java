@@ -50,10 +50,15 @@ public class BlockInteractEvent extends abstractObserver {
                         new confirmIH(plugin, p, (player, aBoolean) -> {
                             if (aBoolean) {
 
+                                if (!p.getUniqueId().equals(ward.getOwner())) {
+                                    Msg.sendMsg(p, Wards.configManager.getLangValues().WARD_PICK_DENY);
+                                    return;
+                                }
+
                                 WardsManager.getInstance().deleteWard(ward);
                                 ItemUtils.give(p, ward.buildItem(), 1);
                                 utils.cleanBlock(ward.getCenter());
-                                Msg.sendMsg(p, Msg.singletonMsg(Wards.langValues.WARD_PICK_UP)
+                                Msg.sendMsg(p, Msg.singletonMsg(Wards.configManager.getLangValues().WARD_PICK_UP)
                                         .add("\\{ward}", ward.getName()).build());
                                 player.spawnParticle(Particle.FLAME,
                                         ward.getCenter().clone().add(0.5, 0.5, 0.5), 40);
@@ -62,8 +67,8 @@ public class BlockInteractEvent extends abstractObserver {
 
                             }
                             p.closeInventory();
-                        }, ward.getType().buildItem(), Wards.guiValues.CONFIRM_TITLE,
-                                Wards.guiValues.CONFIRM_YES, Wards.guiValues.CONFIRM_NO);
+                        }, ward.getType().buildItem(), Wards.configManager.getGuiValues().CONFIRM_TITLE,
+                                Wards.configManager.getGuiValues().CONFIRM_YES, Wards.configManager.getGuiValues().CONFIRM_NO);
                     }
 
                     else ward.openInv(o.getPlayer());

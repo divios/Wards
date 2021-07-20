@@ -8,8 +8,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.io.*;
 import java.util.UUID;
@@ -114,4 +116,29 @@ public class utils {
         p.playSound(p.getLocation(), sound, 1, 1);
     }
 
+    public static Integer getWardsLimit(Player p) {
+        final Integer[] limit = {null};
+        p.getEffectivePermissions().stream()
+                .map(PermissionAttachmentInfo::getPermission)
+                .filter(perm -> perm.startsWith("wards.limit."))
+                .map(perm -> perm.replace("wards.limit.", ""))
+                .filter(utils::isInteger)
+                .mapToInt(Integer::parseInt)
+                .max().ifPresent(value -> limit[0] = value);
+
+        return limit[0];
+    }
+
+    public static void setDefaults(YamlConfiguration yaml, String defYaml) {
+        Reader defConfigStream = null;
+        try {
+            defConfigStream = new InputStreamReader(plugin.getResource(defYaml), "UTF8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if (defConfigStream != null) {
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            yaml.setDefaults(defConfig);
+        }
+    }
 }
