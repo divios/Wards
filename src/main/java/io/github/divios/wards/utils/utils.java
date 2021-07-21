@@ -88,7 +88,7 @@ public class utils {
     }
 
     public static void cleanBlock(Block block) {
-        Task.syncDelayed(plugin, () -> {        // make sure is synchronous
+        Schedulers.sync().run(() -> {         // make sure is synchronous
             block.setType(Material.AIR);
             block.removeMetadata(Wards.WARD_BLOCK, plugin);
         });

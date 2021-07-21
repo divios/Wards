@@ -59,17 +59,21 @@ public class BlockPlaceEvent extends abstractObserver {
 
                     if (event.isCancelled()) return;
 
-                    String owner = new NBTItem(o.getItemInHand()).getString(Wards.WARD_OWNER);
+                    Ward ward = Ward.builder(o.getItemInHand())
+                            .setLocation(l)
+                            .build();
 
-                    utils.setWardMetadata(block, UUID.fromString(owner));
+                    if (!ward.getAcceptedP().contains(p.getUniqueId())) {
+                        Msg.sendMsg(p, "&7You are not allowed to place this ward");
+                        o.setCancelled(true);
+                        return;
+                    }
 
                     IntStream.range(0, 40).forEach(i -> {
                         ParticleUtils.spawnParticlePlace(p, l.clone());
                     });
 
-                    manager.createWard(Ward.builder(o.getItemInHand())
-                            .setLocation(l)
-                            .build());
+                    manager.createWard(ward);
 
                 });
 
