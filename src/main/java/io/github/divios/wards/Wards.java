@@ -12,6 +12,7 @@ import io.github.divios.wards.commands.reloadCmd;
 import io.github.divios.wards.file.ConfigManager;
 import io.github.divios.wards.observer.ObservablesManager;
 import io.github.divios.wards.wards.WardsManager;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -33,6 +34,8 @@ public final class Wards extends JavaPlugin {
     public void onEnable() {
         INSTANCE = this;
         Core_lib.setPlugin(this);
+
+        new Metrics(INSTANCE, 12133);       // initiate bstats
 
         if (Core_lib.MID_VERSION < 12) {
             Log.severe("Unsupported version, disabling...");

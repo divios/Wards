@@ -125,26 +125,31 @@ public class WardInventory {
                 e -> {
 
                     Player p = (Player) e.getWhoClicked();
-                    ChatPrompt.prompt(plugin, p, s -> {
-                        if (s.isEmpty()) {
-                            settingsInv.open(p);
-                            Msg.sendMsg(p, Wards.configManager.getGuiValues().CHANGE_NAME_NOT_EMPTY);
-                        }
 
-                        ward.setName(s);
-                        destroy();
-                        Schedulers.sync().run(() -> {
-                            mainInv = build();
-                            settingsInv = createSettings();
-                            settingsInv.open(p);
-                        });
+                    ChatPrompt.builder()
+                            .withPlayer(p)
+                            .withResponse(s -> {
 
-                    }, motive -> {
+                                if (s.isEmpty()) {
+                                    settingsInv.open(p);
+                                    Msg.sendMsg(p, Wards.configManager.getGuiValues().CHANGE_NAME_NOT_EMPTY);
+                                }
 
-                        if (WardsManager.getInstance().getWard(ward.getCenter()) == null) return;
-                        Schedulers.sync().run(() -> settingsInv.open(p));
-
-                    }, Wards.configManager.getGuiValues().CHANGE_NAME_TITLE, Wards.configManager.getGuiValues().CHANGE_NAME_SUBTITLE);
+                                ward.setName(s);
+                                destroy();
+                                Schedulers.sync().run(() -> {
+                                    mainInv = build();
+                                    settingsInv = createSettings();
+                                    settingsInv.open(p);
+                                });
+                            })
+                            .withCancel(cancelReason -> {
+                                if (WardsManager.getInstance().getWard(ward.getCenter()) == null) return;
+                                Schedulers.sync().run(() -> settingsInv.open(p));
+                            })
+                            .withTitle(Wards.configManager.getGuiValues().CHANGE_NAME_TITLE)
+                            .withSubtitle(Wards.configManager.getGuiValues().CHANGE_NAME_SUBTITLE)
+                            .prompt();
 
                 }), 11);
 

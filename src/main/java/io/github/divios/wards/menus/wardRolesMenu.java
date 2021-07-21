@@ -118,8 +118,8 @@ public class wardRolesMenu {
                                     confirmIH.builder()
                                             .withPlayer(p)
                                             .withItem(e.getCurrentItem())
-                                            .withAction((p1, ba) -> {
-                                                if (ba)
+                                            .withAction(aBoolean -> {
+                                                if (aBoolean)
                                                     ward.removeAccepted(players.get(e.getCurrentItem()
                                                             .getItemMeta().getDisplayName()));
                                                 Schedulers.sync().run(this::refresh);
