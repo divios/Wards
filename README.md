@@ -5,7 +5,7 @@ Wards is not a protection plugin. It's main purpose is to alert and display when
 
 ## How does it work?
 
-When a spigot server starts, all .yml inside the folder wards are parsed into a ward object. After that, players can receive those wards with a single command. When those items are placed, they are added to a very efficient task, which itinerates throught every ward and checks for players in it's configurable radius. This task is repeated async but not, for example, every 20 ticks, that could potencially cause lag, rather all wards are spread equally along those 20 ticks and runned in a queue, so the work is divided equally over the period Instead of a \(potential\) lag spike every 20 ticks.
+When a spigot server starts, all .yml inside the wards folder are parsed into a ward object. After that, players can receive those wards with a single command. When those items are placed, they are added to a very efficient task, which itinerates throught every ward and checks for players in it's configurable radius. This task is repeated async but not, for example, every 20 ticks, that could potencially cause lag, rather all wards are spread equally along those 20 ticks and runned in a queue, so the work is divided equally over the period Instead of a \(potential\) lag spike every 20 ticks.
 
 ## Performance
 
