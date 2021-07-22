@@ -1,5 +1,5 @@
 
-## What is Wards? [![Codacy Badge](https://app.codacy.com/project/badge/Grade/6c346ca5175b49749335a28cfe0296c1)](https://www.codacy.com/gh/divios/Wards/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=divios/Wards&amp;utm_campaign=Badge_Grade)
+## What is Wards? [![Codacy Badge](https://app.codacy.com/project/badge/Grade/6c346ca5175b49749335a28cfe0296c1)](https://www.codacy.com/gh/divios/Wards/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=divios/Wards&amp;utm_campaign=Badge_Grade) [![Java CI with Gradle](https://github.com/divios/Wards/actions/workflows/gradle.yml/badge.svg)](https://github.com/divios/Wards/actions/workflows/gradle.yml)
 
 Wards is not a protection plugin. It's main purpose is to alert and display when a not desire player enters/exits a region, very similar to a centinel in League of Legends. The player who enters is[ highligted ](https://minecraft.fandom.com/wiki/Glowing)to the owner and allies and is also pinned. This could alert if someone is trying to steal from you base or giving information and advantage in a war of factions for example
 
