@@ -19,4 +19,4 @@ If the above explanation doesn't convince you, then let me tell you this. I've t
 - [ ] Add support/compatibility with protection plugins
 - [ ] Add support/compatibility with factions plugins
 - [ ] Add a compass that indicates if a ward is nearby??
-- [ ] Limit amount of wards per player with permissions
+- [x] Limit amount of wards per player with permissions
