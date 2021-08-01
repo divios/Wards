@@ -14,7 +14,7 @@ If the above explanation doesn't convince you, then let me tell you this. I've t
 ## TODO
 
 - [ ] Key that allows to break a centinel
-- [ ] Implement roles per Ward
+- [x] Implement roles per Ward
 - [ ] Implement a potion to make a player invisible to a ward
 - [ ] Add support/compatibility with protection plugins
 - [ ] Add support/compatibility with factions plugins
