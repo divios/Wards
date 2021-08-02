@@ -15,10 +15,18 @@ messages:
     teleport_cooldown: "&7You 'll be teleported in {cooldown} seconds&7. Dont move!"
     teleport_cancelled: "&7Teleport cancelled"
     no_perms: "&7You don't have enough permissions to do that"
+    no_space: "You don't have enough space in your inventory"
   commands:
     give:
       onCmd: "&7You received {amount} {type} &7wards"
       info: "&8- &9/wards give [type] [player] &8 - &7Gives the a ward of the selected type for yourself or the given player"
+    potion:
+      onCmd: "&7You received {amount} potions of {duration}s"
+      info: "&8- &9/wards potion [duration] [type] [player] &8 - &7Gives the a potion to the given player of the given type and the given duration"
+      name: "&9Wards potion"
+      lore: "|&8- &7Duration: &9{duration}||&7Drink this special potion|&7to make yourself invisible|&7to enemy wards for|&7a given time."
+      drink: "&7You are now invisible to enemy wards"
+      expire: "&7You are now visible to wards"
     list:
       info: "&8- &9/wards list [player] &8 - &7Prints all the wards of yourself or given player"
     help:

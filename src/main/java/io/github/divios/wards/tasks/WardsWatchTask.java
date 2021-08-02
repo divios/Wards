@@ -10,6 +10,7 @@ import io.github.divios.core_lib.scheduler.Task;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.events.WardPlaceEvent;
 import io.github.divios.wards.events.WardRemoveEvent;
+import io.github.divios.wards.potions.potionManager;
 import io.github.divios.wards.wards.Ward;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Bukkit;
@@ -60,8 +61,10 @@ public class WardsWatchTask {
                         if (ward.getRegion().getLoadedChunks().isEmpty()) return;
 
                         ward.updateOnSight(Bukkit.getOnlinePlayers().stream()
-                                .filter(p -> ward.isInside(p.getLocation()))
-                                .filter(p -> !ward.getAcceptedP().contains(p.getUniqueId()))
+                                .filter(p -> ward.isInside(p.getLocation()))                // Players inside region
+                                .filter(p -> !potionManager.getInstance().contains(p))      // Invisible Potions
+                                .filter(p -> !p.hasPermission("wards.admin"))         // Ignore admins
+                                .filter(p -> !ward.getTrusted().contains(p.getUniqueId()))  // Ignore trusted
                                 .collect(Collectors.toList()));
                     });
 
