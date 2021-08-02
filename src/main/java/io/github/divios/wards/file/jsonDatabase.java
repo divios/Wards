@@ -31,7 +31,7 @@ public class jsonDatabase {
 
             jsonMerchant.addProperty("owner", ward.getOwner().toString());
             jsonMerchant.addProperty("location", LocationUtils.toString(ward.getCenter()));
-            jsonMerchant.addProperty("roles", new Gson().toJson(ward.getAcceptedP()));
+            jsonMerchant.addProperty("roles", new Gson().toJson(ward.getTrusted()));
             jsonMerchant.addProperty("type", ward.getType().getId());
             jsonMerchant.addProperty("time", ward.getTimer());
 
