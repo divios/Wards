@@ -2,6 +2,7 @@ package io.github.divios.wards.commands;
 
 import io.github.divios.core_lib.commands.abstractCommand;
 import io.github.divios.core_lib.commands.cmdTypes;
+import io.github.divios.core_lib.inventory.inventoryUtils;
 import io.github.divios.core_lib.itemutils.ItemUtils;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.wards.Wards;
@@ -99,6 +100,11 @@ public class giveCmd extends abstractCommand {
         int amount = args.size() >= 3 ? Integer.parseInt(args.get(2)):1;
 
         if (args.size() >= 2 && !p.hasPermission("wards.give.others")) return;
+
+        if (inventoryUtils.playerEmptySlots(p) < amount) {
+            Msg.sendMsg(p, Wards.configManager.getLangValues().WARD_NO_SPACE);
+            return;
+        }
 
         WardsManager.getInstance().getWardsTypes().stream()
                 .filter(wardType -> wardType.getId().equals(args.get(0)))
