@@ -1,5 +1,6 @@
 package io.github.divios.wards.utils;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import io.github.divios.core_lib.Schedulers;
 import io.github.divios.core_lib.misc.Task;
@@ -11,11 +12,14 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class utils {
 
@@ -141,5 +145,13 @@ public class utils {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
             yaml.setDefaults(defConfig);
         }
+    }
+
+    public static boolean isPotion(ItemStack item) {
+        Material material = item.getType();
+
+        return Arrays.asList(XMaterial.POTION.parseMaterial(),
+                XMaterial.LINGERING_POTION.parseMaterial(),
+                XMaterial.SPLASH_POTION.parseMaterial()).contains(material);
     }
 }
