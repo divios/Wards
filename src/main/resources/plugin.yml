@@ -10,5 +10,5 @@ commands:
   Wards:
     description: Wards plugin
     default: false
-    aliases: [ Wards ]
+    aliases: [ Wards, wa, w ]
     usage: /Wards
