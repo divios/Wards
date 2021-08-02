@@ -5,10 +5,7 @@ import io.github.divios.core_lib.commands.CommandManager;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.core_lib.utils.Log;
-import io.github.divios.wards.commands.giveCmd;
-import io.github.divios.wards.commands.helpCmd;
-import io.github.divios.wards.commands.listCmd;
-import io.github.divios.wards.commands.reloadCmd;
+import io.github.divios.wards.commands.*;
 import io.github.divios.wards.file.ConfigManager;
 import io.github.divios.wards.observer.ObservablesManager;
 import io.github.divios.wards.wards.WardsManager;
@@ -49,7 +46,7 @@ public final class Wards extends JavaPlugin {
         ObservablesManager.getInstance();  // Loads all Listeners
 
         CommandManager.register(INSTANCE.getCommand("Wards"));      // Load command Manager
-        CommandManager.addCommand(new giveCmd(), new reloadCmd(), new helpCmd(), new listCmd());
+        CommandManager.addCommand(new giveCmd(), new reloadCmd(), new helpCmd(), new listCmd(), new potionCmd());
 
         Msg.setPREFIX(FormatUtils.color("&9&lWards &7> "));
         Msg.setTeleportCancelled(configManager.getLangValues().WARD_TELEPORT_CANCELLED);
