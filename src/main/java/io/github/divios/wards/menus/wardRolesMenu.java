@@ -8,12 +8,9 @@ import io.github.divios.core_lib.inventory.ItemButton;
 import io.github.divios.core_lib.inventory.builder.inventoryPopulator;
 import io.github.divios.core_lib.inventory.builder.paginatedGui;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
-import io.github.divios.core_lib.itemutils.ItemUtils;
 import io.github.divios.core_lib.misc.ChatPrompt;
 import io.github.divios.core_lib.misc.Msg;
 import io.github.divios.core_lib.misc.confirmIH;
-import io.github.divios.core_lib.profiles.Profile;
-import io.github.divios.core_lib.profiles.ProfileRepository;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.wards.Ward;
 import org.bukkit.Bukkit;
@@ -43,7 +40,7 @@ public class wardRolesMenu {
     private void build() {
 
         BiMap<String, UUID> players = HashBiMap.create();
-        ward.getAcceptedP().forEach(uuid -> {
+        ward.getTrusted().forEach(uuid -> {
             players.put(Bukkit.getOfflinePlayer(uuid).getName(), uuid);
         });
 
@@ -71,16 +68,28 @@ public class wardRolesMenu {
                                     .setName(Wards.configManager.getGuiValues().ROLES_ADD_NAME)
                                     .addLore(Wards.configManager.getGuiValues().ROLES_ADD_LORE),
                             e -> {
-                                ChatPrompt.prompt(p, s -> {
-                                    OfflinePlayer op = Bukkit.getOfflinePlayer(s);
-                                    if (!op.hasPlayedBefore()) {
-                                        Msg.sendMsg(p, Wards.configManager.getLangValues().WARD_PLAYER_NOTEXITS);
-                                    } else ward.addAccepted(op.getUniqueId());
-                                    refresh();
 
-                                }, cancelReason -> refresh(),
-                                        Wards.configManager.getGuiValues().ROLES_PROMPT_TITLE,
-                                        Wards.configManager.getGuiValues().ROLES_PROMPT_SUBTITLE);
+                                if (!p.hasPermission("wards.admin") &&
+                                        !p.getUniqueId().equals(ward.getOwner())) {
+                                    Msg.sendMsg(p, Wards.configManager.getLangValues().WARD_NO_PERMS);
+                                    return;
+                                }
+
+                                ChatPrompt.builder()
+                                        .withPlayer(p)
+                                        .withResponse(s -> {
+
+                                            OfflinePlayer op = Bukkit.getOfflinePlayer(s);
+                                            if (!op.hasPlayedBefore()) {
+                                                Msg.sendMsg(p, Wards.configManager.getLangValues().WARD_PLAYER_NO_EXIST);
+                                            } else ward.addTrusted(op.getUniqueId());
+                                            refresh();
+                                        })
+                                        .withCancel(cancelReason -> refresh())
+                                        .withTitle(Wards.configManager.getGuiValues().ROLES_PROMPT_TITLE)
+                                        .withSubtitle(Wards.configManager.getGuiValues().ROLES_PROMPT_SUBTITLE)
+                                        .prompt();
+
                             }), 53);
                 })
 
@@ -98,14 +107,21 @@ public class wardRolesMenu {
                         .scheme(11, 11)
                         .scheme(11, 11, 3, 0, 0, 0, 3, 11, 11)
                 )
-                .withItems(ward.getAcceptedP().stream()
+                .withItems(ward.getTrusted().stream()
                         .map(uuid -> ItemButton.create(ItemBuilder.of(XMaterial.PLAYER_HEAD)
                                         .setName(players.inverse().get(uuid))
                                         .applyTexture(uuid),
                                 e -> {
 
-                                    if (!p.getUniqueId().equals(ward.getOwner())) {
+                                    if (!p.hasPermission("wards.admin") &&
+                                            !p.getUniqueId().equals(ward.getOwner())) {
                                         Msg.sendMsg(p, Wards.configManager.getLangValues().WARD_NO_PERMS);
+                                        return;
+                                    }
+
+                                    if (players.get(e.getCurrentItem().getItemMeta().getDisplayName())
+                                            .equals(e.getWhoClicked().getUniqueId())) {
+                                        Msg.sendMsg((Player) e.getWhoClicked(), "&7You can't remove yourself");
                                         return;
                                     }
 
@@ -120,7 +136,7 @@ public class wardRolesMenu {
                                             .withItem(e.getCurrentItem())
                                             .withAction(aBoolean -> {
                                                 if (aBoolean)
-                                                    ward.removeAccepted(players.get(e.getCurrentItem()
+                                                    ward.removeTrusted(players.get(e.getCurrentItem()
                                                             .getItemMeta().getDisplayName()));
                                                 Schedulers.sync().run(this::refresh);
                                             })

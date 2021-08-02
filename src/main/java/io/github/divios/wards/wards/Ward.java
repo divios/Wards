@@ -40,7 +40,7 @@ public class Ward {
 
     private final int hash;             // Hash of the object cached
 
-    private final Set<UUID> acceptedP = new HashSet<>();
+    private final Set<UUID> trusted = new HashSet<>();
     private final Set<Player> onSight = new HashSet<>();
 
     private final WardInventory inv;
@@ -49,13 +49,13 @@ public class Ward {
 
         this.name = name;
         this.owner = owner;
-        this.acceptedP.add(owner);
+        this.trusted.add(owner);
         this.type = type;
         this.region = region;
 
         this.time = timer;
 
-        this.acceptedP.addAll(acceptedP);
+        this.trusted.addAll(acceptedP);
 
         this.hash = Objects.hash(region.getCenter(), type);
 
@@ -107,13 +107,13 @@ public class Ward {
         this.time = timer;
     }
 
-    public Set<UUID> getAcceptedP() {
-        return Collections.unmodifiableSet(acceptedP);
+    public Set<UUID> getTrusted() {
+        return Collections.unmodifiableSet(trusted);
     }
 
-    public boolean addAccepted(UUID uuid) { return acceptedP.add(uuid); }
+    public boolean addTrusted(UUID uuid) { return trusted.add(uuid); }
 
-    public boolean removeAccepted(UUID uuid) { return acceptedP.remove(uuid); }
+    public boolean removeTrusted(UUID uuid) { return trusted.remove(uuid); }
 
     public Set<Player> getOnSight() {
         return Collections.unmodifiableSet(onSight);
@@ -130,7 +130,7 @@ public class Ward {
         item.setString(Wards.WARD_NAME, name);
         item.setLong(Wards.WARD_TIMER, time);
         item.setString(Wards.WARD_OWNER, owner.toString());
-        item.setObject(Wards.WARD_ACCEPTED, acceptedP);
+        item.setObject(Wards.WARD_ACCEPTED, trusted);
 
         return item.getItem();
     }
@@ -141,7 +141,7 @@ public class Ward {
 
         onSight.forEach(player ->       // All players on the area
 
-                acceptedP.forEach(uuid -> {     // add glow
+                trusted.forEach(uuid -> {     // add glow
                     Player permitted = Bukkit.getPlayer(uuid);
                     if (permitted == null) return;
                     ParticleUtils.removeGlow(permitted, player);       // Packets
@@ -157,7 +157,7 @@ public class Ward {
         onSight.stream()       // Players who exited
                 .filter(player -> !players.contains(player))
                 .forEach(player -> {
-                    acceptedP.forEach(uuid -> {
+                    trusted.forEach(uuid -> {
 
                         Player permitted = Bukkit.getPlayer(uuid);      // Remove Glow
                         if (permitted == null) return;
@@ -175,7 +175,7 @@ public class Ward {
         players.stream()        // Players who entered
                 .filter(player -> !onSight.contains(player))
                 .forEach(player -> {
-                    acceptedP.forEach(uuid -> {
+                    trusted.forEach(uuid -> {
                         Msg.sendMsg(uuid, Msg.singletonMsg(Wards.configManager.getLangValues().WARD_ENTERED)
                                 .add("\\{player}", player.getName())
                                 .add("\\{ward}", name).build());
@@ -189,7 +189,7 @@ public class Ward {
         onSight.forEach(player ->       // All players on the area
 
             //player.addPotionEffect(PotionEffectType.GLOWING.createEffect(50, 3));   // effect Deprecated
-            acceptedP.forEach(uuid -> {     // add glow
+            trusted.forEach(uuid -> {     // add glow
                 Player permitted = Bukkit.getPlayer(uuid);
                 if (permitted == null) return;
                 ParticleUtils.addGlow(permitted, player);       // Packets

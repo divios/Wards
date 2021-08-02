@@ -17,7 +17,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 
-import java.util.UUID;
 import java.util.stream.IntStream;
 
 public class BlockPlaceEvent extends abstractObserver {
@@ -47,7 +46,7 @@ public class BlockPlaceEvent extends abstractObserver {
                     Integer limit = utils.getWardsLimit(p);
                     int placed = WardsManager.getInstance().getWards(p).size();
 
-                    if (limit != null && limit >= placed) {
+                    if (!p.hasPermission("wards.admin") && limit != null && limit >= placed) {
                         Msg.sendMsg(p, Msg.singletonMsg(Wards.configManager.getLangValues().WARD_LIMIT)
                                 .add("\\{limit}", String.valueOf(limit)).build());
                         o.setCancelled(true);
@@ -63,7 +62,7 @@ public class BlockPlaceEvent extends abstractObserver {
                             .setLocation(l)
                             .build();
 
-                    if (!ward.getAcceptedP().contains(p.getUniqueId())) {
+                    if (!p.hasPermission("wards.admin") && !ward.getTrusted().contains(p.getUniqueId())) {
                         Msg.sendMsg(p, "&7You are not allowed to place this ward");
                         o.setCancelled(true);
                         return;

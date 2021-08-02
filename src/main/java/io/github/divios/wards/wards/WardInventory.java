@@ -126,6 +126,12 @@ public class WardInventory {
 
                     Player p = (Player) e.getWhoClicked();
 
+                    if (!p.hasPermission("wards.admin") &&
+                            !p.getUniqueId().equals(ward.getOwner())) {
+                        Msg.sendMsg(p, Wards.configManager.getLangValues().WARD_NO_PERMS);
+                        return;
+                    }
+
                     ChatPrompt.builder()
                             .withPlayer(p)
                             .withResponse(s -> {
@@ -215,10 +221,8 @@ public class WardInventory {
 
                             if (e.getViewers().size() != 1) return;
 
-                            //Bukkit.broadcastMessage("Iniciado listener");
                             update = Schedulers.builder().sync().every(20).run(() -> {
 
-                                //Bukkit.broadcastMessage("updated");
                                 inv.getMainInv().getInventory().setItem(11,
                                         new ItemBuilder(Wards.configManager.getGuiValues().TIME_MATERIAL)
                                                 .setName(Wards.configManager.getGuiValues().TIME_NAME)
