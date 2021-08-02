@@ -37,7 +37,7 @@ public class BlockInteractEvent extends abstractObserver {
                     if (ward == null) return;
                     o.setCancelled(true);
 
-                    if (!ward.getAcceptedP().contains(p.getUniqueId())) {
+                    if (!ward.getTrusted().contains(p.getUniqueId()) && !p.hasPermission("wards.admin")) {
                         return;
                     }
 
@@ -47,31 +47,38 @@ public class BlockInteractEvent extends abstractObserver {
                     if (event.isCancelled()) return;
 
                     if (o.getPlayer().isSneaking()) {           // Confirm Menu
-                        new confirmIH(plugin, p, (player, aBoolean) -> {
-                            if (aBoolean) {
 
-                                if (!p.getUniqueId().equals(ward.getOwner())) {
-                                    Msg.sendMsg(p, Wards.configManager.getLangValues().WARD_PICK_DENY);
-                                    return;
-                                }
+                        confirmIH.builder()
+                                .withPlayer(p)
+                                .withAction(aBoolean -> {
 
-                                WardsManager.getInstance().deleteWard(ward);
-                                ItemUtils.give(p, ward.buildItem(), 1);
-                                utils.cleanBlock(ward.getCenter());
-                                Msg.sendMsg(p, Msg.singletonMsg(Wards.configManager.getLangValues().WARD_PICK_UP)
-                                        .add("\\{ward}", ward.getName()).build());
-                                player.spawnParticle(Particle.FLAME,
-                                        ward.getCenter().clone().add(0.5, 0.5, 0.5), 40);
+                                    if (aBoolean) {
 
-                                Bukkit.getPluginManager().callEvent(new WardRemoveEvent(p, ward));
+                                        if (!p.getUniqueId().equals(ward.getOwner())) {
+                                            Msg.sendMsg(p, Wards.configManager.getLangValues().WARD_PICK_DENY);
+                                            return;
+                                        }
 
-                            }
-                            p.closeInventory();
-                        }, ward.getType().buildItem(), Wards.configManager.getGuiValues().CONFIRM_TITLE,
-                                Wards.configManager.getGuiValues().CONFIRM_YES, Wards.configManager.getGuiValues().CONFIRM_NO);
-                    }
+                                        WardsManager.getInstance().deleteWard(ward);
+                                        ItemUtils.give(p, ward.buildItem(), 1);
+                                        utils.cleanBlock(ward.getCenter());
+                                        Msg.sendMsg(p, Msg.singletonMsg(Wards.configManager.getLangValues().WARD_PICK_UP)
+                                                .add("\\{ward}", ward.getName()).build());
+                                        p.spawnParticle(Particle.FLAME,
+                                                ward.getCenter().clone().add(0.5, 0.5, 0.5), 40);
 
-                    else ward.openInv(o.getPlayer());
+                                        Bukkit.getPluginManager().callEvent(new WardRemoveEvent(p, ward));
+
+                                    }
+                                    p.closeInventory();
+
+                                })
+                                .withItem(ward.getType().buildItem())
+                                .withConfirmLore(Wards.configManager.getGuiValues().CONFIRM_YES)
+                                .withCancelLore(Wards.configManager.getGuiValues().CONFIRM_NO)
+                                .prompt();
+
+                    } else ward.openInv(o.getPlayer());
                 });
 
     }
