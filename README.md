@@ -16,6 +16,7 @@ If the above explanation doesn't convince you, then let me tell you this. I've t
 - [ ] Key that allows to break a centinel
 - [x] Implement roles per Ward
 - [x] Implement a potion to make a player invisible to a ward
+- [x] Custom recipes
 - [ ] Add support/compatibility with protection plugins
 - [ ] Add support/compatibility with factions plugins
 - [ ] Add a compass that indicates if a ward is nearby??
