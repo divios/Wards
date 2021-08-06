@@ -8,6 +8,7 @@ public class ObservablesManager {
     private final BlockInteractEvent interactEvent = new BlockInteractEvent();
     private final BlockPlaceEvent placeEvent = new BlockPlaceEvent();
     private final PotionConsumeEvent potionConsumeEvent = new PotionConsumeEvent();
+    private final recipeCraftEvent recipeCraftEvent = new recipeCraftEvent();
 
     public static ObservablesManager getInstance() {
         if (INSTANCE == null)
@@ -27,7 +28,7 @@ public class ObservablesManager {
         return placeEvent;
     }
 
-    public PotionConsumeEvent getPotionConsumeEvent() {
-        return potionConsumeEvent;
-    }
+    public PotionConsumeEvent getPotionConsumeEvent() { return potionConsumeEvent; }
+
+    public recipeCraftEvent getRecipeCraftEvent() { return recipeCraftEvent; }
 }

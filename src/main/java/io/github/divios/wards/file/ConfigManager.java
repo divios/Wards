@@ -36,7 +36,8 @@ public class ConfigManager {
 
         if (!wardsDirectory.exists()) {
             wardsDirectory.mkdir();
-            Stream.of("Sentinel", "Guardian").forEach(s ->
+
+            Stream.of("Sentinel", "Guardian", "Protector").forEach(s ->
                     plugin.saveResource("wards/" + s + ".yml", false));
         }
 

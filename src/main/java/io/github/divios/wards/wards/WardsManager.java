@@ -136,6 +136,7 @@ public class WardsManager {
 
         saveWards();
 
+        types.forEach(WardType::destroy);           // Destroy recipes
         types.clear();
         wards.forEach((location, ward) -> ward.destroy());
         wards.clear();
@@ -147,6 +148,8 @@ public class WardsManager {
         WardsCooldownTask.unload();
         WardsWatchTask.unload();
         WardsUpdateTask.unload();
+
+        types.forEach(WardType::destroy);
 
         saveWards();
     }

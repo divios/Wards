@@ -1,25 +1,32 @@
 package io.github.divios.wards.wards;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.google.common.base.Preconditions;
 import de.tr7zw.nbtapi.NBTItem;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
 import io.github.divios.core_lib.misc.FormatUtils;
+import io.github.divios.core_lib.misc.Pair;
+import io.github.divios.core_lib.utils.Log;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.regions.ChunkRegionImpl;
 import io.github.divios.wards.regions.CuboidRegionImpl;
 import io.github.divios.wards.regions.RegionI;
 import io.github.divios.wards.regions.SpheroidRegionImpl;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class WardType {
 
-    private static final Wards plugin = Wards.getInstance();
+    protected static final Wards plugin = Wards.getInstance();
 
     private final int hash;         // Hash cached
 
@@ -30,6 +37,7 @@ public class WardType {
     private final long time;
     private final WardTypeE type;
     private final int radius;
+    private final WardsRecipe recipe;
 
     private WardType(
             String id,
@@ -38,7 +46,8 @@ public class WardType {
             List<String> lore,
             long time,
             WardTypeE type,
-            int radius
+            int radius,
+            Material[][] recipeLines
     ) {
         this.id = id;
         this.material = material;
@@ -47,6 +56,7 @@ public class WardType {
         this.time = time;
         this.type = type;
         this.radius = radius;
+        this.recipe = recipeLines == null ? null: new WardsRecipe(this, recipeLines);
 
         this.hash = id.hashCode();
     }
@@ -77,6 +87,10 @@ public class WardType {
 
     public int getRadius() {
         return radius;
+    }
+
+    public WardsRecipe getRecipe() {
+        return recipe;
     }
 
     public ItemStack buildItem(Player p) {
@@ -111,6 +125,10 @@ public class WardType {
         return region;
     }
 
+    public void destroy() {
+        if (recipe!= null) recipe.destroy();
+    }
+
     @Override
     public int hashCode() {
         return hash;
@@ -133,6 +151,7 @@ public class WardType {
         private Long time = null;
         private String type = null;
         private Integer radius = null;
+        private List<String> recipeLines = null;
 
         public Builder() {
         }
@@ -181,6 +200,11 @@ public class WardType {
             return this;
         }
 
+        public Builder setRecipe(List<String> recipesLines) {
+            this.recipeLines = recipesLines;
+            return this;
+        }
+
         public WardType build() throws WardsTypeException {
 
             if (id == null || id.isEmpty()) {
@@ -217,6 +241,29 @@ public class WardType {
                 throw new WardsTypeException("Radius");
             }
 
+            Material[][] recipes;
+
+            if (recipeLines == null || recipeLines.isEmpty()) recipes = null;
+
+            else {
+
+                if (recipeLines.size() > 3) throw new WardsTypeException("recipe");
+
+                if (recipeLines.size() < 3)
+                    IntStream.range(0, 3 - recipeLines.size()).forEach(i-> recipeLines.add("AIR, AIR, AIR"));
+
+                if (recipeLines.stream().flatMap(s -> Arrays.stream(s.split(",")))
+                        .noneMatch(s -> Material.getMaterial(s) != null))       // If not material found
+                    throw new WardsTypeException("recipe");
+
+                recipes = recipeLines.stream()
+                        .map(s -> Stream.of(s.split(",")))
+                        .map(stringStream -> stringStream.map(String::trim))
+                        .map(s -> s.map(s1 -> Optional.ofNullable(Material.getMaterial(s1)).orElse(Material.AIR)))
+                        .map(materialStream -> materialStream.toArray(Material[]::new))
+                        .toArray(Material[][]::new);
+            }
+
             return new WardType(
                     id,
                     XMaterial.valueOf(material),
@@ -224,12 +271,13 @@ public class WardType {
                     Arrays.asList(lore.split("\\|")),
                     time,
                     WardTypeE.valueOf(type.toUpperCase()),
-                    radius);
+                    radius,
+                    recipes);
 
         }
     }
 
-    public static class WardsTypeException extends Exception {
+    public final static class WardsTypeException extends Exception {
 
         private final String cause;
 
@@ -245,6 +293,88 @@ public class WardType {
 
     private enum WardTypeE {
         CUBOID, SPHEROID, CHUNK
+    }
+
+    private static final class WardsRecipe {
+
+        private final List<Character> letters = new ArrayList<>(Arrays.asList('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'));
+        private final WardType type;
+        private final NamespacedKey name;
+
+        public WardsRecipe(WardType type, Material[][] materials) {
+
+            Preconditions.checkNotNull(type, "type null");
+            Preconditions.checkArgument(materials.length == 3, "Materials length");
+            Preconditions.checkArgument(Arrays.stream(materials).allMatch(materials1 -> materials1.length == 3), "Material length");
+
+            this.type = type;
+            name = new NamespacedKey(plugin, "Ward_" + type.getId());
+
+            parseMaterials(materials);
+
+        }
+
+        private void parseMaterials(Material[][] materials) {
+
+            List<Pair<Character, Material>> recipeMap = new ArrayList<>();
+
+            for (int i = 0; i<3; i++) {
+                for (int j=0; j<3; j++) {
+
+                    Material entry = materials[i][j];
+
+                    if (recipeMap.stream().anyMatch(pair -> pair.get2().equals(entry))) {
+                        recipeMap.add(recipeMap.stream().filter(pair -> pair.get2().equals(entry)).findFirst().get());
+                    } else {
+                      recipeMap.add(Pair.of(letters.get(0), entry));
+                      letters.remove(0);
+                    }
+
+                }
+            }
+
+            createRecipe(recipeMap);
+
+        }
+
+        private void createRecipe(List<Pair<Character, Material>> recipeMap) {
+
+            Preconditions.checkArgument(recipeMap.size() == 9, "recipeMap size");
+
+            ShapedRecipe customRecipe = new ShapedRecipe(name, type.buildItem());
+
+            List<String> auxRecipes = new ArrayList<>();
+            recipeMap.forEach(pair -> {
+                if (pair.get2().equals(Material.AIR))
+                    auxRecipes.add(" ");
+                else
+                    auxRecipes.add(String.valueOf(pair.get1()));
+            });
+
+            customRecipe.shape(
+                    auxRecipes.get(0).concat(auxRecipes.get(1)).concat(auxRecipes.get(2)),
+                    auxRecipes.get(3).concat(auxRecipes.get(4)).concat(auxRecipes.get(5)),
+                    auxRecipes.get(6).concat(auxRecipes.get(7)).concat(auxRecipes.get(8))
+            );
+
+            Set<Character> keysSeen = new HashSet<>();
+            recipeMap.forEach(key -> {
+                if (keysSeen.contains(key.get1())) return;
+
+                if (key.get2().equals(Material.AIR)) return;
+
+                //Log.info(String.valueOf(key.get1()));
+                keysSeen.add(key.get1());
+                customRecipe.setIngredient(key.get1(), key.get2());
+            });
+
+            Bukkit.addRecipe(customRecipe);
+
+        }
+
+        public void destroy() {
+            Bukkit.removeRecipe(name);
+        }
     }
 
 }

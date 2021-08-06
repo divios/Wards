@@ -63,6 +63,7 @@ public class WardsParser {
                         .setTime(yaml.contains("time") ? yaml.getInt("time"):null)
                         .setType(yaml.getString("type"))
                         .setRadius(yaml.contains("radius") ? yaml.getInt("radius"):null)
+                        .setRecipe(yaml.getStringList("recipe"))
                         .build();
 
                 ids.add(id);
