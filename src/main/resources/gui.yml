@@ -27,6 +27,9 @@ gui:
     title: "&e&lChange name"
     subtitle: "&7Input new name"
     not_empty: "&7The name cannot be empty!"
+  roles:
+    name: "&9Configure Roles"
+    lore: "&7Click to configure roles of this ward"
   return:
     material: OAK_DOOR
     name: "&c&lReturn"
