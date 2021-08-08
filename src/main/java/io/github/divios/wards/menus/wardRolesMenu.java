@@ -57,7 +57,7 @@ public class wardRolesMenu {
                                 .applyTexture("19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf")
                         , 51)
 
-                .withExitButton(ItemBuilder.of(XMaterial.OAK_DOOR).setName(Wards.configManager.getGuiValues().ROLES_RETURN),
+                .withExitButton(ItemBuilder.of(XMaterial.OAK_DOOR).setName(Wards.configManager.getGuiValues().ROLES_GUI_RETURN),
                         e -> {
                             Schedulers.sync().run(() -> ward.openInv(p));
                         }, 8)
@@ -65,8 +65,8 @@ public class wardRolesMenu {
                 .withButtons((inventoryGUI, integer) -> {
                     inventoryGUI.addButton(ItemButton.create(ItemBuilder.of(XMaterial.PLAYER_HEAD)
                                     .applyTexture("3edd20be93520949e6ce789dc4f43efaeb28c717ee6bfcbbe02780142f716")
-                                    .setName(Wards.configManager.getGuiValues().ROLES_ADD_NAME)
-                                    .addLore(Wards.configManager.getGuiValues().ROLES_ADD_LORE),
+                                    .setName(Wards.configManager.getGuiValues().ROLES_GUI_ADD_NAME)
+                                    .addLore(Wards.configManager.getGuiValues().ROLES_GUI_ADD_LORE),
                             e -> {
 
                                 if (!p.hasPermission("wards.admin") &&
@@ -86,8 +86,8 @@ public class wardRolesMenu {
                                             refresh();
                                         })
                                         .withCancel(cancelReason -> refresh())
-                                        .withTitle(Wards.configManager.getGuiValues().ROLES_PROMPT_TITLE)
-                                        .withSubtitle(Wards.configManager.getGuiValues().ROLES_PROMPT_SUBTITLE)
+                                        .withTitle(Wards.configManager.getGuiValues().ROLES_GUI_PROMPT_TITLE)
+                                        .withSubtitle(Wards.configManager.getGuiValues().ROLES_GUI_PROMPT_SUBTITLE)
                                         .prompt();
 
                             }), 53);
@@ -148,7 +148,7 @@ public class wardRolesMenu {
                                 }))
                 )
 
-                .withTitle(Wards.configManager.getGuiValues().ROLES_TITLE)
+                .withTitle(Wards.configManager.getGuiValues().ROLES_GUI_TITLE)
                 .build();
 
         pGui.open(p);

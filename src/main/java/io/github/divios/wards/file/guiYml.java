@@ -3,7 +3,6 @@ package io.github.divios.wards.file;
 import com.cryptomorin.xseries.XMaterial;
 import com.google.common.base.Splitter;
 import io.github.divios.core_lib.misc.FormatUtils;
-import sun.text.resources.FormatData;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +28,8 @@ public class guiYml extends resource {
     public String CHANGE_NAME_TITLE;
     public String CHANGE_NAME_SUBTITLE;
     public String CHANGE_NAME_NOT_EMPTY;
+    public String ROLES_NAME;
+    public List<String> ROLES_LORE;
     public XMaterial RETURN_MATERIAL;
     public String RETURN_NAME;
     public List<String> RETURN_LORE;
@@ -40,12 +41,12 @@ public class guiYml extends resource {
     public String LIST_NOT_SAFE;
     public String LIST_PREVIOUS;
     public String LIST_NEXT;
-    public String ROLES_TITLE;
-    public String ROLES_RETURN;
-    public String ROLES_ADD_NAME;
-    public List<String> ROLES_ADD_LORE;
-    public String ROLES_PROMPT_TITLE;
-    public String ROLES_PROMPT_SUBTITLE;
+    public String ROLES_GUI_TITLE;
+    public String ROLES_GUI_RETURN;
+    public String ROLES_GUI_ADD_NAME;
+    public List<String> ROLES_GUI_ADD_LORE;
+    public String ROLES_GUI_PROMPT_TITLE;
+    public String ROLES_GUI_PROMPT_SUBTITLE;
 
     public guiYml() {
         super("gui.yml");
@@ -81,6 +82,9 @@ public class guiYml extends resource {
         CHANGE_NAME_SUBTITLE = yaml.getString("gui.change_name.subtitle");
         CHANGE_NAME_NOT_EMPTY = yaml.getString("gui.change_name.not_empty");
 
+        ROLES_NAME = yaml.getString("gui.roles.name");
+        ROLES_LORE = Arrays.asList(yaml.getString("gui.roles.lore").split("\\|"));
+
         RETURN_MATERIAL = XMaterial.matchXMaterial(yaml.getString("gui.return.material", "CLOCK")).get();
         RETURN_NAME = yaml.getString("gui.return.name");
         RETURN_LORE = Arrays.asList(yaml.getString("gui.return.lore").split("\\|"));
@@ -95,12 +99,12 @@ public class guiYml extends resource {
         LIST_NEXT = yaml.getString("gui.list_gui.next");
         LIST_PREVIOUS = yaml.getString("gui.list_gui.previous");
 
-        ROLES_TITLE = yaml.getString("gui.roles_gui.title");
-        ROLES_RETURN = yaml.getString("gui.roles_gui.return");
-        ROLES_ADD_NAME = yaml.getString("gui.roles_gui.add_name");
-        ROLES_ADD_LORE = Splitter.on("|").splitToList(yaml.getString("gui.roles_gui.add_lore"));
-        ROLES_PROMPT_TITLE = yaml.getString("gui.roles_gui.prompt_title");
-        ROLES_PROMPT_SUBTITLE = yaml.getString("gui.roles_gui.prompt_subtitle");
+        ROLES_GUI_TITLE = yaml.getString("gui.roles_gui.title");
+        ROLES_GUI_RETURN = yaml.getString("gui.roles_gui.return");
+        ROLES_GUI_ADD_NAME = yaml.getString("gui.roles_gui.add_name");
+        ROLES_GUI_ADD_LORE = Splitter.on("|").splitToList(yaml.getString("gui.roles_gui.add_lore"));
+        ROLES_GUI_PROMPT_TITLE = yaml.getString("gui.roles_gui.prompt_title");
+        ROLES_GUI_PROMPT_SUBTITLE = yaml.getString("gui.roles_gui.prompt_subtitle");
     }
 
     protected void setDefaults() {

@@ -24,7 +24,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 
 import java.util.ArrayList;
 
-public class WardInventory {
+public class WardsMenu {
 
     private static final Wards plugin = Wards.getInstance();
 
@@ -34,7 +34,7 @@ public class WardInventory {
 
     private final Watcher watcher;
 
-    public WardInventory(Ward ward) {
+    public WardsMenu(Ward ward) {
         this.ward = ward;
         mainInv = build();
         settingsInv = createSettings();
@@ -74,8 +74,7 @@ public class WardInventory {
                                         FormatUtils.color("&c&l" + XSymbols.TIMES_3.parseSymbol()) :
                                         FormatUtils.formatTimeOffset(ward.getTimer() * 1000L) + "")).build()),
                 e -> {
-                })
-                , 11);
+                }), 11);
 
 
         builded.addButton(ItemButton.create(ItemBuilder.of(ward.getType().buildItem())
@@ -160,8 +159,8 @@ public class WardInventory {
                 }), 11);
 
         builded.addButton(ItemButton.create(ItemBuilder.of(XMaterial.BLACK_BANNER)
-                        .setName("&9Configure Roles")
-                        .setLore("&7Click to configure roles of this ward"),
+                        .setName(Wards.configManager.getGuiValues().ROLES_NAME)
+                        .setLore(Wards.configManager.getGuiValues().ROLES_LORE),
                 e -> {
                     wardRolesMenu.prompt((Player) e.getWhoClicked(), ward); }
         ), 15);
@@ -198,11 +197,11 @@ public class WardInventory {
 
     private static final class Watcher {
 
-        private final WardInventory inv;
+        private final WardsMenu inv;
         private Task update;
         private MergedSubscription listeners;
 
-        protected Watcher(WardInventory inv) {
+        protected Watcher(WardsMenu inv) {
             this.inv = inv;
 
             if (inv.getWard().getTimer() != -1)

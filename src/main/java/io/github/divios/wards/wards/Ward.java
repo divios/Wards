@@ -43,7 +43,7 @@ public class Ward {
     private final Set<UUID> trusted = new HashSet<>();
     private final Set<Player> onSight = new HashSet<>();
 
-    private final WardInventory inv;
+    private final WardsMenu inv;
 
     private Ward(String name, UUID owner, WardType type, Long timer, RegionI region, Set<UUID> acceptedP) {
 
@@ -59,7 +59,7 @@ public class Ward {
 
         this.hash = Objects.hash(region.getCenter(), type);
 
-        this.inv = new WardInventory(this);
+        this.inv = new WardsMenu(this);
 
     }
 
