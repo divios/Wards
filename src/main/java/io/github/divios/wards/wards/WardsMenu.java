@@ -118,7 +118,7 @@ public class WardsMenu {
                 .apply(builded.getInventory());
 
 
-        builded.addButton(ItemButton.create(ItemBuilder.of(XMaterial.PAPER)
+        builded.addButton(ItemButton.create(ItemBuilder.of(Wards.configManager.getGuiValues().CHANGE_NAME_MATERIAL)
                         .setName(Wards.configManager.getGuiValues().CHANGE_NAME_NAME)
                         .addLore(Wards.configManager.getGuiValues().CHANGE_NAME_LORE),
                 e -> {
@@ -162,8 +162,23 @@ public class WardsMenu {
                         .setName(Wards.configManager.getGuiValues().ROLES_NAME)
                         .setLore(Wards.configManager.getGuiValues().ROLES_LORE),
                 e -> {
-                    wardRolesMenu.prompt((Player) e.getWhoClicked(), ward); }
+                    wardRolesMenu.prompt((Player) e.getWhoClicked(), ward);
+                }
         ), 15);
+
+        builded.addButton(ItemButton.create(ItemBuilder.of(XMaterial.NOTE_BLOCK)
+                        .setName("&c&l(un)Mute")
+                        .setLore("&7Click to allow/disable", "&7notifications from this ward to yourself"),
+                e -> {
+                    if (ward.getMuted().contains(e.getWhoClicked().getUniqueId())) {
+                        ward.removeMuted((Player) e.getWhoClicked());
+                        Msg.sendMsg((Player) e.getWhoClicked(), "&7You'll now receive pings from this ward");
+                    } else {
+                        ward.addmuted((Player) e.getWhoClicked());
+                        Msg.sendMsg((Player) e.getWhoClicked(), "&7You'll no longer receive pings from this ward");
+                    }
+                })
+                , 8);
 
         builded.addButton(ItemButton.create(ItemBuilder.of(Wards.configManager.getGuiValues().RETURN_MATERIAL)
                         .setName(Wards.configManager.getGuiValues().RETURN_NAME)

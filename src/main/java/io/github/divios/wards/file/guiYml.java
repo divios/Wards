@@ -3,6 +3,7 @@ package io.github.divios.wards.file;
 import com.cryptomorin.xseries.XMaterial;
 import com.google.common.base.Splitter;
 import io.github.divios.core_lib.misc.FormatUtils;
+import org.bukkit.Material;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +31,10 @@ public class guiYml extends resource {
     public String CHANGE_NAME_NOT_EMPTY;
     public String ROLES_NAME;
     public List<String> ROLES_LORE;
+    public XMaterial ROLES_MATERIAL;
+    public String MUTE_NAME;
+    public List<String> MUTE_LORE;
+    public XMaterial MUTE_MATERIAL;
     public XMaterial RETURN_MATERIAL;
     public String RETURN_NAME;
     public List<String> RETURN_LORE;
@@ -67,25 +72,30 @@ public class guiYml extends resource {
 
         TYPE_LORE = Arrays.asList(yaml.getString("gui.type.lore").split("\\|"));
 
-        SHOW_MATERIAL = XMaterial.matchXMaterial(yaml.getString("gui.show.material", "NETHER_STAR")).get();
+        SHOW_MATERIAL = XMaterial.matchXMaterial(yaml.getString("gui.show.material")).orElse(XMaterial.NETHER_STAR);
         SHOW_NAME = yaml.getString("gui.show.name");
         SHOW_LORE = Arrays.asList(yaml.getString("gui.show.lore").split("\\|"));
 
-        SETTINGS_MATERIAL = XMaterial.matchXMaterial(yaml.getString("gui.settings.material", "CLOCK")).get();
+        SETTINGS_MATERIAL = XMaterial.matchXMaterial(yaml.getString("gui.settings.material")).orElse(XMaterial.PAPER);
         SETTINGS_NAME = yaml.getString("gui.settings.name");
         SETTINGS_LORE = Arrays.asList(yaml.getString("gui.settings.lore").split("\\|"));
 
-        CHANGE_NAME_MATERIAL = XMaterial.matchXMaterial(yaml.getString("gui.change_name.material", "CLOCK")).get();
+        CHANGE_NAME_MATERIAL = XMaterial.matchXMaterial(yaml.getString("gui.change_name.material")).orElse(XMaterial.PAPER);
         CHANGE_NAME_NAME = yaml.getString("gui.change_name.name");
         CHANGE_NAME_LORE = Arrays.asList(yaml.getString("gui.change_name.lore").split("\\|"));
         CHANGE_NAME_TITLE = yaml.getString("gui.change_name.title");
         CHANGE_NAME_SUBTITLE = yaml.getString("gui.change_name.subtitle");
         CHANGE_NAME_NOT_EMPTY = yaml.getString("gui.change_name.not_empty");
 
+        ROLES_MATERIAL = XMaterial.matchXMaterial(yaml.getString("gui.change_name.material")).orElse(XMaterial.PAPER);
         ROLES_NAME = yaml.getString("gui.roles.name");
         ROLES_LORE = Arrays.asList(yaml.getString("gui.roles.lore").split("\\|"));
 
-        RETURN_MATERIAL = XMaterial.matchXMaterial(yaml.getString("gui.return.material", "CLOCK")).get();
+        MUTE_MATERIAL = XMaterial.matchXMaterial(yaml.getString("gui.change_name.material")).orElse(XMaterial.PAPER);
+        MUTE_NAME = yaml.getString("gui.roles.name");
+        MUTE_LORE = Arrays.asList(yaml.getString("gui.roles.lore").split("\\|"));
+
+        RETURN_MATERIAL = XMaterial.matchXMaterial(yaml.getString("gui.return.material")).orElse(XMaterial.OAK_DOOR);
         RETURN_NAME = yaml.getString("gui.return.name");
         RETURN_LORE = Arrays.asList(yaml.getString("gui.return.lore").split("\\|"));
 

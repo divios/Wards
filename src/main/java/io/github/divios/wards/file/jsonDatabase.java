@@ -32,6 +32,8 @@ public class jsonDatabase {
             jsonMerchant.addProperty("owner", ward.getOwner().toString());
             jsonMerchant.addProperty("location", LocationUtils.toString(ward.getCenter()));
             jsonMerchant.addProperty("roles", new Gson().toJson(ward.getTrusted()));
+            jsonMerchant.addProperty("muted", new Gson().toJson(ward.getMuted()));
+            jsonMerchant.addProperty("name", ward.getName());
             jsonMerchant.addProperty("type", ward.getType().getId());
             jsonMerchant.addProperty("time", ward.getTimer());
 
@@ -69,7 +71,9 @@ public class jsonDatabase {
                 wards1.add(Ward.builder(jsonObject.get("owner").getAsString())
                         .setLocation(LocationUtils.fromString(jsonObject.get("location").getAsString()))
                         .setId(jsonObject.get("type").getAsString())
-                        .setAccepted(new Gson().fromJson(jsonObject.get("roles").getAsString(), ArrayList.class))
+                        .setName(jsonObject.has("name") ? jsonObject.get("name").getAsString():null)
+                        .setAccepted(jsonObject.has("roles") ? new Gson().fromJson(jsonObject.get("roles").getAsString(), ArrayList.class):null )
+                        .setMuted(jsonObject.has("muted") ? new Gson().fromJson(jsonObject.get("muted").getAsString(), ArrayList.class):null)
                         .setTimer(jsonObject.get("time").getAsLong())
                         .build());
             });

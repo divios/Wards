@@ -41,11 +41,12 @@ public class Ward {
     private final int hash;             // Hash of the object cached
 
     private final Set<UUID> trusted = new HashSet<>();
+    private final Set<UUID> muted = new HashSet<>();
     private final Set<Player> onSight = new HashSet<>();
 
     private final WardsMenu inv;
 
-    private Ward(String name, UUID owner, WardType type, Long timer, RegionI region, Set<UUID> acceptedP) {
+    private Ward(String name, UUID owner, WardType type, Long timer, RegionI region, Set<UUID> acceptedP, Set<UUID> muted) {
 
         this.name = name;
         this.owner = owner;
@@ -56,6 +57,7 @@ public class Ward {
         this.time = timer;
 
         this.trusted.addAll(acceptedP);
+        this.muted.addAll(muted);
 
         this.hash = Objects.hash(region.getCenter(), type);
 
@@ -115,6 +117,12 @@ public class Ward {
 
     public boolean removeTrusted(UUID uuid) { return trusted.remove(uuid); }
 
+    public Set<UUID> getMuted() { return Collections.unmodifiableSet(muted); }
+
+    public boolean addmuted(Player p) { return muted.add(p.getUniqueId()); }
+
+    public boolean removeMuted(Player p) { return muted.remove(p.getUniqueId()); }
+
     public Set<Player> getOnSight() {
         return Collections.unmodifiableSet(onSight);
     }
@@ -157,7 +165,7 @@ public class Ward {
         onSight.stream()       // Players who exited
                 .filter(player -> !players.contains(player))
                 .forEach(player -> {
-                    trusted.forEach(uuid -> {
+                    trusted.stream().filter(uuid -> !muted.contains(uuid)).forEach(uuid -> {
 
                         Player permitted = Bukkit.getPlayer(uuid);      // Remove Glow
                         if (permitted == null) return;
@@ -175,7 +183,7 @@ public class Ward {
         players.stream()        // Players who entered
                 .filter(player -> !onSight.contains(player))
                 .forEach(player -> {
-                    trusted.forEach(uuid -> {
+                    trusted.stream().filter(uuid -> !muted.contains(uuid)).forEach(uuid -> {
                         Msg.sendMsg(uuid, Msg.singletonMsg(Wards.configManager.getLangValues().WARD_ENTERED)
                                 .add("\\{player}", player.getName())
                                 .add("\\{ward}", name).build());
@@ -241,6 +249,7 @@ public class Ward {
         private WardType type = null;
         private Long timer = null;
         private Set<UUID> accepted = null;
+        private Set<UUID> muted = null;
 
         public Builder(Player p) {
             Objects.requireNonNull(p, "Player cannot be null");
@@ -307,6 +316,11 @@ public class Ward {
             return setAccepted(accepted.stream().map(UUID::fromString).collect(Collectors.toSet()));
         }
 
+        public Builder setMuted(List<String> muted) {
+            if (muted == null) return this;
+            return setAccepted(muted.stream().map(UUID::fromString).collect(Collectors.toSet()));
+        }
+
         public Builder setAccepted(Set<UUID> accepted) {
             this.accepted = accepted;
             return this;
@@ -325,6 +339,7 @@ public class Ward {
                 timer = type.getTime();
 
             if (accepted == null) accepted = Collections.emptySet();
+            if (muted == null) muted  = Collections.emptySet();
 
             return new Ward(
                     this.name,
@@ -332,7 +347,8 @@ public class Ward {
                     this.type,
                     this.timer,
                     type.getRegion(location),
-                    accepted);
+                    accepted,
+                    muted);
         }
     }
 }

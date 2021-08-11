@@ -28,8 +28,13 @@ gui:
     subtitle: "&7Input new name"
     not_empty: "&7The name cannot be empty!"
   roles:
+    material: "BLACK_BANNER"
     name: "&9Configure Roles"
     lore: "&7Click to configure roles of this ward"
+  mute:
+    material: NOTE_BLOCK
+    name: "&c(un)Mute"
+    lore: "&7Click to allow/disable|&7notifications from this ward to yourself"
   return:
     material: OAK_DOOR
     name: "&c&lReturn"
