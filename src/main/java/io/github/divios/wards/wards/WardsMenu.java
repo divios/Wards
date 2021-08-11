@@ -166,9 +166,9 @@ public class WardsMenu {
                 }
         ), 15);
 
-        builded.addButton(ItemButton.create(ItemBuilder.of(XMaterial.NOTE_BLOCK)
-                        .setName("&c&l(un)Mute")
-                        .setLore("&7Click to allow/disable", "&7notifications from this ward to yourself"),
+        builded.addButton(ItemButton.create(ItemBuilder.of(Wards.configManager.getGuiValues().MUTE_MATERIAL)
+                        .setName(Wards.configManager.getGuiValues().MUTE_NAME)
+                        .setLore(Wards.configManager.getGuiValues().MUTE_LORE),
                 e -> {
                     if (ward.getMuted().contains(e.getWhoClicked().getUniqueId())) {
                         ward.removeMuted((Player) e.getWhoClicked());
