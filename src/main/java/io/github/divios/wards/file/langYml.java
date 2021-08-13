@@ -21,6 +21,8 @@ public class langYml extends resource {
     public String WARD_OWNER_DENY_REMOVE;
     public String WARD_TELEPORT_COOLDOWN;
     public String WARD_TELEPORT_CANCELLED;
+    public String WARD_PING;
+    public String WARD_UNPING;
 
     public String GIVE_ON_CMD;
     public String GIVE_INFO;
@@ -58,6 +60,8 @@ public class langYml extends resource {
         WARD_NO_SPACE = FormatUtils.color(yaml.getString("messages.ward.no_space"));
         WARD_TELEPORT_COOLDOWN = FormatUtils.color(yaml.getString("messages.ward.teleport_cooldown"));
         WARD_TELEPORT_CANCELLED = FormatUtils.color(yaml.getString("messages.ward.teleport_cancelled"));
+        WARD_PING = FormatUtils.color(yaml.getString("messages.ward.ping"));
+        WARD_UNPING = FormatUtils.color(yaml.getString("messages.ward.unping"));
 
         GIVE_ON_CMD = FormatUtils.color(yaml.getString("messages.commands.give.onCmd"));
         GIVE_INFO = FormatUtils.color(yaml.getString("messages.commands.give.info"));

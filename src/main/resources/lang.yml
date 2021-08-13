@@ -12,10 +12,12 @@ messages:
     pick_deny: "&7Only the owner can pick up the ward"
     player_not_exits: "&7That player doesn't exist"
     owner_deny_remove: "&7You can't remove the owner of this ward"
+    ping: "&7You'll now receive pings from this ward"
+    unping: "&7You'll no longer receive pings from this ward"
     teleport_cooldown: "&7You 'll be teleported in {cooldown} seconds&7. Dont move!"
     teleport_cancelled: "&7Teleport cancelled"
     no_perms: "&7You don't have enough permissions to do that"
-    no_space: "You don't have enough space in your inventory"
+    no_space: "&7You don't have enough space in your inventory"
   commands:
     give:
       onCmd: "&7You received {amount} {type} &7wards"

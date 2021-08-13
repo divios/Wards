@@ -91,9 +91,9 @@ public class guiYml extends resource {
         ROLES_NAME = yaml.getString("gui.roles.name");
         ROLES_LORE = Arrays.asList(yaml.getString("gui.roles.lore").split("\\|"));
 
-        MUTE_MATERIAL = XMaterial.matchXMaterial(yaml.getString("gui.change_name.material")).orElse(XMaterial.PAPER);
-        MUTE_NAME = yaml.getString("gui.roles.name");
-        MUTE_LORE = Arrays.asList(yaml.getString("gui.roles.lore").split("\\|"));
+        MUTE_MATERIAL = XMaterial.matchXMaterial(yaml.getString("gui.mute.material")).orElse(XMaterial.PAPER);
+        MUTE_NAME = yaml.getString("gui.mute.name");
+        MUTE_LORE = Arrays.asList(yaml.getString("gui.mute.lore").split("\\|"));
 
         RETURN_MATERIAL = XMaterial.matchXMaterial(yaml.getString("gui.return.material")).orElse(XMaterial.OAK_DOOR);
         RETURN_NAME = yaml.getString("gui.return.name");

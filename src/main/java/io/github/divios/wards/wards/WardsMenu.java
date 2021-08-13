@@ -172,10 +172,10 @@ public class WardsMenu {
                 e -> {
                     if (ward.getMuted().contains(e.getWhoClicked().getUniqueId())) {
                         ward.removeMuted((Player) e.getWhoClicked());
-                        Msg.sendMsg((Player) e.getWhoClicked(), "&7You'll now receive pings from this ward"); // TODO
+                        Msg.sendMsg((Player) e.getWhoClicked(), Wards.configManager.getLangValues().WARD_PING);
                     } else {
                         ward.addmuted((Player) e.getWhoClicked());
-                        Msg.sendMsg((Player) e.getWhoClicked(), "&7You'll no longer receive pings from this ward");
+                        Msg.sendMsg((Player) e.getWhoClicked(), Wards.configManager.getLangValues().WARD_UNPING);
                     }
                 })
                 , 8);

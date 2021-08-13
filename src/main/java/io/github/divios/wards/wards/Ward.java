@@ -138,7 +138,8 @@ public class Ward {
         item.setString(Wards.WARD_NAME, name);
         item.setLong(Wards.WARD_TIMER, time);
         item.setString(Wards.WARD_OWNER, owner.toString());
-        item.setObject(Wards.WARD_ACCEPTED, trusted);
+        item.setObject(Wards.WARD_ACCEPTED, trusted.stream().map(UUID::toString).collect(Collectors.toList()));
+        item.setObject(Wards.WARD_MUTED, muted.stream().map(UUID::toString).collect(Collectors.toList()));
 
         return item.getItem();
     }
@@ -279,6 +280,7 @@ public class Ward {
                     item.getLong(Wards.WARD_TIMER) :
                     type.getTime();
             setAccepted(item.getObject(Wards.WARD_ACCEPTED, List.class));
+            setMuted(item.getObject(Wards.WARD_MUTED, List.class));
         }
 
         public Builder setLocation(Location l) {
@@ -311,19 +313,27 @@ public class Ward {
             return this;
         }
 
-        public Builder setAccepted(List<String> accepted) {
-            if (accepted == null) return this;
-            return setAccepted(accepted.stream().map(UUID::fromString).collect(Collectors.toSet()));
+        public Builder setMuted(Set<UUID> muted) {
+            if (muted == null) return this;
+            this.muted = muted;
+            return this;
         }
 
         public Builder setMuted(List<String> muted) {
             if (muted == null) return this;
-            return setAccepted(muted.stream().map(UUID::fromString).collect(Collectors.toSet()));
+            return setMuted(muted.stream().map(UUID::fromString).collect(Collectors.toSet()));
         }
 
+
         public Builder setAccepted(Set<UUID> accepted) {
+            if (accepted == null) return this;
             this.accepted = accepted;
             return this;
+        }
+
+        public Builder setAccepted(List<String> accepted) {
+            if (accepted == null) return this;
+            return setAccepted(accepted.stream().map(UUID::fromString).collect(Collectors.toSet()));
         }
 
         public Ward build() {
