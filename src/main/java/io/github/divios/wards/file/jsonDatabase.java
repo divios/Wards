@@ -67,13 +67,6 @@ public class jsonDatabase {
             json.getAsJsonArray().forEach(jsonElement -> {
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
 
-
-                ((Set<UUID>) new Gson().fromJson(jsonObject.get("roles").getAsString(), new TypeToken<Set<UUID>>() {}.getType())).forEach(uuid -> {
-                    Log.info(uuid.toString());
-                });
-
-                Log.info("");
-
                 wards1.add(Ward.builder(jsonObject.get("owner").getAsString())
                         .setLocation(LocationUtils.fromString(jsonObject.get("location").getAsString()))
                         .setId(jsonObject.get("type").getAsString())
