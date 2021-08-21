@@ -46,7 +46,6 @@ public class WardsParser {
             }
 
             WardType type;
-
             try {
 
                 String id = yaml.getString("id");
@@ -71,6 +70,10 @@ public class WardsParser {
             } catch (WardType.WardsTypeException e) {
                 plugin.getLogger().severe("There was a problem parsing the file " + file.getName()
                     + " , found the error on the field: " + e.getWho());
+                return;
+            } catch (Exception e) {
+                plugin.getLogger().severe("There was an unknown problem parsing the file " + file.getName());
+                e.printStackTrace();
                 return;
             }
 

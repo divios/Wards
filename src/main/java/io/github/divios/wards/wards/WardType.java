@@ -252,6 +252,15 @@ public class WardType {
                 if (recipeLines.size() < 3)
                     IntStream.range(0, 3 - recipeLines.size()).forEach(i-> recipeLines.add("AIR, AIR, AIR"));
 
+                recipeLines.forEach(s -> {
+                    if (s.split(",").length >= 3) return;
+
+                    int index = recipeLines.indexOf(s);
+
+                    IntStream.range(0, 3 - s.split(",").length).forEach(value ->
+                            recipeLines.set(index, recipeLines.get(index).concat(", AIR")));
+                });
+
                 if (recipeLines.stream().flatMap(s -> Arrays.stream(s.split(",")))
                         .noneMatch(s -> Material.getMaterial(s) != null))       // If not material found
                     throw new WardsTypeException("recipe");
@@ -262,6 +271,8 @@ public class WardType {
                         .map(s -> s.map(s1 -> Optional.ofNullable(Material.getMaterial(s1)).orElse(Material.AIR)))
                         .map(materialStream -> materialStream.toArray(Material[]::new))
                         .toArray(Material[][]::new);
+
+
             }
 
             return new WardType(
