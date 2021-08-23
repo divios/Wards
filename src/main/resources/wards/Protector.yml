@@ -16,6 +16,8 @@ id: Protector
 # Material of the Ward Block.
 # This MUST be a valid Minecraft block.
 #
+# Supports custom heads via URL (ex: eccb29822d49611f1a1c260b4d4a75df5b3e51cc06e049fb9466cbb306b1129b)
+#
 # Check https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 # for valid materials of spigot latest version
 #

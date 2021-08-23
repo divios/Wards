@@ -6,7 +6,6 @@ import de.tr7zw.nbtapi.NBTItem;
 import io.github.divios.core_lib.itemutils.ItemBuilder;
 import io.github.divios.core_lib.misc.FormatUtils;
 import io.github.divios.core_lib.misc.Pair;
-import io.github.divios.core_lib.utils.Log;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.regions.ChunkRegionImpl;
 import io.github.divios.wards.regions.CuboidRegionImpl;
@@ -19,6 +18,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -31,7 +31,7 @@ public class WardType {
     private final int hash;         // Hash cached
 
     private final String id;
-    private final XMaterial material;
+    private final WrappedMaterial material;
     private final String display_name;
     private final List<String> lore;
     private final long time;
@@ -41,7 +41,7 @@ public class WardType {
 
     private WardType(
             String id,
-            XMaterial material,
+            WrappedMaterial material,
             String display_name,
             List<String> lore,
             long time,
@@ -65,8 +65,8 @@ public class WardType {
         return id;
     }
 
-    public Material getMaterial() {
-        return material.parseMaterial();
+    public WrappedMaterial getMaterial() {
+        return material;
     }
 
     public String getDisplay_name() {
@@ -95,7 +95,7 @@ public class WardType {
 
     public ItemStack buildItem(Player p) {
 
-        NBTItem item = new NBTItem(new ItemBuilder(material)
+        NBTItem item = new NBTItem(new ItemBuilder(material.parseItem())
                 .setName(display_name).setLore(lore));
 
         String uuid = p == null ? null : p.getUniqueId().toString();
@@ -166,7 +166,7 @@ public class WardType {
         }
 
         public Builder setMaterial(String material) {
-            this.material = material;
+            this.material = material.toUpperCase();
             return this;
         }
 
@@ -211,10 +211,7 @@ public class WardType {
                 throw new WardsTypeException("id");
             }
 
-            if (material == null || material.isEmpty() ||
-                    !XMaterial.matchXMaterial(material).isPresent() ||
-                    XMaterial.matchXMaterial(material).get().parseItem() == null ||
-                    !XMaterial.matchXMaterial(material).get().parseMaterial().isBlock()
+            if (material == null || material.isEmpty() || WrappedMaterial.of(material) == null
             ) {
                 throw new WardsTypeException("Material");
             }
@@ -277,7 +274,7 @@ public class WardType {
 
             return new WardType(
                     id,
-                    XMaterial.valueOf(material),
+                    WrappedMaterial.of(material),
                     display_name,
                     Arrays.asList(lore.split("\\|")),
                     time,
@@ -304,6 +301,39 @@ public class WardType {
 
     private enum WardTypeE {
         CUBOID, SPHEROID, CHUNK
+    }
+
+    private static final class WrappedMaterial {
+
+        private final ItemStack item;
+
+        private WrappedMaterial (ItemStack item) {
+            this.item = item;
+        }
+
+        public @Nullable ItemStack parseItem() { return item; }
+
+        public static WrappedMaterial of(String sMaterial) {
+
+            ItemStack item;
+
+            if (sMaterial.length() > 35) {
+                item = ItemBuilder.of(XMaterial.PLAYER_HEAD).applyTexture(sMaterial);
+            } else {
+
+                if (!XMaterial.matchXMaterial(sMaterial).isPresent() ||
+                        XMaterial.matchXMaterial(sMaterial).get().parseItem() == null ||
+                        !XMaterial.matchXMaterial(sMaterial).get().parseMaterial().isBlock()) {
+                    return null;
+                }
+
+                Material m = Material.matchMaterial(sMaterial);
+                item = m == null ? null : XMaterial.valueOf(sMaterial).parseItem();
+            }
+
+            return new WrappedMaterial(item);
+        }
+
     }
 
     private static final class WardsRecipe {
