@@ -53,7 +53,7 @@ public class WardsManager {
 
         types.addAll(WardsParser.parse());
 
-        database = new jsonDatabase(new File(plugin.getDataFolder() + File.separator + "data.json"));
+        database = new jsonDatabase(new File(plugin.getDataFolder(), "data.json"));
 
         Schedulers.async().run(() -> {
 

@@ -1,6 +1,7 @@
 package io.github.divios.wards.file;
 
 import io.github.divios.wards.Wards;
+import org.bukkit.util.FileUtil;
 
 import java.io.File;
 import java.util.stream.Stream;
@@ -40,6 +41,11 @@ public class ConfigManager {
             Stream.of("Sentinel", "Guardian", "Protector").forEach(s ->
                     plugin.saveResource("wards/" + s + ".yml", false));
         }
+
+        File dataFile = new File(plugin.getDataFolder(), "data.json");
+        if (!dataFile.exists())
+            try { dataFile.createNewFile(); }
+        catch (Exception e) { e.printStackTrace(); }
 
         return instance;
 
