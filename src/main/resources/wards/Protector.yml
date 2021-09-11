@@ -60,6 +60,15 @@ type: CHUNK
 #
 radius: 2
 
+# particle (String)
+#
+# The particle that is displayed when the radius of the wards is show.
+#
+# It has to be a valid Particle. Check https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+#
+
+particle: VILLAGER_HAPPY
+
 # Recipe
 #
 # Custom recipe to craft this item.
@@ -69,6 +78,7 @@ radius: 2
 #
 # Note: Materials that do not exist will be considered
 # AIR too, be careful with that.
+
 recipe:
   - "GOLD_INGOT, DIAMOND_ORE, GOLD_INGOT"
   - "DIAMOND_ORE, AIR, DIAMOND_ORE"

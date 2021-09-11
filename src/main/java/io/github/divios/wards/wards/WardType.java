@@ -11,10 +11,7 @@ import io.github.divios.wards.regions.ChunkRegionImpl;
 import io.github.divios.wards.regions.CuboidRegionImpl;
 import io.github.divios.wards.regions.RegionI;
 import io.github.divios.wards.regions.SpheroidRegionImpl;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -37,6 +34,7 @@ public class WardType {
     private final long time;
     private final WardTypeE type;
     private final int radius;
+    private final Particle particle;
     private final WardsRecipe recipe;
 
     private WardType(
@@ -47,6 +45,7 @@ public class WardType {
             long time,
             WardTypeE type,
             int radius,
+            Particle particle,
             Material[][] recipeLines
     ) {
         this.id = id;
@@ -56,6 +55,7 @@ public class WardType {
         this.time = time;
         this.type = type;
         this.radius = radius;
+        this.particle = particle;
         this.recipe = recipeLines == null ? null: new WardsRecipe(this, recipeLines);
 
         this.hash = id.hashCode();
@@ -87,6 +87,10 @@ public class WardType {
 
     public int getRadius() {
         return radius;
+    }
+
+    public Particle getParticle() {
+        return particle;
     }
 
     public WardsRecipe getRecipe() {
@@ -151,6 +155,7 @@ public class WardType {
         private Long time = null;
         private String type = null;
         private Integer radius = null;
+        private String particle = null;
         private List<String> recipeLines = null;
 
         public Builder() {
@@ -200,6 +205,11 @@ public class WardType {
             return this;
         }
 
+        public Builder setParticle(String particle) {
+            this.particle = particle;
+            return this;
+        }
+
         public Builder setRecipe(List<String> recipesLines) {
             this.recipeLines = recipesLines;
             return this;
@@ -237,6 +247,9 @@ public class WardType {
             if (radius == null) {
                 throw new WardsTypeException("Radius");
             }
+
+            if (particle == null || particle.isEmpty() || Arrays.stream(Particle.values()).noneMatch(particle1 -> particle1.name().equals(particle)))
+                particle = Particle.VILLAGER_HAPPY.name();
 
             Material[][] recipes;
 
@@ -280,6 +293,7 @@ public class WardType {
                     time,
                     WardTypeE.valueOf(type.toUpperCase()),
                     radius,
+                    Particle.valueOf(particle),
                     recipes);
 
         }

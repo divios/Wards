@@ -48,18 +48,10 @@ public class ParticleUtils {
         }
     }
 
-    public static void spawnParticleShape(Player p, Location l) {
+    public static void spawnParticleShape(Player p, Location l, Particle particle) {
 
-        ParticleDisplay.simple(l, Particle.VILLAGER_HAPPY)
-                .withForce(true).spawn(l, p);
+        ParticleDisplay.simple(l, particle).withForce(true).spawn(l, p);
 
-        /*
-        if (Wards.MID_VERSION > 12)
-            p.spawnParticle(Particle.REDSTONE, l, 5, new Particle.DustOptions(Color.ORANGE, 1));
-        else if (Wards.MID_VERSION > 8)
-            p.spawnParticle(Particle.REDSTONE, l, 0, 1, 139/255F, 0, 1);
-        else
-            l.getWorld().playEffect(l, Effect.valueOf("COLOURED_DUST"), null); */
     }
 
     public static void spawnParticlePlace(Player p, Location l) {

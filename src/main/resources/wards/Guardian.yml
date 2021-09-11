@@ -59,3 +59,12 @@ type: CUBOID
 # For the CHUNK type means the radius of chunks for each direction.
 #
 radius: 8
+
+# particle (String)
+#
+# The particle that is displayed when the radius of the wards is show.
+#
+# It has to be a valid Particle. Check https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+#
+
+particle: VILLAGER_HAPPY

@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class WardsShowTask {
 
     private static final Wards plugin = Wards.getInstance();
-    private static Cache<UUID, Task> cache = CacheBuilder.newBuilder()
+    private static final Cache<UUID, Task> cache = CacheBuilder.newBuilder()
             .expireAfterWrite(Wards.configManager.getConfigValues().CHUNK_DISPLAY_COOLDOWN, TimeUnit.SECONDS).build();
 
     public static void generate(Player p, Ward ward) {
@@ -38,9 +38,7 @@ public class WardsShowTask {
 
                     ward.getRegion().getSurface().stream()
                             .filter(block -> block.getLocation().distance(p.getLocation()) < 40)
-                            .forEach(block ->
-                                    ParticleUtils.spawnParticleShape(p,
-                                            block.getLocation().add(0, 1, 0)));
+                            .forEach(block -> ParticleUtils.spawnParticleShape(p, block.getLocation().add(0, 1, 0), ward.getType().getParticle()));
 
                     counter.incrementAndGet();
                 }));

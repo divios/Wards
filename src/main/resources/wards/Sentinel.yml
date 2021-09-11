@@ -60,4 +60,13 @@ type: SPHEROID
 #
 radius: 20
 
+# particle (String)
+#
+# The particle that is displayed when the radius of the wards is show.
+#
+# It has to be a valid Particle. Check https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+#
+
+particle: VILLAGER_HAPPY
+
 
