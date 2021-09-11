@@ -4,6 +4,7 @@ import de.tr7zw.nbtapi.NBTItem;
 import io.github.divios.core_lib.Events;
 import io.github.divios.core_lib.event.SingleSubscription;
 import io.github.divios.core_lib.misc.Msg;
+import io.github.divios.core_lib.utils.Log;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.events.WardPlaceEvent;
 import io.github.divios.wards.utils.ParticleUtils;
@@ -46,7 +47,7 @@ public class BlockPlaceEvent extends abstractObserver {
                     Integer limit = utils.getWardsLimit(p);
                     int placed = WardsManager.getInstance().getWards(p).size();
 
-                    if (!p.hasPermission("wards.admin") && limit != null && limit >= placed) {
+                    if (!p.hasPermission("wards.admin") && limit != null && placed >= limit) {
                         Msg.sendMsg(p, Msg.singletonMsg(Wards.configManager.getLangValues().WARD_LIMIT)
                                 .add("\\{limit}", String.valueOf(limit)).build());
                         o.setCancelled(true);
