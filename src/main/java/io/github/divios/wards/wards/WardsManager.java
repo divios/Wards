@@ -79,16 +79,16 @@ public class WardsManager {
 
     }
 
-    public Ward getWard(Location l) {
-        return wards.get(l);
-    }
-
     public Set<WardType> getWardsTypes() { return Collections.unmodifiableSet(types); }
 
     public WardType getWardType(String type) {
         return types.stream()
                 .filter(type1 -> type1.getId().equals(type))
                 .findFirst().orElse(null);
+    }
+
+    public Ward getWard(Location l) {
+        return wards.get(l);
     }
 
     public Map<Location, Ward> getWards() {
