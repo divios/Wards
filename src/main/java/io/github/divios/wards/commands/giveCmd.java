@@ -5,12 +5,14 @@ import io.github.divios.core_lib.commands.cmdTypes;
 import io.github.divios.core_lib.inventory.inventoryUtils;
 import io.github.divios.core_lib.itemutils.ItemUtils;
 import io.github.divios.core_lib.misc.Msg;
+import io.github.divios.core_lib.utils.Log;
 import io.github.divios.wards.Wards;
 import io.github.divios.wards.utils.utils;
 import io.github.divios.wards.wards.WardType;
 import io.github.divios.wards.wards.WardsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
@@ -39,19 +41,19 @@ public class giveCmd extends abstractCommand {
 
         if (args.size() == 1 &&
                 WardsManager.getInstance().getWardsTypes().stream()
-                .anyMatch(wardType -> wardType.getId().equals(args.get(0)))) {
+                .anyMatch(wardType -> wardType.getId().equalsIgnoreCase(args.get(0)))) {
             return true;
         }
 
         if (args.size() == 2) {
             return WardsManager.getInstance().getWardsTypes().stream()
-                    .anyMatch(wardType -> wardType.getId().equals(args.get(0))) &&
+                    .anyMatch(wardType -> wardType.getId().equalsIgnoreCase(args.get(0))) &&
                             Bukkit.getPlayer(args.get(1)) != null;
         }
 
         if (args.size() == 3) {
             return WardsManager.getInstance().getWardsTypes().stream()
-                    .anyMatch(wardType -> wardType.getId().equals(args.get(0))) &&
+                    .anyMatch(wardType -> wardType.getId().equalsIgnoreCase(args.get(0))) &&
                     Bukkit.getPlayer(args.get(1)) != null &&
                     utils.isInteger(args.get(2));
         }
@@ -66,7 +68,7 @@ public class giveCmd extends abstractCommand {
 
     @Override
     public List<String> getPerms() {
-        return Arrays.asList("wards.give");
+        return Collections.singletonList("wards.give");
     }
 
     @Override
@@ -96,18 +98,23 @@ public class giveCmd extends abstractCommand {
     @Override
     public void run(CommandSender sender, List<String> args) {
 
-        Player p = args.size() == 2 ? Bukkit.getPlayer(args.get(1)): (Player) sender;
+        if (sender instanceof ConsoleCommandSender && args.size() == 1 )  {
+            sender.sendMessage("You cannot give a ward to yourself from console");
+            return;
+        }
+
+        Player p = args.size() >= 2 ? Bukkit.getPlayer(args.get(1)): (Player) sender;
         int amount = args.size() >= 3 ? Integer.parseInt(args.get(2)):1;
 
-        if (args.size() >= 2 && !p.hasPermission("wards.give.others")) return;
+        if (args.size() >= 2 && !sender.hasPermission("wards.give.others")) return;
 
         if (inventoryUtils.playerEmptySlots(p) < amount) {
-            Msg.sendMsg(p, Wards.configManager.getLangValues().WARD_NO_SPACE);
+            Msg.sendMsg((Player) sender, Wards.configManager.getLangValues().WARD_NO_SPACE);
             return;
         }
 
         WardsManager.getInstance().getWardsTypes().stream()
-                .filter(wardType -> wardType.getId().equals(args.get(0)))
+                .filter(wardType -> wardType.getId().equalsIgnoreCase(args.get(0)))
                 .findFirst()
                 .ifPresent(wardType -> {
                     Msg.sendMsg(p, Msg.singletonMsg(Wards.configManager.getLangValues().GIVE_ON_CMD)
